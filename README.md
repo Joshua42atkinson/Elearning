@@ -1,0 +1,29 @@
+# The Local AI Architect: A Strategic Production Roadmap for Sovereign Educational Game Design
+
+## 1. Executive Summary: From Vision to Utility
+
+The imperative to transform education is often framed in ideological terms—liberation, empowerment, and revolution. While these ideals drive the "why" of educational reform, they often falter in the "how." The user’s reflection on previous iterations of this project—noting a tendency toward "preachiness"—reveals a critical insight: Ideology does not scale; utility does. To change the world, one must not merely argue for a better future but engineer the tools that make that future the path of least resistance.
+
+This project serves as a production-ready roadmap for "The Local AI Architect." It translates high-level aspirations of "Sovereign Ed-Tech" into a granular, executable strategy. By leveraging local Large Language Models (LLMs) like Ollama and game engines such as Roblox, Minecraft, and Bevy, we propose a shift from the "Textbook Trap" of passive consumption to a "Sovereign Sandbox" of active creation.
+
+## 2. Core Modules
+
+### [Module 1: The Local Forge (The Setup)](./module-1-setup/README.md)
+Objective: Configure a private, local AI environment using Ollama, understanding the functional and ethical implications of "air-gapped" intelligence.
+
+### [Module 2: Translating Intent to Rules (The Logic)](./module-2-logic/README.md)
+Objective: Orchestrate a "Mentor-in-the-Loop" interaction, using natural language to generate conditional logic for game NPCs.
+
+### [Module 3: Bringing the World to Life (Implementation)](./module-3-implementation/README.md)
+Objective: Implement AI-generated logic into a sandbox environment (Roblox, Minecraft) to create interactive learning experiences.
+
+### [Module 4: The Sovereign Sandbox (The Bevy/Rust Demo)](./module-4-demo/README.md)
+Objective: Validate the efficacy of "Sovereign Ed-Tech" through a high-performance, open-source demonstration using the Bevy engine.
+
+## 3. The Philosophy of Sovereignty
+
+"Sovereign Computing"—running the AI locally on the device—re-establishes the classroom as a "walled garden" of safety. It creates a "Safe Failure Space" where learners can experiment with code, ask "stupid" questions, and explore controversial topics without generating a permanent digital footprint on a corporate server.
+
+---
+
+*This project is built for students, teachers, administrators, and developers who believe in reclaiming digital agency in education.*
