@@ -1,0 +1,310 @@
+/* Matrix-Rust Design System */
+:root {
+    --phosphor-amber: #FFBF00;
+    --phosphor-amber-dim: rgba(255, 191, 0, 0.2);
+    --industrial-rust: #B7410E;
+    --deep-charcoal: #1A1A1A;
+    --terminal-black: #0D0D0D;
+    --status-green: #40FF00;
+    --alert-red: #C9462A;
+
+    --font-header: 'VT323', monospace;
+    --font-code: 'JetBrains Mono', monospace;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=JetBrains+Mono:wght@400;700&display=swap');
+
+body {
+    background-color: var(--deep-charcoal);
+    color: var(--phosphor-amber);
+    font-family: var(--font-code);
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.container {
+    width: 95%;
+    max-width: 1200px;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-family: var(--font-header);
+    border-bottom: 2px solid var(--industrial-rust);
+    padding-bottom: 1rem;
+}
+
+h1 {
+    font-size: 3rem;
+    margin: 0;
+    text-shadow: 0 0 10px var(--phosphor-amber-dim);
+}
+
+/* Mission Panel */
+.mission-panel {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 250px;
+    padding: 1rem;
+    border: 1px solid var(--industrial-rust);
+    background-color: rgba(13, 13, 13, 0.9);
+    font-family: var(--font-header);
+    box-shadow: 0 0 5px var(--industrial-rust);
+    z-index: 100;
+}
+
+.mission-panel h3 {
+    margin-top: 0;
+    color: var(--industrial-rust);
+    border-bottom: 1px dashed var(--industrial-rust);
+}
+
+#mission-list {
+    list-style: none;
+    padding: 0;
+}
+
+#mission-list li {
+    margin-bottom: 5px;
+    color: var(--phosphor-amber);
+}
+
+#mission-list li.completed {
+    color: var(--status-green);
+    text-decoration: line-through;
+}
+
+/* Air Gap Control */
+.air-gap-control {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+    font-family: var(--font-header);
+    font-size: 1.2rem;
+}
+
+.status-text {
+    margin-left: 10px;
+    color: var(--status-green);
+}
+
+.status-text.offline {
+    color: var(--industrial-rust);
+}
+
+/* Toggle Switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--industrial-rust);
+    transition: .4s;
+    border: 1px solid var(--phosphor-amber);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 3px;
+    background-color: var(--terminal-black);
+    transition: .4s;
+}
+
+input:checked+.slider {
+    background-color: var(--status-green);
+}
+
+input:checked+.slider:before {
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 0;
+    /* Industrial look - sharp corners */
+}
+
+/* Split Pane Layout */
+.split-container {
+    display: flex;
+    flex: 1;
+    gap: 20px;
+    position: relative;
+    height: 60vh;
+}
+
+.split-pane {
+    flex: 1;
+    border: 1px solid var(--industrial-rust);
+    background-color: var(--terminal-black);
+    padding: 1rem;
+    transition: all 0.5s ease;
+    overflow: hidden;
+    display: flex;
+    /* Centering content */
+    flex-direction: column;
+}
+
+.left-pane {
+    flex: 0 0 0;
+    /* Initially hidden/collapsed */
+    opacity: 0;
+    border: none;
+    padding: 0;
+}
+
+.split-pane.expanded {
+    flex: 1;
+    opacity: 1;
+    border: 1px solid var(--industrial-rust);
+    padding: 1rem;
+}
+
+.pane-content h2 {
+    font-family: var(--font-header);
+    color: var(--industrial-rust);
+    text-align: center;
+    border-bottom: 1px dashed var(--industrial-rust);
+    padding-bottom: 0.5rem;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    font-family: var(--font-code);
+}
+
+.feature-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #333;
+}
+
+.feature-list li.negative:before {
+    content: "[!] ";
+    color: var(--alert-red);
+}
+
+/* Terminal Window - The Forge */
+.terminal-window {
+    background-color: var(--terminal-black);
+    color: var(--phosphor-amber);
+    font-family: var(--font-code);
+    padding: 1rem;
+    height: 100%;
+    position: relative;
+    overflow-y: auto;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.terminal-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--industrial-rust);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    color: var(--industrial-rust);
+    font-size: 0.8rem;
+}
+
+.terminal-content p {
+    margin: 5px 0;
+    line-height: 1.4;
+}
+
+/* Input Line */
+.input-line {
+    display: flex;
+    align-items: center;
+}
+
+.prompt {
+    margin-right: 10px;
+    color: var(--status-green);
+}
+
+#terminal-input {
+    background: transparent;
+    border: none;
+    color: var(--phosphor-amber);
+    font-family: var(--font-code);
+    font-size: 1rem;
+    flex: 1;
+    outline: none;
+    caret-color: var(--phosphor-amber);
+}
+
+/* CRT Scanline Effect */
+.scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: rgba(255, 191, 0, 0.1);
+    animation: scan 6s linear infinite;
+    pointer-events: none;
+    z-index: 10;
+}
+
+@keyframes scan {
+    0% {
+        top: 0%;
+    }
+
+    100% {
+        top: 100%;
+    }
+}
+
+/* Button */
+.control-panel {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.btn {
+    background-color: transparent;
+    color: var(--phosphor-amber);
+    border: 1px solid var(--industrial-rust);
+    padding: 10px 20px;
+    font-family: var(--font-header);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.btn:hover {
+    background-color: var(--phosphor-amber);
+    color: var(--terminal-black);
+    box-shadow: 0 0 15px var(--phosphor-amber);
+}
