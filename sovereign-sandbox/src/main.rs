@@ -8,10 +8,12 @@ struct BootTimer(Timer);
 
 mod ai;
 mod teacher;
+mod syllabus;
 
 use ai::AiPlugin;
 use ai::memory::{MemoryStore, MemoryStoreResource};
 use teacher::TeacherPlugin;
+use syllabus::SyllabusPlugin;
 use std::sync::Arc;
 use std::path::Path;
 
@@ -41,6 +43,7 @@ fn main() {
             ..default()
         }))
         .insert_resource(MemoryStoreResource(memory_store))
+        .add_plugins(SyllabusPlugin) // Load the Syllabus
         .add_plugins(AiPlugin) // Add the Brain
         .add_plugins(TeacherPlugin) // Add the Teacher Entity
         .insert_resource(ClearColor(Color::srgb(0.05, 0.05, 0.05))) // Deep Charcoal (Almost Black)

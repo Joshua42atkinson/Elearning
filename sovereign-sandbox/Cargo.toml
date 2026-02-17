@@ -38,6 +38,7 @@ cpal = "0.15"
 rubato = "0.14"
 hound = "3.5.0"
 rand = "0.8.5"
+toml = "0.8"
 
 # Profile optimizations for Bevy
 [profile.dev]

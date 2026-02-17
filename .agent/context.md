@@ -52,7 +52,7 @@ These rules are non-negotiable and define the project's soul.
 1.  **The Silicon Cortex (AI Robustness)**: Structured JSON outputs, Context Caching, Safety Rails.
 2.  **The Akashic Records (Persistence)**: **INTEGRATED (Trinity Sled)**. Semantic vector memory system with `sled` + `hnsw_rs`.
 3.  **The Glass Bead Game (UI/UX)**: Diegetic interface, Quest Log, Visual Novel dialogue.
-4.  **The Syllabus (Content Engine)**: Decouple content from code using TOML/YAML Quest Definition Language (QDL).
+4.  **The Syllabus (Content Engine)**: **INTEGRATED (QDL)**. Quest Definition Language using TOML. `module_1.toml` contains 20min e-learning storyboard mapped to Gagné's 9 Events.
 5.  **The Construct (Distribution)**: Bundled inference binaries and cross-platform installers.
 
 ## 6. How to Contribute

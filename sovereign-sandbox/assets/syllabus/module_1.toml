@@ -1,0 +1,53 @@
+title = "The Local AI Architect"
+description = "A 20-minute e-learning journey into sovereign educational game design."
+
+[[modules]]
+id = "video_1"
+title = "Starting Your Private Assistant (The Setup)"
+description = "Simple steps to own your AI tools locally."
+objective = "Install and run Ollama locally, understanding the value of privacy and sovereignty."
+
+[modules.events]
+gain_attention = "We all want our students to be active participants in their learning, not just passive readers. Today, we're going to set up a private assistant that helps you build those active experiences right from your own computer."
+inform_objectives = "Our first step is to bring the tool home. We're using a program called Ollama. It's a simple, free download that acts as the engine for everything we're about to build."
+recall_prior_knowledge = "Once it's installed, we give it one instruction to get started. You'll see a progress bar. While this moves, the computer is preparing its own internal 'brain' that belongs only to you."
+present_content = "Now, look at this. Even with the internet turned off, your assistant is ready to help. This means your ideas and your students' data never leave your sight. It's safe, it's private, and it's yours."
+provide_guidance = "Follow the installation guide. Run `ollama run llama3` in your terminal."
+elicit_performance = "Try asking your local assistant a question about your lesson plans."
+provide_feedback = "Your assistant is working! Notice how it responds even offline."
+assess_performance = "Can you explain why local AI matters for student privacy?"
+enhance_retention = "Now that your assistant is ready, we can start a conversation about how to turn your next lesson into an interactive world."
+
+[[modules]]
+id = "video_2"
+title = "Translating Ideas into Rules (The Logic)"
+description = "Using natural language to create game behaviors."
+objective = "Convert lesson plans into structured logic using AI assistance."
+
+[modules.events]
+gain_attention = "You already have great lesson plans. Usually, these stay on paper. But what if we could turn these ideas into rules for a digital world?"
+inform_objectives = "We're going to use our private assistant to translate your teaching ideas into game logic."
+recall_prior_knowledge = "We don't need to learn a new programming language. We just need to talk to our assistant. We explain what we want to happen, and it helps us organize those thoughts into logic."
+present_content = "See how the assistant responded? It took your lesson and turned it into a clear set of steps: If a bee visits a flower, then the flower can grow. This is the bridge between your imagination and a playable game."
+provide_guidance = "Try prompting: 'I'm teaching about ecosystems. Can you help me write a set of rules for a character in a game that explains how bees help flowers?'"
+elicit_performance = "Refine the logic. Add a detail: 'Make the character say Thank you when the player helps.'"
+provide_feedback = "If it's not quite right, we just ask for a change. It's a simple back-and-forth until the logic matches exactly how you want your students to learn."
+assess_performance = "Can you describe a simple game behavior for your own lesson?"
+enhance_retention = "With our rules written down in plain language, we're ready to put them into a space where students can actually play with them."
+
+[[modules]]
+id = "video_3"
+title = "Bringing the World to Life (Implementation)"
+description = "Moving logic into interactive spaces."
+objective = "Implement AI-generated logic into a game environment."
+
+[modules.events]
+gain_attention = "This is our digital classroom. It's a place where students can explore. Right now, it's just a world, but we're about to give it a purpose."
+inform_objectives = "We're going to take the rules we wrote and bring them into the Sovereign Sandbox."
+recall_prior_knowledge = "We take the rules we just wrote with our assistant and place them into a character. Because our assistant did the technical translation, we can stay focused on the teaching."
+present_content = "Now, the lesson is alive. When a student interacts with this world, they aren't just reading about a concept—they are experiencing it. Your lesson plan has become an interaction."
+provide_guidance = "Launch the Sovereign Sandbox. Observe how the Teacher NPC uses your syllabus content."
+elicit_performance = "Press 'T' to interact with the Teacher. Ask about your next lesson."
+provide_feedback = "The technical barrier has disappeared. If you can describe a learning experience, you can build it."
+assess_performance = "What learning experience will you create next?"
+enhance_retention = "You are now creating the tools your students need to thrive."

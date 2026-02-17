@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use crate::ai::AiChannel;
+use crate::syllabus::SyllabusResource;
 
 #[derive(Component)]
 pub struct Teacher;
@@ -74,9 +75,25 @@ fn teacher_interaction(
     keys: Res<ButtonInput<KeyCode>>,
     mut ai_channel: ResMut<AiChannel>,
     mut teacher_state: ResMut<TeacherState>,
+    syllabus: Option<Res<SyllabusResource>>,
 ) {
     if keys.just_pressed(KeyCode::KeyT) {
-        let _ = ai_channel.sender.send("How can I make my lesson more fun?".to_string());
+        // Build context-aware prompt using current syllabus step
+        let prompt = if let Some(syl) = syllabus {
+            if let (Some(quest), Some(event_text)) = (syl.current_quest(), syl.current_event_text()) {
+                format!(
+                    "CONTEXT: We are on '{}'. Current step: {}\n\nUser: How can I make my lesson more fun?",
+                    quest.title,
+                    event_text
+                )
+            } else {
+                "How can I make my lesson more fun?".to_string()
+            }
+        } else {
+            "How can I make my lesson more fun?".to_string()
+        };
+        
+        let _ = ai_channel.sender.send(prompt);
         teacher_state.is_speaking = true;
         info!("Architect asked the Teacher a question.");
     }
