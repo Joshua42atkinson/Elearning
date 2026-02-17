@@ -9,11 +9,13 @@ struct BootTimer(Timer);
 mod ai;
 mod teacher;
 mod syllabus;
+mod quest_ui;
 
 use ai::AiPlugin;
 use ai::memory::{MemoryStore, MemoryStoreResource};
 use teacher::TeacherPlugin;
 use syllabus::SyllabusPlugin;
+use quest_ui::QuestUIPlugin;
 use std::sync::Arc;
 use std::path::Path;
 
@@ -46,6 +48,7 @@ fn main() {
         .add_plugins(SyllabusPlugin) // Load the Syllabus
         .add_plugins(AiPlugin) // Add the Brain
         .add_plugins(TeacherPlugin) // Add the Teacher Entity
+        .add_plugins(QuestUIPlugin) // Add the Quest Progression UI
         .insert_resource(ClearColor(Color::srgb(0.05, 0.05, 0.05))) // Deep Charcoal (Almost Black)
         .insert_resource(BootTimer(Timer::from_seconds(0.1, TimerMode::Repeating)))
         .add_systems(Startup, setup)
