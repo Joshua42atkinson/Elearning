@@ -9,82 +9,210 @@
 </head>
 
 <body>
-    <div class="container">
-        <header>
-            <h1>The Local Forge</h1>
-            <p>Sovereign Ed-Tech Initiative // Status: ONLINE</p>
-        </header>
-
-        <main>
-            <!-- Mission Panel -->
-            <div class="mission-panel">
-                <h3>MISSION OBJECTIVES</h3>
-                <ul id="mission-list">
-                    <li id="mission-airgap" class="pending">[ ] Secure the Network (Air-Gap)</li>
-                    <li id="mission-compare" class="pending">[ ] Compare Architectures</li>
-                    <li id="mission-boot" class="pending">[ ] Boot the Brain (ollama run)</li>
-                </ul>
-            </div>
-
-            <!-- Air-Gap Toggle -->
-            <div class="air-gap-control">
-                <label class="switch">
-                    <input type="checkbox" id="air-gap-toggle">
-                    <span class="slider round"></span>
-                </label>
-                <span id="network-status" class="status-text">NETWORK: ONLINE</span>
-            </div>
-
-            <!-- Rent vs Own Split Screen -->
-            <div class="split-container">
-                <!-- Left: The Cloud (Rent) -->
-                <div class="split-pane left-pane" id="cloud-pane">
-                    <div class="pane-content">
-                        <h2>THE CLOUD (RENT)</h2>
-                        <ul class="feature-list">
-                            <li class="negative">Monthly Subscription</li>
-                            <li class="negative">Data Surveillance</li>
-                            <li class="negative">Rate Limits</li>
-                            <li class="negative">Dependent on Internet</li>
-                        </ul>
+    <div class="app-container">
+        <!-- SIDEBAR: THE QUEST LOG -->
+        <aside class="quest-log">
+            <header class="log-header">
+                <h1>THE ARCHITECT</h1>
+                <div class="player-status">
+                    <div class="level-badge">LVL <span id="player-level">1</span></div>
+                    <div class="xp-container">
+                        <div class="xp-bar" id="xp-bar" style="width: 0%"></div>
                     </div>
+                    <div class="xp-text"><span id="player-xp">0</span> / 100 XP</div>
+                </div>
+            </header>
+
+            <nav class="quest-nav">
+                <button class="quest-btn active" data-target="quest-1" id="btn-quest-1">
+                    <span class="quest-icon">I</span>
+                    <div class="quest-info">
+                        <span class="quest-title">LEVEL 1: THE INITIATE</span>
+                        <span class="quest-desc">Boot the Brain</span>
+                    </div>
+                </button>
+
+                <button class="quest-btn locked" data-target="quest-2" id="btn-quest-2">
+                    <span class="quest-icon">II</span>
+                    <div class="quest-info">
+                        <span class="quest-title">LEVEL 2: THE WHISPERER</span>
+                        <span class="quest-desc">Tame the Golem</span>
+                    </div>
+                    <span class="lock-icon">🔒</span>
+                </button>
+
+                <button class="quest-btn locked" data-target="quest-3" id="btn-quest-3">
+                    <span class="quest-icon">III</span>
+                    <div class="quest-info">
+                        <span class="quest-title">LEVEL 3: WORLD BUILDER</span>
+                        <span class="quest-desc">The First Loop</span>
+                    </div>
+                    <span class="lock-icon">🔒</span>
+                </button>
+
+                <!-- Future Expansion -->
+                <button class="quest-btn locked" data-target="quest-4" id="btn-quest-4">
+                    <span class="quest-icon">IV</span>
+                    <div class="quest-info">
+                        <span class="quest-title">LEVEL 4: GAME MASTER</span>
+                        <span class="quest-desc">Forge the World</span>
+                    </div>
+                    <span class="lock-icon">🔒</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- MAIN STAGE -->
+        <main class="stage">
+            <!-- QUEST 1: THE FORGE (Previously Module 1) -->
+            <section id="quest-1" class="quest-container active">
+                <div class="quest-header">
+                    <h2>QUEST: BOOT THE BRAIN</h2>
+                    <p>Objective: Reclaim your digital sovereignty by initializing the local neural network.</p>
                 </div>
 
-                <!-- Right: The Forge (Own) -->
-                <div class="split-pane right-pane expanded" id="local-pane">
-                    <div class="pane-content">
-                        <h2>THE FORGE (OWN)</h2>
-                        <div class="terminal-window" id="main-terminal">
-                            <div class="scan-line"></div>
-                            <div class="terminal-header">
-                                <span>SYS.ADMIN</span>
-                                <span>VER: 1.0.0</span>
-                            </div>
-                            <div class="terminal-content" id="terminal-output">
-                                <p>> INITIALIZING BOOT SEQUENCE...</p>
-                                <p>> CHECKING HARDWARE SOVEREIGNTY... [OK]</p>
-                                <p>> ESTABLISHING AIR-GAP PROTOCOLS... [OK]</p>
-                                <p>> LOADING NEURAL NETWORK...</p>
-                                <br>
-                                <p>Welcome, Architect. The cloud offers convenience, but it extracts a toll. Today, we
-                                    stop renting intelligence. We start building it.</p>
-                                <br>
-                                <div class="input-line">
-                                    <span class="prompt">></span>
-                                    <input type="text" id="terminal-input" autofocus autocomplete="off">
+                <!-- Module 1 Content -->
+                <div class="mission-panel">
+                    <h3>MISSION OBJECTIVES</h3>
+                    <ul id="mission-list">
+                        <li id="mission-airgap" class="pending">[ ] Secure the Network (Air-Gap)</li>
+                        <li id="mission-compare" class="pending">[ ] Compare Architectures</li>
+                        <li id="mission-boot" class="pending">[ ] Boot the Brain (ollama run)</li>
+                    </ul>
+                </div>
+
+                <div class="air-gap-control">
+                    <label class="switch">
+                        <input type="checkbox" id="air-gap-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <span id="network-status" class="status-text">NETWORK: ONLINE</span>
+                </div>
+
+                <div class="split-container">
+                    <!-- Left: The Cloud (Rent) -->
+                    <div class="split-pane left-pane" id="cloud-pane">
+                        <div class="pane-content">
+                            <h2>THE CLOUD (RENT)</h2>
+                            <ul class="feature-list">
+                                <li class="negative">Monthly Subscription</li>
+                                <li class="negative">Data Surveillance</li>
+                                <li class="negative">Rate Limits</li>
+                                <li class="negative">Dependent on Internet</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right: The Forge (Own) -->
+                    <div class="split-pane right-pane expanded" id="local-pane">
+                        <div class="pane-content">
+                            <h2>THE FORGE (OWN)</h2>
+                            <div class="terminal-window" id="main-terminal">
+                                <div class="scan-line"></div>
+                                <div class="terminal-header">
+                                    <span>SYS.ADMIN</span>
+                                    <span>VER: 1.0.0</span>
+                                </div>
+                                <div class="terminal-content" id="terminal-output">
+                                    <p>> INITIALIZING BOOT SEQUENCE...</p>
+                                    <p>> CHECKING HARDWARE SOVEREIGNTY... [OK]</p>
+                                    <p>> ESTABLISHING AIR-GAP PROTOCOLS... [OK]</p>
+                                    <p>> LOADING NEURAL NETWORK...</p>
+                                    <br>
+                                    <p>Welcome, Initiate. To teach the game, you must first play the game.</p>
+                                    <br>
+                                    <div class="input-line">
+                                        <span class="prompt">></span>
+                                        <input type="text" id="terminal-input" autofocus autocomplete="off">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="control-panel">
-                <button class="btn" id="compare-btn">COMPARE MODELS</button>
-            </div>
+                <div class="control-panel">
+                    <button class="btn" id="compare-btn">COMPARE MODELS</button>
+                </div>
+            </section>
+
+            <!-- QUEST 2: LOGIC ENGINE (Previously Module 2) -->
+            <section id="quest-2" class="quest-container hidden">
+                <div class="quest-header">
+                    <h2>QUEST: TAME THE GOLEM</h2>
+                    <p>Objective: Learn the language of the machine. Translate intent into logic.</p>
+                </div>
+
+                <div class="mission-panel">
+                    <h3>LOGIC OBJECTIVES</h3>
+                    <ul id="logic-mission-list">
+                        <li id="mission-intent" class="pending">[ ] Define Intent (Prompt)</li>
+                        <li id="mission-translate" class="pending">[ ] Translate to Logic</li>
+                        <li id="mission-visualize" class="pending">[ ] Visualize Data Stream</li>
+                    </ul>
+                </div>
+
+                <div class="split-container prompt-engine">
+                    <!-- Left: Intent -->
+                    <div class="split-pane left-pane" id="intent-pane">
+                        <div class="pane-content">
+                            <h2>HUMAN INTENT</h2>
+                            <p class="instruction-text">Describe what you want the entity to do.</p>
+                            <textarea id="prompt-input"
+                                placeholder="e.g., If the player touches the gold block, give them 10 points."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Middle: Translation Control -->
+                    <div class="translation-controls">
+                        <button class="btn" id="translate-btn">TRANSLATE ->></button>
+                        <div id="matrix-stream" class="data-stream"></div>
+                    </div>
+
+                    <!-- Right: Machine Logic -->
+                    <div class="split-pane right-pane" id="logic-pane">
+                        <div class="pane-content">
+                            <h2>MACHINE LOGIC</h2>
+                            <div class="code-window">
+                                <div class="line-numbers">1<br>2<br>3<br>4<br>5</div>
+                                <pre><code id="generated-code" class="language-lua">-- Waiting for intent...</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- QUEST 3: WEB RUNTIME (Previously Module 3) -->
+            <section id="quest-3" class="quest-container hidden">
+                <div class="quest-header">
+                    <h2>QUEST: THE FIRST LOOP</h2>
+                    <p>Objective: Close the feedback loop. Verify your logic in the simulation.</p>
+                </div>
+
+                <div class="mission-panel">
+                    <h3>RUNTIME OBJECTIVES</h3>
+                    <ul id="runtime-mission-list">
+                        <li id="mission-run" class="pending">[ ] Run the Simulation</li>
+                        <li id="mission-kill" class="pending">[ ] Verify Logic: Death (Lava)</li>
+                        <li id="mission-score" class="pending">[ ] Verify Logic: Score (Gold)</li>
+                    </ul>
+                </div>
+
+                <div class="execution-container" id="sim-container">
+                    <div class="sim-header">
+                        <h3>VISUAL RUNTIME ENVIRONMENT</h3>
+                        <div class="sim-controls">
+                            <button class="btn small-btn" id="run-sim-btn">RUN SIMULATION</button>
+                            <button class="btn small-btn" id="reset-sim-btn">RESET</button>
+                        </div>
+                    </div>
+                    <canvas id="sim-canvas" width="800" height="400"></canvas>
+                    <div class="sim-status">STATUS: IDLE</div>
+                </div>
+            </section>
         </main>
-        <script src="script.js"></script>
     </div>
+    <script src="script.js"></script>
 </body>
 
 </html>

@@ -1,27 +1,61 @@
 # Project Context: The Local AI Architect
+**"To teach the game, you must play the game."**
 
-## 1. Project Overview
-**Goal**: Build a "Sovereign Ed-Tech" platform that runs locally (Ollama) and empowers K-12 educators to build their own tools.
-**Aesthetic**: "Daydream Matrix-Rust" (Phosphor Amber `#FFBF00` vs Industrial Rust `#B7410E`).
-**Architecture**: Agentic Workflow with a "Sovereign Squad" of AI agents.
+## 1. The Vision: The Sovereign Syllabus
+We are building a **Gamified Teacher Training Academy**.
+*   **The Problem**: Teachers are becoming consumers of AI, not creators.
+*   **The Solution**: An RPG-style platform where teachers play as "Architects," learning to build their own gamified curricula using local AI tools.
+*   **The Philosophy**: Constructionism + Sovereignty. "If you don't own the server, you don't own the gradebook."
 
-## 2. Current State (End of Session 1)
-- **Infrastructure**: Directory structure created at `~/antigravity/local-ai-architect`.
-- **Brain**: `.agent/` directory contains rules for Styling (`styling.md`) and Pedagogy (`pedagogy.md`).
-- **Web Interface**: `forge-web/index.html` created with the initial "Boot Sequence" UI.
-- **Git**: Initialized locally. Remote setup deferred by user.
+## 2. The Architecture: Two Worlds
+The platform consists of two distinct but connected environments:
 
-## 3. Immediate Next Steps (Session 2)
-The next session should focus on **Module 1: The Local Forge**.
-1.  **Rent vs Own Visual**: Implement the split-screen comparison logic.
-2.  **Terminal Simulation**: Build the interactive JS to simulate `ollama run llama3`.
-3.  **Air-Gap Switch**: Create the UI toggle for "disconnecting" the internet.
+### World 1: The Quest Log (Web App)
+*   **Role**: The Learning Management System (LMS) and Tooling Hub.
+*   **Stack**: HTML5, Vanilla CSS, JavaScript.
+*   **Key Modules**:
+    *   **Module 1 (The Forge)**: Terminal/Ollama Interface (Safe Sandbox).
+    *   **Module 2 (The Logic Engine)**: Prompt Engineering & Intent/Code Translation.
+    *   **Module 3 (The Web Runtime)**: Instant feedback visualization (Canvas).
+*   **Aesthetic**: "Daydream Matrix-Rust" (Phosphor Amber `#FFBF00` on Deep Charcoal `#1A1A1A`).
 
-## 4. Key Rules
-- **Look & Feel**: MUST follow `.agent/rules/styling.md`.
-- **Pedagogy**: MUST follow `.agent/rules/pedagogy.md`.
-- **Workflow**: Use `.agent/workflows/build_module.md`.
+### World 2: The Sovereign Sandbox (The Engine)
+*   **Role**: The "Final Project" engine where teachers build high-fidelity simulations.
+*   **Stack**: **Rust** & **Bevy ECS**.
+*   **Scripting**: **Rhai** (Sandboxed Logic).
 
-## 5. Artifacts to Reference
-- `README.md`: High-level vision.
-- `forge-web/index.html`: Current implementation.
+*   **AI**: **Candle** (Hugging Face Rust Inference).
+    *   **Brain**: Phi-3-Mini (4k Instruct).
+    *   **Ears**: Whisper (Architecture Stub).
+*   **Location**: `/sovereign-sandbox`.
+*   **Design**: Isomorphic/Dimetric Projection (2:1 Ratio).
+
+## 3. The Rules (The Genome)
+These rules are non-negotiable and define the project's soul.
+*   **Aesthetics**: Follow `.agent/rules/aesthetics.md`. High information density, terminal motifs, scanlines.
+*   **Technical**: Follow `.agent/rules/bevy.md`. Use `Required Components`, `Entity Relationships`, and `Rhai` for logic.
+*   **Pedagogy**: Follow Gagné's 9 Events of Instruction. Every interaction must have immediate visual feedback.
+*   **Documentation Protocol**: This `context.md` file MUST be updated after every major accomplishment to ensure continuity across sessions.
+
+## 4. Current State (Session 6: "The Teacher")
+*   **Web App (World 1)**: **COMPLETE**.
+*   **Rust Engine (World 2)**: **TEACHER ALIVE**.
+    *   **The Brain**: Phi-3-Mini-4k-Instruct optimized with `wgpu`.
+    *   **The Ears**: **COMPLETE**. Integrated Whisper (Tiny).
+    *   **The Teacher**: **ACTIVE**.
+        *   **Persona**: "The Gamification Architect" (Socratic Guide).
+        *   **Visuals**: Basic Entity spawned.
+        *   **Interaction**: Press 'T' to Chat, 'H' to Listen.
+    *   **UI**: "Neon Wizard" boot sequence implemented.
+
+## 5. The Production Roadmap (The Pentagram)
+1.  **The Silicon Cortex (AI Robustness)**: Structured JSON outputs, Context Caching, Safety Rails.
+2.  **The Akashic Records (Persistence)**: **INTEGRATED (Trinity Sled)**. Semantic vector memory system with `sled` + `hnsw_rs`.
+3.  **The Glass Bead Game (UI/UX)**: Diegetic interface, Quest Log, Visual Novel dialogue.
+4.  **The Syllabus (Content Engine)**: Decouple content from code using TOML/YAML Quest Definition Language (QDL).
+5.  **The Construct (Distribution)**: Bundled inference binaries and cross-platform installers.
+
+## 6. How to Contribute
+*   **Web Changes**: Edit `forge-web/`. Open `index.html` to test.
+*   **Rust Changes**: Edit `sovereign-sandbox/`. Run `cargo run` to test.
+*   **Documentation**: Update `syllabus.md` for pedagogical changes, `context.md` for architectural changes.

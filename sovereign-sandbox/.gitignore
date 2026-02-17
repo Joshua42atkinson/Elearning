@@ -1,0 +1,17 @@
+# AI Models
+assets/models/*.gguf
+assets/models/*.safetensors
+assets/models/*.bytes
+assets/models/*.json
+
+# Database
+assets/memory/
+*.db
+*.sled
+
+# Rust
+target/
+**/*.rs.bk
+
+# OS
+.DS_Store

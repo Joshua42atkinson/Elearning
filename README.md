@@ -17,10 +17,19 @@ Objective: Orchestrate a "Mentor-in-the-Loop" interaction, using natural languag
 ### [Module 3: Bringing the World to Life (Implementation)](./module-3-implementation/README.md)
 Objective: Implement AI-generated logic into a sandbox environment (Roblox, Minecraft) to create interactive learning experiences.
 
-### [Module 4: The Sovereign Sandbox (The Bevy/Rust Demo)](./module-4-demo/README.md)
-Objective: Validate the efficacy of "Sovereign Ed-Tech" through a high-performance, open-source demonstration using the Bevy engine.
+### [Module 3: Bringing the World to Life (Implementation)](./module-3-implementation/README.md)
+Objective: Implement AI-generated logic into a sandbox environment (Roblox, Minecraft) to create interactive learning experiences.
 
-## 3. The Philosophy of Sovereignty
+### [Module 4: The Sovereign Sandbox (Rust/Bevy Engine)](./module-4-demo/README.md)
+Objective: Build a dedicated, high-performance educational game engine using **Rust** and **Bevy**. This "Sovereign Sandbox" removes reliance on proprietary platforms like Roblox, offering a truly open-source, local-first environment for 3D logic visualization.
+
+## 3. Expanded Vision: Hybrid Media Strategy
+To truly scale "The Local AI Architect," we are integrating a multi-modal learning approach:
+-   **NotebookLM Video Synthesizer**: utilizing Google's NotebookLM to generate "Deep Dive" audio/video summaries of complex technical concepts.
+-   **Human-in-the-Loop (OBS)**: High-fidelity screen captures and commentary from the lead architect (User), grounding the AI theory in human practice.
+-   **The Sovereign Sandbox**: A browser-based (WASM) or native Rust/Bevy application that serves as the final "exam" environment for students.
+
+## 4. The Philosophy of Sovereignty
 
 "Sovereign Computing"—running the AI locally on the device—re-establishes the classroom as a "walled garden" of safety. It creates a "Safe Failure Space" where learners can experiment with code, ask "stupid" questions, and explore controversial topics without generating a permanent digital footprint on a corporate server.
 

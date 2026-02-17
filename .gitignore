@@ -1,0 +1,27 @@
+# AI Models (Global)
+**/*.gguf
+**/*.bin
+**/*.safetensors
+**/*.bytes
+**/*.pt
+**/*.pth
+**/*.onnx
+
+# Rust
+/target
+**/*.rs.bk
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Application Data
+sovereign-sandbox/assets/models/
+sovereign-sandbox/assets/memory/
+*.db
+*.sled
