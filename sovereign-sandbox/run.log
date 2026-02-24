@@ -1,197 +1,175 @@
-nohup: ignoring input
-   Compiling unicode-ident v1.0.24
-   Compiling cfg-if v1.0.4
-   Compiling equivalent v1.0.2
-   Compiling hashbrown v0.16.1
-   Compiling pin-project-lite v0.2.16
-   Compiling libc v0.2.180
-   Compiling serde_core v1.0.228
-   Compiling portable-atomic v1.13.1
-   Compiling crossbeam-utils v0.8.21
-   Compiling libm v0.2.16
-   Compiling smallvec v1.15.1
-   Compiling either v1.15.0
-   Compiling unicode-xid v0.2.6
-   Compiling getrandom v0.2.17
-   Compiling parking v2.2.1
-   Compiling arrayvec v0.7.6
-   Compiling futures-core v0.3.32
-   Compiling thread_local v1.1.9
-   Compiling proc-macro2 v1.0.106
-   Compiling futures-io v0.3.32
-   Compiling fastrand v2.3.0
-   Compiling log v0.4.29
-   Compiling slab v0.4.12
-   Compiling allocator-api2 v0.2.21
-   Compiling const-random-macro v0.1.16
-   Compiling typeid v1.0.3
-   Compiling uuid v1.12.1
-   Compiling fixedbitset v0.4.2
-   Compiling futures-lite v2.6.1
-   Compiling memchr v2.8.0
-   Compiling async-task v4.7.1
-   Compiling downcast-rs v1.2.1
-   Compiling bevy_ptr v0.15.3
-   Compiling quote v1.0.44
-   Compiling once_cell v1.21.3
-   Compiling concurrent-queue v2.5.0
-   Compiling disqualified v1.0.0
-   Compiling indexmap v2.13.0
-   Compiling event-listener v5.4.1
-   Compiling nonmax v0.5.5
-   Compiling syn v2.0.116
-   Compiling tracing-core v0.1.36
-   Compiling const-random v0.1.18
-   Compiling libloading v0.8.9
-   Compiling fixedbitset v0.5.7
-   Compiling bitflags v1.3.2
-   Compiling scopeguard v1.2.0
-   Compiling crossbeam-epoch v0.9.18
-   Compiling event-listener-strategy v0.5.4
-   Compiling async-channel v2.5.0
-   Compiling lock_api v0.4.14
-   Compiling num-traits v0.2.19
-   Compiling async-executor v1.14.0
-   Compiling crossbeam-deque v0.8.6
-   Compiling crc32fast v1.5.0
-   Compiling aho-corasick v1.1.4
-   Compiling itertools v0.13.0
-   Compiling getrandom v0.3.4
-   Compiling bevy_tasks v0.15.3
-   Compiling parking_lot_core v0.9.12
-   Compiling rayon-core v1.13.0
-   Compiling toml_edit v0.22.27
-   Compiling rand_core v0.6.4
-   Compiling parking_lot v0.12.5
-   Compiling static_assertions v1.1.0
-   Compiling regex-syntax v0.8.9
-   Compiling simd-adler32 v0.3.8
-   Compiling unicode-width v0.1.14
-   Compiling rayon v1.11.0
-   Compiling typewit v1.14.2
-   Compiling termcolor v1.4.1
-   Compiling bit-vec v0.8.0
-   Compiling rustc-hash v1.1.0
-   Compiling raw-window-handle v0.6.2
-   Compiling bitflags v2.11.0
-   Compiling erased-serde v0.4.9
-   Compiling nix v0.31.1
-   Compiling spirv v0.3.0+sdk-1.3.268.0
-   Compiling codespan-reporting v0.11.1
-   Compiling bit-set v0.8.0
-   Compiling const_panic v0.2.15
-   Compiling crossbeam-channel v0.5.15
-   Compiling atomic-waker v1.1.2
-   Compiling adler2 v2.0.1
-   Compiling foldhash v0.1.5
-   Compiling ctrlc v3.5.2
-   Compiling hexf-parse v0.2.1
-   Compiling tinyvec_macros v0.1.1
-   Compiling hashbrown v0.15.5
-   Compiling tinyvec v1.10.0
-   Compiling miniz_oxide v0.8.9
-   Compiling piper v0.2.4
-   Compiling wgpu-types v23.0.0
-   Compiling gpu-alloc-types v0.3.0
-   Compiling regex-automata v0.4.14
-   Compiling gpu-descriptor-types v0.2.0
-   Compiling rand_core v0.9.5
-   Compiling gpu-descriptor v0.3.2
-   Compiling gpu-alloc v0.6.0
-   Compiling flate2 v1.1.9
-   Compiling ash v0.38.0+1.3.281
-   Compiling blocking v1.6.2
-   Compiling khronos-egl v6.0.0
-   Compiling fdeflate v0.3.7
-   Compiling pxfm v0.1.27
-   Compiling async-lock v3.4.2
-   Compiling arrayref v0.3.9
-   Compiling event-listener v2.5.3
-   Compiling profiling v1.0.17
-   Compiling glow v0.14.2
-   Compiling renderdoc-sys v1.1.0
-   Compiling cpufeatures v0.2.17
-   Compiling constant_time_eq v0.4.2
-   Compiling base64 v0.21.7
-   Compiling blake3 v1.8.3
-   Compiling async-fs v2.2.0
-   Compiling async-broadcast v0.5.1
-   Compiling png v0.18.1
-   Compiling stackfuture v0.3.1
-   Compiling atomicow v1.1.0
-   Compiling reborrow v0.5.5
-   Compiling byteorder-lite v0.1.0
-   Compiling twox-hash v1.6.3
-   Compiling bit-vec v0.6.3
-   Compiling accesskit v0.17.1
-   Compiling bevy_macro_utils v0.15.3
-   Compiling encase_derive_impl v0.10.0
-   Compiling ruzstd v0.7.3
-   Compiling bit-set v0.5.3
-   Compiling ktx2 v0.3.0
-   Compiling const_soft_float v0.1.4
-error: could not compile `ktx2` (lib)
+warning: unused import: `PathBuf`
+ --> src/ai/memory.rs:8:23
+  |
+8 | use std::path::{Path, PathBuf};
+  |                       ^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
 
-Caused by:
-  process didn't exit successfully: `/home/joshua-atkinson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name ktx2 --edition=2018 /home/joshua-atkinson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ktx2-0.3.0/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C opt-level=3 -C embed-bitcode=no -C debuginfo=2 -C debug-assertions=on --cfg 'feature="default"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "std"))' -C metadata=a928f8cf0e2f9712 -C extra-filename=-09b7016ef250cc46 --out-dir /home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps -L dependency=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps --extern bitflags=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libbitflags-12bca80d0fa2248f.rmeta --cap-lints allow` (signal: 15, SIGTERM: termination signal)
-warning: build failed, waiting for other jobs to finish...
-error: could not compile `const_soft_float` (lib)
+warning: unused import: `candle_transformers::utils::apply_repeat_penalty`
+ --> src/ai/candle_integration.rs:5:5
+  |
+5 | use candle_transformers::utils::apply_repeat_penalty;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Caused by:
-  process didn't exit successfully: `/home/joshua-atkinson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name const_soft_float --edition=2021 /home/joshua-atkinson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/const_soft_float-0.1.4/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C opt-level=3 -C embed-bitcode=no -C debuginfo=2 -C debug-assertions=on --cfg 'feature="no_std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("const_mut_refs", "const_trait_impl", "no_std"))' -C metadata=e42780192200bf4d -C extra-filename=-f1d1c86fee6318f5 --out-dir /home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps -L dependency=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps --cap-lints allow` (signal: 15, SIGTERM: termination signal)
-error: could not compile `bevy_macro_utils` (lib)
+warning: variable does not need to be mutable
+  --> src/ai/memory.rs:88:13
+   |
+88 |         let mut index = self.index.write().unwrap();
+   |             ----^^^^^
+   |             |
+   |             help: remove this `mut`
+   |
+   = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
 
-Caused by:
-  process didn't exit successfully: `/home/joshua-atkinson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name bevy_macro_utils --edition=2021 /home/joshua-atkinson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/bevy_macro_utils-0.15.3/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C opt-level=3 -C embed-bitcode=no '--warn=clippy::unwrap_or_default' --warn=unused_qualifications --warn=unsafe_op_in_unsafe_fn --deny=unsafe_code --warn=unexpected_cfgs '--warn=clippy::undocumented_unsafe_blocks' '--allow=clippy::type_complexity' '--allow=clippy::too_long_first_doc_paragraph' '--warn=clippy::std_instead_of_core' '--warn=clippy::std_instead_of_alloc' '--warn=clippy::semicolon_if_nothing_returned' '--warn=clippy::ref_as_ptr' '--warn=clippy::redundant_else' '--warn=clippy::redundant_closure_for_method_calls' '--warn=clippy::ptr_cast_constness' '--warn=clippy::ptr_as_ptr' --warn=missing_docs '--warn=clippy::match_same_arms' '--warn=clippy::manual_let_else' '--warn=clippy::doc_markdown' '--warn=clippy::alloc_instead_of_core' --check-cfg 'cfg(docsrs_dep)' -C debug-assertions=on --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=b3d53b15284f49da -C extra-filename=-ee38a93958448ed9 --out-dir /home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps -L dependency=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps --extern proc_macro2=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libproc_macro2-d79308bbe01c47be.rmeta --extern quote=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libquote-e9f597f316faaa8f.rmeta --extern syn=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libsyn-1d464c07bd84cf59.rmeta --extern toml_edit=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libtoml_edit-59c6fee792aeef04.rmeta --cap-lints allow` (signal: 15, SIGTERM: termination signal)
-error: could not compile `ruzstd` (lib)
+warning: variable does not need to be mutable
+   --> src/ai/memory.rs:141:17
+    |
+141 |             let mut index = self.index.write().unwrap();
+    |                 ----^^^^^
+    |                 |
+    |                 help: remove this `mut`
 
-Caused by:
-  process didn't exit successfully: `/home/joshua-atkinson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name ruzstd --edition=2018 /home/joshua-atkinson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ruzstd-0.7.3/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C opt-level=3 -C embed-bitcode=no -C debuginfo=2 -C debug-assertions=on --cfg 'feature="default"' --cfg 'feature="hash"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "hash", "rustc-dep-of-std", "std"))' -C metadata=35efa5b38b9347ef -C extra-filename=-d6d6c7da97c046b9 --out-dir /home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps -L dependency=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps --extern twox_hash=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libtwox_hash-bdc22a17b153831a.rmeta --cap-lints allow` (signal: 15, SIGTERM: termination signal)
-error: could not compile `async-fs` (lib)
+warning: unused variable: `no_timestamps_token`
+  --> src/ai/hearing.rs:66:13
+   |
+66 |         let no_timestamps_token = self.tokenizer.token_to_id("<|notim...
+   |             ^^^^^^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_no_timestamps_token`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
 
-Caused by:
-  process didn't exit successfully: `/home/joshua-atkinson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name async_fs --edition=2021 /home/joshua-atkinson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-fs-2.2.0/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C opt-level=3 -C embed-bitcode=no -C debuginfo=2 -C debug-assertions=on --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=34d5d0dacad54788 -C extra-filename=-a559fc92ac12da63 --out-dir /home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps -L dependency=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps --extern async_lock=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libasync_lock-04e63f9157ea9514.rmeta --extern blocking=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libblocking-ec5a29c85987812a.rmeta --extern futures_lite=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libfutures_lite-a0c8363543014629.rmeta --cap-lints allow` (signal: 15, SIGTERM: termination signal)
-error: could not compile `encase_derive_impl` (lib)
+warning: unused variable: `asset_server`
+  --> src/teacher.rs:33:42
+   |
+33 | ... commands: Commands, asset_server: Res<AssetServer>) {
+   |                         ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_asset_server`
 
-Caused by:
-  process didn't exit successfully: `/home/joshua-atkinson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name encase_derive_impl --edition=2021 /home/joshua-atkinson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/encase_derive_impl-0.10.0/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C opt-level=3 -C embed-bitcode=no -C debug-assertions=on --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=be919e7ee50a2b8d -C extra-filename=-4311808e0ef4cae8 --out-dir /home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps -L dependency=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps --extern proc_macro2=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libproc_macro2-d79308bbe01c47be.rmeta --extern quote=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libquote-e9f597f316faaa8f.rmeta --extern syn=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libsyn-1d464c07bd84cf59.rmeta --cap-lints allow` (signal: 15, SIGTERM: termination signal)
-error: could not compile `accesskit` (lib)
+warning: variable does not need to be mutable
+  --> src/teacher.rs:76:5
+   |
+76 |     mut ai_channel: ResMut<AiChannel>,
+   |     ----^^^^^^^^^^
+   |     |
+   |     help: remove this `mut`
 
-Caused by:
-  process didn't exit successfully: `/home/joshua-atkinson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name accesskit --edition=2021 /home/joshua-atkinson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/accesskit-0.17.1/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C opt-level=3 -C embed-bitcode=no -C debuginfo=2 -C debug-assertions=on --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("enumn", "pyo3", "schemars", "serde"))' -C metadata=5a5ddc78fa988ec8 -C extra-filename=-0ee5bbc7fe6abd97 --out-dir /home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps -L dependency=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps --cap-lints allow` (signal: 15, SIGTERM: termination signal)
-error: could not compile `png` (lib)
+warning: variable does not need to be mutable
+   --> src/teacher.rs:109:5
+    |
+109 |     mut ai_channel: ResMut<AiChannel>,
+    |     ----^^^^^^^^^^
+    |     |
+    |     help: remove this `mut`
 
-Caused by:
-  process didn't exit successfully: `/home/joshua-atkinson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name png --edition=2021 /home/joshua-atkinson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/png-0.18.1/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C opt-level=3 -C embed-bitcode=no -C debuginfo=2 --warn=unexpected_cfgs --check-cfg 'cfg(fuzzing)' -C debug-assertions=on --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("benchmarks", "unstable", "zlib-rs"))' -C metadata=9a6c882591bb51fc -C extra-filename=-1ca5dc105f88aefa --out-dir /home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps -L dependency=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps --extern bitflags=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libbitflags-2835029f7aecf31a.rmeta --extern crc32fast=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libcrc32fast-fa5245fee22643d0.rmeta --extern fdeflate=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libfdeflate-f66b961379fbc5af.rmeta --extern flate2=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libflate2-a29966c0bca5e240.rmeta --extern miniz_oxide=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libminiz_oxide-4c21da2c101b79bd.rmeta --cap-lints allow` (signal: 15, SIGTERM: termination signal)
-error: could not compile `toml_edit` (lib)
+warning: unused variable: `before_step`
+   --> src/quest_ui.rs:189:17
+    |
+189 |             let before_step = syl.current_event_step;
+    |                 ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_before_step`
 
-Caused by:
-  process didn't exit successfully: `/home/joshua-atkinson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name toml_edit --edition=2021 /home/joshua-atkinson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/toml_edit-0.22.27/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C opt-level=3 -C embed-bitcode=no --warn=rust_2018_idioms '--warn=clippy::zero_sized_map_values' '--warn=clippy::wildcard_imports' '--warn=clippy::verbose_file_reads' --warn=unused_qualifications --warn=unused_macro_rules --warn=unused_lifetimes --warn=unsafe_op_in_unsafe_fn --warn=unreachable_pub --allow=unnameable_types '--warn=clippy::uninlined_format_args' '--warn=clippy::trait_duplication_in_bounds' '--warn=clippy::todo' '--warn=clippy::string_to_string' '--warn=clippy::string_lit_as_bytes' '--warn=clippy::string_add_assign' '--warn=clippy::string_add' '--warn=clippy::str_to_string' '--warn=clippy::semicolon_if_nothing_returned' '--warn=clippy::self_named_module_files' '--warn=clippy::same_functions_in_if_condition' '--allow=clippy::result_large_err' '--warn=clippy::rest_pat_in_fully_bound_structs' '--warn=clippy::ref_option_ref' '--warn=clippy::redundant_feature_names' '--warn=clippy::rc_mutex' '--warn=clippy::ptr_as_ptr' '--warn=clippy::path_buf_push_overwrite' '--warn=clippy::negative_feature_names' '--warn=clippy::needless_for_each' '--allow=clippy::needless_continue' '--warn=clippy::mutex_integer' '--warn=clippy::mem_forget' '--warn=clippy::macro_use_imports' '--warn=clippy::lossy_float_literal' '--warn=clippy::linkedlist' '--allow=clippy::let_and_return' '--warn=clippy::large_types_passed_by_value' '--warn=clippy::large_stack_arrays' '--warn=clippy::large_digit_groups' '--warn=clippy::invalid_upcast_comparisons' '--warn=clippy::infinite_loop' '--warn=clippy::inefficient_to_string' '--warn=clippy::inconsistent_struct_constructor' '--warn=clippy::imprecise_flops' '--warn=clippy::implicit_clone' '--allow=clippy::if_same_then_else' '--warn=clippy::from_iter_instead_of_collect' '--warn=clippy::fn_params_excessive_bools' '--warn=clippy::float_cmp_const' '--warn=clippy::flat_map_option' '--warn=clippy::filter_map_next' '--warn=clippy::fallible_impl_from' '--warn=clippy::explicit_into_iter_loop' '--warn=clippy::explicit_deref_methods' '--warn=clippy::expl_impl_clone_on_copy' '--warn=clippy::enum_glob_use' '--warn=clippy::empty_enum' '--warn=clippy::doc_markdown' '--warn=clippy::debug_assert_with_mut_call' '--warn=clippy::dbg_macro' '--warn=clippy::create_dir' '--allow=clippy::collapsible_else_if' '--warn=clippy::checked_conversions' '--allow=clippy::branches_sharing_code' '--allow=clippy::bool_assert_comparison' -C debug-assertions=on --cfg 'feature="parse"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "display", "parse", "perf", "serde", "unbounded", "unstable-debug"))' -C metadata=e4010825beba38b9 -C extra-filename=-59c6fee792aeef04 --out-dir /home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps -L dependency=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps --extern indexmap=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libindexmap-c41a0c6b3bcd4f67.rmeta --extern toml_datetime=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libtoml_datetime-8b99a2746fffefcd.rmeta --extern winnow=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libwinnow-a0e83a7d594c15ce.rmeta --cap-lints allow` (signal: 15, SIGTERM: termination signal)
-error: could not compile `aho-corasick` (lib)
+warning: field `name` is never read
+ --> src/ai/persona.rs:3:9
+  |
+2 | pub struct TeacherPersona {
+  |            -------------- field in this struct
+3 |     pub name: String,
+  |         ^^^^
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
 
-Caused by:
-  process didn't exit successfully: `/home/joshua-atkinson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name aho_corasick --edition=2021 /home/joshua-atkinson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/aho-corasick-1.1.4/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C opt-level=3 -C embed-bitcode=no -C debuginfo=2 -C debug-assertions=on --cfg 'feature="default"' --cfg 'feature="perf-literal"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("default", "logging", "perf-literal", "std"))' -C metadata=0228fffc4afd9a9a -C extra-filename=-712be6951a5771b2 --out-dir /home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps -L dependency=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps --extern memchr=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libmemchr-0a89996aa23d3f51.rmeta --cap-lints allow` (signal: 15, SIGTERM: termination signal)
-error: could not compile `glow` (lib)
+warning: struct `StatsResponse` is never constructed
+  --> src/ai/memory.rs:37:12
+   |
+37 | pub struct StatsResponse {
+   |            ^^^^^^^^^^^^^
 
-Caused by:
-  process didn't exit successfully: `/home/joshua-atkinson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name glow --edition=2021 /home/joshua-atkinson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glow-0.14.2/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C opt-level=3 -C embed-bitcode=no -C debuginfo=2 -C debug-assertions=on --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("debug_automatic_glGetError", "debug_trace_calls", "log"))' -C metadata=61835c2a7f263e16 -C extra-filename=-aa0616696687d8c0 --out-dir /home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps -L dependency=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps --cap-lints allow` (signal: 15, SIGTERM: termination signal)
-error: could not compile `regex-automata` (lib)
+warning: method `stats` is never used
+   --> src/ai/memory.rs:208:12
+    |
+ 60 | impl MemoryStore {
+    | ---------------- method in this implementation
+...
+208 |     pub fn stats(&self) -> Result<StatsResponse> {
+    |            ^^^^^
 
-Caused by:
-  process didn't exit successfully: `/home/joshua-atkinson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name regex_automata --edition=2021 /home/joshua-atkinson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/regex-automata-0.4.14/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C opt-level=3 -C embed-bitcode=no -C debuginfo=2 --allow=unexpected_cfgs --check-cfg 'cfg(docsrs_regex)' -C debug-assertions=on --cfg 'feature="alloc"' --cfg 'feature="dfa"' --cfg 'feature="dfa-build"' --cfg 'feature="dfa-onepass"' --cfg 'feature="dfa-search"' --cfg 'feature="hybrid"' --cfg 'feature="meta"' --cfg 'feature="nfa"' --cfg 'feature="nfa-backtrack"' --cfg 'feature="nfa-pikevm"' --cfg 'feature="nfa-thompson"' --cfg 'feature="perf"' --cfg 'feature="perf-inline"' --cfg 'feature="perf-literal"' --cfg 'feature="perf-literal-multisubstring"' --cfg 'feature="perf-literal-substring"' --cfg 'feature="std"' --cfg 'feature="syntax"' --cfg 'feature="unicode"' --cfg 'feature="unicode-age"' --cfg 'feature="unicode-bool"' --cfg 'feature="unicode-case"' --cfg 'feature="unicode-gencat"' --cfg 'feature="unicode-perl"' --cfg 'feature="unicode-script"' --cfg 'feature="unicode-segment"' --cfg 'feature="unicode-word-boundary"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("alloc", "default", "dfa", "dfa-build", "dfa-onepass", "dfa-search", "hybrid", "internal-instrument", "internal-instrument-pikevm", "logging", "meta", "nfa", "nfa-backtrack", "nfa-pikevm", "nfa-thompson", "perf", "perf-inline", "perf-literal", "perf-literal-multisubstring", "perf-literal-substring", "std", "syntax", "unicode", "unicode-age", "unicode-bool", "unicode-case", "unicode-gencat", "unicode-perl", "unicode-script", "unicode-segment", "unicode-word-boundary"))' -C metadata=0c96aae860343015 -C extra-filename=-67e179e7dc3bcecc --out-dir /home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps -L dependency=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps --extern aho_corasick=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libaho_corasick-712be6951a5771b2.rmeta --extern memchr=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libmemchr-0a89996aa23d3f51.rmeta --extern regex_syntax=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libregex_syntax-dc01aec9c13924f6.rmeta --cap-lints allow` (signal: 15, SIGTERM: termination signal)
-error: could not compile `regex-syntax` (lib)
+warning: field `last_message` is never read
+  --> src/teacher.rs:11:9
+   |
+ 9 | pub struct TeacherState {
+   |            ------------ field in this struct
+10 |     pub is_speaking: bool,
+11 |     pub last_message: String,
+   |         ^^^^^^^^^^^^
 
-Caused by:
-  process didn't exit successfully: `/home/joshua-atkinson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name regex_syntax --edition=2021 /home/joshua-atkinson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/regex-syntax-0.8.9/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C opt-level=3 -C embed-bitcode=no -C debuginfo=2 --allow=unexpected_cfgs --check-cfg 'cfg(docsrs_regex)' -C debug-assertions=on --cfg 'feature="default"' --cfg 'feature="std"' --cfg 'feature="unicode"' --cfg 'feature="unicode-age"' --cfg 'feature="unicode-bool"' --cfg 'feature="unicode-case"' --cfg 'feature="unicode-gencat"' --cfg 'feature="unicode-perl"' --cfg 'feature="unicode-script"' --cfg 'feature="unicode-segment"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("arbitrary", "default", "std", "unicode", "unicode-age", "unicode-bool", "unicode-case", "unicode-gencat", "unicode-perl", "unicode-script", "unicode-segment"))' -C metadata=89e86744f1507914 -C extra-filename=-dc01aec9c13924f6 --out-dir /home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps -L dependency=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps --cap-lints allow` (signal: 15, SIGTERM: termination signal)
-error: could not compile `pxfm` (lib)
+warning: field `description` is never read
+ --> src/syllabus/mod.rs:9:9
+  |
+7 | pub struct Syllabus {
+  |            -------- field in this struct
+8 |     pub title: String,
+9 |     pub description: String,
+  |         ^^^^^^^^^^^
+  |
+  = note: `Syllabus` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
 
-Caused by:
-  process didn't exit successfully: `/home/joshua-atkinson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name pxfm --edition=2024 /home/joshua-atkinson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pxfm-0.1.27/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C opt-level=3 -C embed-bitcode=no -C debuginfo=2 -C debug-assertions=on --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=8f99031e14e4573d -C extra-filename=-dbbe90e21094c671 --out-dir /home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps -L dependency=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps --extern num_traits=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libnum_traits-7ec51d6cb16bdac4.rmeta --cap-lints allow` (signal: 15, SIGTERM: termination signal)
-error: could not compile `syn` (lib)
+warning: fields `id`, `description`, and `objective` are never read
+  --> src/syllabus/mod.rs:15:9
+   |
+14 | pub struct Quest {
+   |            ----- fields in this struct
+15 |     pub id: String,
+   |         ^^
+16 |     pub title: String,
+17 |     pub description: String,
+   |         ^^^^^^^^^^^
+18 |     pub objective: String,
+   |         ^^^^^^^^^
+   |
+   = note: `Quest` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
 
-Caused by:
-  process didn't exit successfully: `/home/joshua-atkinson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name syn --edition=2021 /home/joshua-atkinson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/syn-2.0.116/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C opt-level=3 -C embed-bitcode=no -C debug-assertions=on --cfg 'feature="clone-impls"' --cfg 'feature="default"' --cfg 'feature="derive"' --cfg 'feature="extra-traits"' --cfg 'feature="fold"' --cfg 'feature="full"' --cfg 'feature="parsing"' --cfg 'feature="printing"' --cfg 'feature="proc-macro"' --cfg 'feature="visit"' --cfg 'feature="visit-mut"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("clone-impls", "default", "derive", "extra-traits", "fold", "full", "parsing", "printing", "proc-macro", "test", "visit", "visit-mut"))' -C metadata=a2a384ce6502b0b0 -C extra-filename=-1d464c07bd84cf59 --out-dir /home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps -L dependency=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps --extern proc_macro2=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libproc_macro2-d79308bbe01c47be.rmeta --extern quote=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libquote-e9f597f316faaa8f.rmeta --extern unicode_ident=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/libunicode_ident-9769df47c26b284c.rmeta --cap-lints allow` (signal: 15, SIGTERM: termination signal)
-error: could not compile `ash` (lib)
-
-Caused by:
-  process didn't exit successfully: `/home/joshua-atkinson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc --crate-name ash --edition=2021 /home/joshua-atkinson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ash-0.38.0+1.3.281/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C opt-level=3 -C embed-bitcode=no -C debuginfo=2 -C debug-assertions=on --cfg 'feature="debug"' --cfg 'feature="default"' --cfg 'feature="libloading"' --cfg 'feature="loaded"' --cfg 'feature="std"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values("debug", "default", "libloading", "linked", "loaded", "std"))' -C metadata=46c84341097752d3 -C extra-filename=-f27ca8dd29bc3b56 --out-dir /home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps -L dependency=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps --extern libloading=/home/joshua-atkinson/antigravity/local-ai-architect/sovereign-sandbox/target/debug/deps/liblibloading-f4342cce40206530.rmeta --cap-lints allow` (signal: 15, SIGTERM: termination signal)
+warning: `sovereign-sandbox` (bin "sovereign-sandbox") generated 15 warnings (run `cargo fix --bin "sovereign-sandbox" -p sovereign-sandbox` to apply 9 suggestions)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 0.31s
+     Running `target/debug/sovereign-sandbox`
+[2m2026-02-17T22:58:46.549298Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "AMD Radeon RX 5600M (RADV NAVI10)", vendor: 4098, device: 29471, device_type: DiscreteGpu, driver: "radv", driver_info: "Mesa 25.0.7-0ubuntu0.24.04.2", backend: Vulkan }
+[2m2026-02-17T22:58:46.631694Z[0m [32m INFO[0m [2msovereign_sandbox::syllabus[0m[2m:[0m 📚 Syllabus Loaded: The Local AI Architect
+[2m2026-02-17T22:58:46.650306Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window "The Sovereign Sandbox" (0v1#4294967296)
+[2m2026-02-17T22:58:46.650373Z[0m [32m INFO[0m [2mwinit::platform_impl::linux::x11::window[0m[2m:[0m Guessed window scale factor: 1
+🧠 Brain Initialized.
+👂 Ears Initialized.
+[2m2026-02-17T23:00:16.733925Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 2/9: Inform Objectives
+[2m2026-02-17T23:00:17.181282Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 3/9: Recall Prior Knowledge
+[2m2026-02-17T23:00:17.527992Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 4/9: Present Content
+[2m2026-02-17T23:00:17.528086Z[0m [32m INFO[0m [2msovereign_sandbox::inventory[0m[2m:[0m 🎁 Tool Acquired: 🧭 - Ollama Compass
+[2m2026-02-17T23:00:20.689403Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 5/9: Provide Guidance
+[2m2026-02-17T23:00:21.190924Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 6/9: Elicit Performance
+[2m2026-02-17T23:00:21.799975Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 7/9: Provide Feedback
+[2m2026-02-17T23:00:21.800018Z[0m [32m INFO[0m [2msovereign_sandbox::inventory[0m[2m:[0m 🎁 Tool Acquired: 🔍 - Logic Lens
+[2m2026-02-17T23:00:24.141175Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 8/9: Assess Performance
+[2m2026-02-17T23:00:24.446419Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 9/9: Enhance Retention
+[2m2026-02-17T23:00:24.446471Z[0m [32m INFO[0m [2msovereign_sandbox::inventory[0m[2m:[0m 🎁 Tool Acquired: 🪞 - Feedback Mirror
+[2m2026-02-17T23:00:24.682551Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 🎓 Advanced to Module 2
+[2m2026-02-17T23:00:26.078533Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 2/9: Inform Objectives
+[2m2026-02-17T23:00:26.919090Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 3/9: Recall Prior Knowledge
+[2m2026-02-17T23:00:27.946031Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 4/9: Present Content
+[2m2026-02-17T23:00:28.745150Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 5/9: Provide Guidance
+[2m2026-02-17T23:00:30.980904Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 6/9: Elicit Performance
+[2m2026-02-17T23:00:31.696902Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 7/9: Provide Feedback
+[2m2026-02-17T23:00:32.349407Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 8/9: Assess Performance
+[2m2026-02-17T23:00:32.877261Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 9/9: Enhance Retention
+[2m2026-02-17T23:00:33.308141Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 🎓 Advanced to Module 3
+[2m2026-02-17T23:00:33.940118Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 2/9: Inform Objectives
+[2m2026-02-17T23:00:34.141031Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 3/9: Recall Prior Knowledge
+[2m2026-02-17T23:00:34.301330Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 4/9: Present Content
+[2m2026-02-17T23:00:34.475486Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 5/9: Provide Guidance
+[2m2026-02-17T23:00:34.627368Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 6/9: Elicit Performance
+[2m2026-02-17T23:00:34.773792Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 7/9: Provide Feedback
+[2m2026-02-17T23:00:34.919259Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 8/9: Assess Performance
+[2m2026-02-17T23:00:35.071774Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 9/9: Enhance Retention
+[2m2026-02-17T23:00:35.237941Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 🎓 Advanced to Module 4
+[2m2026-02-17T23:00:35.410757Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 2/9: Inform Objectives
+[2m2026-02-17T23:00:35.591305Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 3/9: Recall Prior Knowledge
+[2m2026-02-17T23:00:35.792746Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 4/9: Present Content
+[2m2026-02-17T23:00:36.161195Z[0m [32m INFO[0m [2msovereign_sandbox::quest_ui[0m[2m:[0m 📖 Advanced to Step 5/9: Provide Guidance
+[2m2026-02-17T23:00:42.210545Z[0m [32m INFO[0m [2mbevy_window::system[0m[2m:[0m No windows are open, exiting
+[2m2026-02-17T23:00:42.211258Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Closing window 0v1#4294967296
+[2m2026-02-17T23:00:42.217858Z[0m [32m INFO[0m [2mhnsw_rs::hnsw[0m[2m:[0m entering PointIndexation drop
+[2m2026-02-17T23:00:42.217896Z[0m [32m INFO[0m [2mhnsw_rs::hnsw[0m[2m:[0m  drop sys time(s) 0 cpu time 0

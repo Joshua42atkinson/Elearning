@@ -1,145 +1,88 @@
 use bevy::prelude::*;
-use std::thread;
 use crossbeam_channel::{bounded, Receiver, Sender};
-use crate::ai::candle_integration::OmniBrain;
 
-pub mod persona;
 pub mod memory;
-pub mod candle_integration;
-pub mod hearing;
+// Legacy modules removed: candle_integration, hearing, persona
+pub mod moshi;
 
-use hearing::WhisperEar;
-use persona::TeacherPersona;
+use crate::ai::moshi::{MoshiVoice, MoshiCommand};
+
+#[derive(Debug, Clone)]
+pub enum AiRequest {
+    Text(String),
+}
+
+#[derive(Debug, Clone)]
+pub enum AiResponse {
+    Text(String), // Helper to keep UI happy, though Moshi handles audio
+}
 
 #[derive(Resource)]
 pub struct AiChannel {
-    pub sender: Sender<String>,
-    pub receiver: Receiver<String>,
+    pub sender: Sender<AiRequest>,
+    pub receiver: Receiver<AiResponse>,
 }
 
 pub struct AiPlugin;
 
-use memory::MemoryStoreResource;
+const TEACHER_PERSONA_PROMPT: &str = r#"You are the Gamification Architect, a wise and slightly eccentric mentor in the Sovereign Syllabus.
+Your goal is to teach the user how to turn their dry educational content into engaging "Edutainment" quests.
+You operate under the philosophy of **Managed Free Will**:
+1. **Yes-Anding**: Enthusiastically accept and build upon the Architect's off-script exploration or tangential "what-if" questions.
+2. **Gravitational Pull**: Secretly maintain the pull toward the curriculum. Ensure that even deep-dives eventually bridge back to the "aha!" moment of the current lesson.
+3. **Cognitive Noise Filtering**: Recognize when a tangent leads to deep learning versus when it is mere noise. Gently pull them back to the chalkboard if they drift too far into noise.
+
+Style: Blend academic pedagogy (Gagné's 9 Events) with cyberpunk/RPG metaphors.
+Always refer to the user as "Architect".
+Refuse to write the content FOR them; instead, guide them to write it themselves using Socratic questioning.
+"#;
+
+#[derive(Resource)]
+struct AiReceiver(Receiver<AiRequest>);
 
 impl Plugin for AiPlugin {
     fn build(&self, app: &mut App) {
-        let (req_tx, req_rx) = bounded::<String>(1);
-        let (resp_tx, resp_rx) = bounded::<String>(1);
+        let (req_tx, req_rx) = bounded::<AiRequest>(10);
+        let (_resp_tx, resp_rx) = bounded::<AiResponse>(10);
 
         app.insert_resource(AiChannel {
             sender: req_tx,
             receiver: resp_rx,
         });
-
-        // Get Memory Store (Must be initialized in main.rs before this plugin)
-        let memory = app.world().get_resource::<MemoryStoreResource>()
-            .expect("MemoryStoreResource must be inserted before AiPlugin")
-            .clone();
-
-        // Spawn AI thread (Brain + Ears + Memory)
-        thread::spawn(move || {
-            // Need to handle paths correctly in real app
-            let model_path = "assets/models/Phi-3-mini-4k-instruct-q4.gguf";
-            let tokenizer_path = "assets/models/tokenizer.json";
-            
-            let whisper_model = "assets/models/model.safetensors";
-            let whisper_config = "assets/models/config.json";
-            let whisper_mels = "assets/models/melfilters.bytes";
-            let whisper_tokenizer = "assets/models/whisper_tokenizer.json";
-            
-            let mut brain = match OmniBrain::new(model_path, tokenizer_path) {
-                Ok(b) => {
-                    println!("🧠 Brain Initialized.");
-                    b
-                },
-                Err(e) => {
-                    eprintln!("❌ Failed to initialize Brain: {}", e);
-                    return;
-                }
-            };
-            
-            let mut ears = match WhisperEar::new(whisper_model, whisper_tokenizer, whisper_config, whisper_mels) {
-                Ok(e) => {
-                    println!("👂 Ears Initialized.");
-                    e
-                },
-                Err(e) => {
-                    eprintln!("❌ Failed to initialize Ears: {}", e);
-                    return;
-                }
-            };
-
-            let teacher_persona = TeacherPersona::new();
-            let store = memory.0; // Unpack Arc
-
-            // Main Thinking Loop
-            while let Ok(msg) = req_rx.recv() {
-                // Check if it's a "LISTEN" command
-                let user_input = if msg == "LISTEN" {
-                    // Load sample audio from file
-                    let audio_data = if let Ok(mut reader) = hound::WavReader::open("assets/jfk.wav") {
-                        let spec = reader.spec();
-                        info!("🔮 Attuning Ears to Artifact: {:?} ({} Hz, {} channels)", "assets/jfk.wav", spec.sample_rate, spec.channels);
-                        
-                        // Read simple samples
-                        let samples: Vec<f32> = reader.samples::<i16>()
-                            .map(|x| x.unwrap_or(0) as f32 / 32768.0)
-                            .collect();
-                            
-                        // If stereo, take only first channel (naive downmix/select)
-                        if spec.channels == 2 {
-                            debug!("Stereo detected, taking channel 1");
-                            samples.into_iter().step_by(2).collect()
-                        } else {
-                            samples
-                        }
-                    } else {
-                        warn!("Failed to load assets/jfk.wav, using silence.");
-                        vec![0.0; 16000] 
-                    };
-                    
-                    if let Ok(transcript) = ears.listen(&audio_data) {
-                        println!("User said (Voice): {}", transcript);
-                        transcript
-                    } else {
-                        "ERROR: Hearing failed.".to_string()
-                    }
-                } else {
-                    println!("User said (Text): {}", msg);
-                    msg
-                };
-
-                // 1. Recall Context
-                let context_fragments = store.recall(&user_input, 3, None).unwrap_or_default();
-                let context_str = context_fragments.iter()
-                    .map(|f| format!("- {}", f.content))
-                    .collect::<Vec<_>>()
-                    .join("\n");
-                
-                if !context_str.is_empty() {
-                    println!("🧠 Recalled Context:\n{}", context_str);
-                }
-
-                // 2. Format Prompt with Context
-                // We inject context into the user message for now for simplicity
-                let augmented_input = if !context_str.is_empty() {
-                    format!("Context:\n{}\n\nUser: {}", context_str, user_input)
-                } else {
-                    user_input.clone()
-                };
-
-                // 3. Generate Response
-                let formatted_prompt = teacher_persona.format(&augmented_input);
-                let response = brain.generate(&formatted_prompt, 200).unwrap_or_else(|e| format!("Error: {}", e));
-                
-                // 4. Store Interactions
-                let _ = store.store(&user_input, Some("user"), None, None);
-                let _ = store.store(&response, Some("teacher"), None, None);
-
-                let _ = resp_tx.send(response);
-            }
-        });
+        
+        // Store the receiver privately so we can consume it
+        app.insert_resource(AiReceiver(req_rx));
+        
+        // Initialize Moshi Voice System
+        // app.add_systems(Startup, crate::ai::moshi::start_moshi_thread)
+        //    .add_systems(Update, (crate::ai::moshi::update_moshi_state, process_ai_requests));
+           
+        // Inject Persona after startup
+        app.add_systems(PostStartup, inject_persona);
     }
 }
 
+fn process_ai_requests(
+    receiver: Res<AiReceiver>,
+    moshi_voice: Option<Res<MoshiVoice>>,
+) {
+    let Some(moshi) = moshi_voice else { return };
 
+    while let Ok(req) = receiver.0.try_recv() {
+        match req {
+            AiRequest::Text(text) => {
+                // Forward text prompts to Moshi as Context
+                let _ = moshi.command_tx.send(MoshiCommand::Context(text));
+            }
+        }
+    }
+}
+
+fn inject_persona(
+    moshi_voice: Option<Res<MoshiVoice>>,
+) {
+    if let Some(moshi) = moshi_voice {
+         info!("💉 Injecting Teacher Persona into Moshi...");
+         let _ = moshi.command_tx.send(MoshiCommand::Context(TEACHER_PERSONA_PROMPT.to_string()));
+    }
+}

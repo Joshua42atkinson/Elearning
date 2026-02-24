@@ -10,12 +10,18 @@ mod ai;
 mod teacher;
 mod syllabus;
 mod quest_ui;
+mod inventory;
+mod game_world;
+mod story_mode;
 
 use ai::AiPlugin;
 use ai::memory::{MemoryStore, MemoryStoreResource};
 use teacher::TeacherPlugin;
 use syllabus::SyllabusPlugin;
 use quest_ui::QuestUIPlugin;
+use inventory::InventoryPlugin;
+use game_world::GameWorldPlugin;
+use story_mode::StoryModePlugin;
 use std::sync::Arc;
 use std::path::Path;
 
@@ -43,21 +49,26 @@ fn main() {
                 ..default()
             }),
             ..default()
-        }))
+        }).set(ImagePlugin::default_nearest()))
         .insert_resource(MemoryStoreResource(memory_store))
         .add_plugins(SyllabusPlugin) // Load the Syllabus
         .add_plugins(AiPlugin) // Add the Brain
         .add_plugins(TeacherPlugin) // Add the Teacher Entity
         .add_plugins(QuestUIPlugin) // Add the Quest Progression UI
+        .add_plugins(InventoryPlugin) // Add the Inventory System
+        .add_plugins(GameWorldPlugin) // Add the 2D RPG World
+        .add_plugins(StoryModePlugin) // Add LitRPG Story Mode
         .insert_resource(ClearColor(Color::srgb(0.05, 0.05, 0.05))) // Deep Charcoal (Almost Black)
         .insert_resource(BootTimer(Timer::from_seconds(0.1, TimerMode::Repeating)))
         .add_systems(Startup, setup)
         .add_systems(Update, animate_boot_text)
+        .add_plugins(bevy_inspector_egui::quick::WorldInspectorPlugin::new())
         .run();
 }
 
 fn setup(mut commands: Commands) {
-    commands.spawn(Camera2d);
+    // Camera is now spawned by GameWorldPlugin
+    // commands.spawn(Camera2d);
 
     // Initial "Cursor"
     commands.spawn((

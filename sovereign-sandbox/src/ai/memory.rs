@@ -5,7 +5,8 @@ use hnsw_rs::prelude::*;
 use serde::{Deserialize, Serialize};
 use sled::Db;
 use std::collections::HashMap;
-use std::path::{Path, PathBuf};
+use std::path::Path;
+
 use std::sync::{Arc, RwLock};
 use uuid::Uuid;
 
@@ -33,8 +34,10 @@ pub struct MemoryFragment {
     pub similarity: f32,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Serialize)]
 pub struct StatsResponse {
+
     pub total_memories: usize,
     pub storage_bytes: u64,
     pub sessions: usize,
@@ -85,7 +88,8 @@ impl MemoryStore {
 
     fn rebuild_index(&self) -> Result<()> {
         info!("🔄 Rebuilding in-memory HNSW index from disk...");
-        let mut index = self.index.write().unwrap();
+        let index = self.index.write().unwrap();
+
         let mut id_map = self.id_map.write().unwrap();
         let mut next_id = self.next_id.write().unwrap();
 
@@ -138,7 +142,8 @@ impl MemoryStore {
 
         // Add to in-memory index
         {
-            let mut index = self.index.write().unwrap();
+            let index = self.index.write().unwrap();
+
             let mut id_map = self.id_map.write().unwrap();
             let mut next_id = self.next_id.write().unwrap();
 
@@ -204,8 +209,38 @@ impl MemoryStore {
         Ok(fragments)
     }
 
+    /// Get the most recent memories
+    pub fn get_recent_memories(&self, limit: usize) -> Result<Vec<MemoryFragment>> {
+        let mut fragments = Vec::new();
+        
+        // Scan in reverse to get most recent additions (assuming keys are somewhat chronological or just scanning)
+        for result in self.db.iter().rev() {
+            if let Ok((_, value)) = result {
+                if let Ok(memory) = serde_json::from_slice::<StoredMemory>(&value) {
+                    fragments.push(MemoryFragment {
+                        id: memory.id,
+                        content: memory.content,
+                        source: memory.source,
+                        timestamp: memory.created_at,
+                        similarity: 1.0,
+                    });
+                }
+            }
+            if fragments.len() >= limit {
+                break;
+            }
+        }
+        
+        // Sort by timestamp just in case
+        fragments.sort_by(|a, b| b.timestamp.cmp(&a.timestamp));
+        
+        Ok(fragments.into_iter().take(limit).collect())
+    }
+
     /// Get memory statistics
+    #[allow(dead_code)]
     pub fn stats(&self) -> Result<StatsResponse> {
+
         let total = self.db.len();
         let size = self.db.size_on_disk().unwrap_or(0);
 

@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 # The Engine
-bevy = { version = "0.15", features = ["dynamic_linking"] } # dynamic_linking for faster dev builds
+bevy = { version = "0.15", features = ["dynamic_linking", "jpeg"] } # dynamic_linking for faster dev builds
 
 # The Scripting Layer (Safe Logic)
 # Using generic scripting crate for now, assuming compatibility, or use rhai directly if needed.
@@ -27,9 +27,9 @@ chrono = { version = "0.4", features = ["serde"] }
 rusqlite = { version = "0.33.0", features = ["bundled"] }
 
 # AI / Inference
-candle-core = { version = "0.8.2" }
-candle-transformers = { version = "0.8.2" }
-candle-nn = { version = "0.8.2" }
+candle-core = { version = "0.9.1" }
+candle-transformers = { version = "0.9.1" }
+candle-nn = { version = "0.9.1" }
 tokenizers = { version = "0.21.0" }
 tokio = { version = "1.41.0", features = ["full"] }
 crossbeam-channel = "0.5"
@@ -39,6 +39,8 @@ rubato = "0.14"
 hound = "3.5.0"
 rand = "0.8.5"
 toml = "0.8"
+sentencepiece = "0.11"
+moshi = { git = "https://github.com/kyutai-labs/moshi", package = "moshi" }
 
 # Profile optimizations for Bevy
 [profile.dev]

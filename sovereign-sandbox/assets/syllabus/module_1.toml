@@ -18,6 +18,47 @@ provide_feedback = "Your assistant is working! Notice how it responds even offli
 assess_performance = "Can you explain why local AI matters for student privacy?"
 enhance_retention = "Now that your assistant is ready, we can start a conversation about how to turn your next lesson into an interactive world."
 
+[[modules.phases]]
+type = "exploration"
+target = "Teacher"
+
+[[modules.phases]]
+type = "dialogue"
+gagne_step = 0
+
+[[modules.phases]]
+type = "dialogue"
+gagne_step = 1
+
+[[modules.phases]]
+type = "dialogue"
+gagne_step = 2
+
+[[modules.phases]]
+type = "dialogue"
+gagne_step = 3
+rewards = ["OllamaCompass"]
+
+[[modules.phases]]
+type = "task"
+description = "Walk to the Terminal and interact with it"
+
+[[modules.phases]]
+type = "dialogue"
+gagne_step = 5
+
+[[modules.phases]]
+type = "dialogue"
+gagne_step = 6
+
+[[modules.phases]]
+type = "reflection"
+question = "Can you explain why local AI matters for student privacy?"
+
+[[modules.phases]]
+type = "dialogue"
+gagne_step = 8
+
 [[modules]]
 id = "video_2"
 title = "Translating Ideas into Rules (The Logic)"
@@ -25,15 +66,32 @@ description = "Using natural language to create game behaviors."
 objective = "Convert lesson plans into structured logic using AI assistance."
 
 [modules.events]
-gain_attention = "You already have great lesson plans. Usually, these stay on paper. But what if we could turn these ideas into rules for a digital world?"
-inform_objectives = "We're going to use our private assistant to translate your teaching ideas into game logic."
-recall_prior_knowledge = "We don't need to learn a new programming language. We just need to talk to our assistant. We explain what we want to happen, and it helps us organize those thoughts into logic."
-present_content = "See how the assistant responded? It took your lesson and turned it into a clear set of steps: If a bee visits a flower, then the flower can grow. This is the bridge between your imagination and a playable game."
-provide_guidance = "Try prompting: 'I'm teaching about ecosystems. Can you help me write a set of rules for a character in a game that explains how bees help flowers?'"
-elicit_performance = "Refine the logic. Add a detail: 'Make the character say Thank you when the player helps.'"
-provide_feedback = "If it's not quite right, we just ask for a change. It's a simple back-and-forth until the logic matches exactly how you want your students to learn."
-assess_performance = "Can you describe a simple game behavior for your own lesson?"
-enhance_retention = "With our rules written down in plain language, we're ready to put them into a space where students can actually play with them."
+gain_attention = ""
+inform_objectives = ""
+recall_prior_knowledge = ""
+present_content = ""
+provide_guidance = ""
+elicit_performance = ""
+provide_feedback = ""
+assess_performance = ""
+enhance_retention = ""
+
+[[modules.phases]]
+type = "exploration"
+target = "Archive"
+rewards = ["LogicLens"]
+
+[[modules.phases]]
+type = "dialogue"
+gagne_step = 0
+
+[[modules.phases]]
+type = "dialogue"
+gagne_step = 1
+
+[[modules.phases]]
+type = "dialogue"
+gagne_step = 2
 
 [[modules]]
 id = "video_3"
@@ -42,7 +100,23 @@ description = "Moving logic into interactive spaces."
 objective = "Implement AI-generated logic into a game environment."
 
 [modules.events]
-gain_attention = "This is our digital classroom. It's a place where students can explore. Right now, it's just a world, but we're about to give it a purpose."
+gain_attention = ""
+inform_objectives = ""
+recall_prior_knowledge = ""
+present_content = ""
+provide_guidance = ""
+elicit_performance = ""
+provide_feedback = ""
+assess_performance = ""
+enhance_retention = ""
+
+[[modules.phases]]
+type = "exploration"
+target = "Server"
+
+[[modules.phases]]
+type = "dialogue"
+gagne_step = 0
 inform_objectives = "We're going to take the rules we wrote and bring them into the Sovereign Sandbox."
 recall_prior_knowledge = "We take the rules we just wrote with our assistant and place them into a character. Because our assistant did the technical translation, we can stay focused on the teaching."
 present_content = "Now, the lesson is alive. When a student interacts with this world, they aren't just reading about a concept—they are experiencing it. Your lesson plan has become an interaction."
