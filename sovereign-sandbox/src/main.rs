@@ -46,6 +46,8 @@ fn main() {
                 resolution: (1280.0, 720.0).into(),
                 present_mode: bevy::window::PresentMode::AutoVsync,
                 resizable: false,
+                canvas: Some("#bevy-canvas".into()),
+                fit_canvas_to_parent: true,
                 ..default()
             }),
             ..default()

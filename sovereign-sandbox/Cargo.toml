@@ -4,13 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-# The Engine
-bevy = { version = "0.15", features = ["dynamic_linking", "jpeg"] } # dynamic_linking for faster dev builds
-
-# The Scripting Layer (Safe Logic)
-# Using generic scripting crate for now, assuming compatibility, or use rhai directly if needed.
-# For this demo, we will use raw Rhai to demonstrate the "Sandboxing" capability manually first.
-rhai = "1.19.0"
+# Safe dependencies that work in browser
+bevy = { version = "0.15", features = ["jpeg"] }
 
 # UI Inspection (for the "Workbench" feel)
 bevy-inspector-egui = "0.28"
@@ -18,12 +13,25 @@ bevy-inspector-egui = "0.28"
 # Serialization
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+uuid = { version = "1.0", features = ["v4", "serde", "js"] }
+chrono = { version = "0.4", features = ["serde", "wasmbind"] }
+
+rand = "0.8.5"
+toml = "0.8"
+wasm-bindgen = "0.2.113"
+getrandom_0_2 = { package = "getrandom", version = "0.2", features = ["js"] }
+getrandom_0_3 = { package = "getrandom", version = "0.3", features = ["wasm_js"] }
+anyhow = "1.0"
+crossbeam-channel = "0.5"
+
+# Platform-specific dependencies
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+# The Scripting Layer (Safe Logic)
+rhai = "1.19.0"
+
+# Native Database
 sled = "0.34"
 hnsw_rs = "0.3.1"
-uuid = { version = "1.0", features = ["v4", "serde"] }
-chrono = { version = "0.4", features = ["serde"] }
-
-# Database
 rusqlite = { version = "0.33.0", features = ["bundled"] }
 
 # AI / Inference
@@ -32,15 +40,12 @@ candle-transformers = { version = "0.9.1" }
 candle-nn = { version = "0.9.1" }
 tokenizers = { version = "0.21.0" }
 tokio = { version = "1.41.0", features = ["full"] }
-crossbeam-channel = "0.5"
-anyhow = "1.0"
 cpal = "0.15"
 rubato = "0.14"
 hound = "3.5.0"
-rand = "0.8.5"
-toml = "0.8"
 sentencepiece = "0.11"
 moshi = { git = "https://github.com/kyutai-labs/moshi", package = "moshi" }
+web-sys = "0.3.90"
 
 # Profile optimizations for Bevy
 [profile.dev]
@@ -48,3 +53,4 @@ opt-level = 1
 
 [profile.dev.package."*"]
 opt-level = 3
+

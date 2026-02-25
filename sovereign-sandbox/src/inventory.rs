@@ -83,7 +83,6 @@ impl Default for Inventory {
         
         Self {
             tools,
-            tools,
             active_tool: None,
             active_hat: None,
             newly_acquired: None,
@@ -337,12 +336,10 @@ fn update_inventory_ui(
                 *bg_color = BackgroundColor(Color::srgb(0.1, 0.1, 0.1));
             }
             
-            // Special coloring for Active Hat
             if Some(slot.tool_id) == inventory.active_hat {
                  *border_color = BorderColor(Color::srgb(0.5, 0.0, 1.0)); // Purple for Active Hat
                  *bg_color = BackgroundColor(Color::srgb(0.2, 0.0, 0.4));
             }
-        }
         }
     }
 }

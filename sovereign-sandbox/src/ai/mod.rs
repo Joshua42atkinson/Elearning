@@ -1,9 +1,57 @@
 use bevy::prelude::*;
 use crossbeam_channel::{bounded, Receiver, Sender};
 
+#[cfg(not(target_arch = "wasm32"))]
 pub mod memory;
-// Legacy modules removed: candle_integration, hearing, persona
+#[cfg(target_arch = "wasm32")]
+pub mod memory {
+    use bevy::prelude::*;
+    use uuid::Uuid;
+    use std::sync::Arc;
+    
+    use chrono::{DateTime, Utc};
+    
+    #[derive(Debug, serde::Serialize, serde::Deserialize)]
+    pub struct MemoryFragment {
+        pub id: Uuid,
+        pub content: String,
+        pub source: String,
+        pub timestamp: DateTime<Utc>,
+        pub similarity: f32,
+    }
+
+    #[derive(Resource, Clone)]
+    pub struct MemoryStoreResource(pub Arc<MemoryStore>);
+    pub struct MemoryStore {}
+    impl MemoryStore {
+        pub fn new(_path: &std::path::Path) -> anyhow::Result<Self> { Ok(Self{}) }
+        pub fn store(&self, _c: &str, _s: Option<&str>, _sid: Option<Uuid>, _m: Option<serde_json::Value>) -> anyhow::Result<Uuid> { Ok(Uuid::new_v4()) }
+        pub fn get_recent_memories(&self, _limit: usize) -> anyhow::Result<Vec<MemoryFragment>> { Ok(vec![]) }
+    }
+}
+
+#[cfg(not(target_arch = "wasm32"))]
 pub mod moshi;
+
+#[cfg(target_arch = "wasm32")]
+pub mod moshi {
+    use bevy::prelude::*;
+    use crossbeam_channel::Sender;
+    use std::sync::{Arc, Mutex};
+    
+    #[derive(Resource)]
+    pub struct MoshiVoice {
+        pub is_speaking: bool,
+        pub amplitude: f32,
+        pub command_tx: Sender<MoshiCommand>,
+        pub state_rx: Arc<Mutex<(bool, f32)>>,
+    }
+    pub enum MoshiCommand {
+        Start,
+        Stop,
+        Context(String),
+    }
+}
 
 use crate::ai::moshi::{MoshiVoice, MoshiCommand};
 
