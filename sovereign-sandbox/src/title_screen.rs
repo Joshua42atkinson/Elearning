@@ -51,14 +51,14 @@ fn setup_title_screen(mut commands: Commands) {
             root.spawn((
                 Text::new("THE SOVEREIGN SANDBOX"),
                 TextFont { font_size: 52.0, ..default() },
-                TextColor(Color::srgb(1.0, 0.75, 0.0)),
+                TextColor(Color::srgb(0.75, 0.5, 1.0)), // Violet-400 equivalent
             ));
 
             // Subtitle
             root.spawn((
                 Text::new("An AI Academy Adventure"),
                 TextFont { font_size: 22.0, ..default() },
-                TextColor(Color::srgb(0.0, 1.0, 1.0)),
+                TextColor(Color::srgb(0.5, 0.6, 1.0)), // Indigo-300 equivalent
             ));
 
             // Spacer
@@ -94,7 +94,7 @@ fn setup_title_screen(mut commands: Commands) {
                     margin: UiRect::top(Val::Px(30.0)),
                     ..default()
                 },
-                BackgroundColor(Color::srgba(1.0, 0.75, 0.0, 0.5)),
+                BackgroundColor(Color::srgba(0.75, 0.5, 1.0, 0.3)), // Faint violet
             ));
 
             // Credits

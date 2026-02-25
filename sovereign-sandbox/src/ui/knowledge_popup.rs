@@ -76,17 +76,17 @@ fn spawn_knowledge_popup(
                         panel.spawn((
                             Text::new("📜  KNOWLEDGE FRAGMENT"),
                             TextFont { font_size: 22.0, ..default() },
-                            TextColor(Color::srgb(1.0, 0.85, 0.0)),
+                            TextColor(Color::srgb(0.75, 0.5, 1.0)), // Violet
                         ));
 
-                        // Divider (thin amber line via zero-height node)
+                        // Divider (thin violet line)
                         panel.spawn((
                             Node {
                                 width: Val::Percent(80.0),
                                 height: Val::Px(1.0),
                                 ..default()
                             },
-                            BackgroundColor(Color::srgba(1.0, 0.85, 0.0, 0.4)),
+                            BackgroundColor(Color::srgba(0.75, 0.5, 1.0, 0.3)),
                         ));
 
                         // Fragment title
