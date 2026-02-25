@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Shield, Code, Play } from 'lucide-react';
+import { ArrowRight, BookOpen, Shield, Code, Play, Wand2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function HomePage() {
@@ -24,6 +24,30 @@ export default function HomePage() {
                     <Link to="/module-1" className="glass-button glass-button-primary shadow-[0_0_30px_rgba(139,92,246,0.5)]">
                         Start Learning Module <ArrowRight size={20} />
                     </Link>
+                </div>
+            </div>
+
+            {/* Icebreaker Image Section */}
+            <div className="flex justify-center mb-16 px-4 animate-in zoom-in-95 duration-700 delay-200">
+                <div className="relative group max-w-4xl w-full">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-violet-500 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-700"></div>
+                    <div className="relative glass-panel p-2 rounded-3xl border-violet-500/20 shadow-2xl overflow-hidden">
+                        <img
+                            src="/assets/intro_hero.png"
+                            alt="A classic book emitting glowing holographic digital architecture"
+                            className="w-full h-auto rounded-2xl object-cover hover:scale-[1.02] transition-transform duration-700"
+                        />
+                        <div className="absolute bottom-6 left-6 right-6">
+                            <div className="glass-panel bg-black/60 backdrop-blur-md border-violet-500/30 p-4 rounded-xl inline-block max-w-xl shadow-[0_0_20px_rgba(139,92,246,0.3)]">
+                                <h3 className="text-lg font-bold text-white mb-1 flex items-center gap-2">
+                                    <Wand2 className="text-violet-400" size={18} /> Gamifying Education
+                                </h3>
+                                <p className="text-slate-300 text-sm">
+                                    Turn passive reading into active world-building. What if your lesson plan could generate a living, breathing sandbox?
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

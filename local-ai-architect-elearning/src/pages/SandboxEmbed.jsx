@@ -1,7 +1,9 @@
-import { Gamepad2, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Gamepad2, ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
 export default function SandboxEmbed() {
+    const [isLoading, setIsLoading] = useState(true);
     return (
         <div className="w-full max-w-6xl space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-500">
 
@@ -14,11 +16,28 @@ export default function SandboxEmbed() {
 
             {/* The iframe container holding the isolated game canvas */}
             <div className="glass-panel w-full aspect-[16/9] rounded-2xl overflow-hidden relative shadow-[0_0_30px_rgba(99,102,241,0.2)] bg-black/40">
+
+                {/* Loading Protocol Overlay */}
+                <div
+                    className={`absolute inset-0 bg-slate-950 flex flex-col items-center justify-center transition-opacity duration-1000 z-10 ${isLoading ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                >
+                    <div className="flex flex-col items-center space-y-4">
+                        <Loader2 size={48} className="text-indigo-500 animate-spin drop-shadow-[0_0_15px_rgba(99,102,241,0.6)]" />
+                        <div className="font-mono text-indigo-300 text-sm tracking-widest uppercase animate-pulse">
+                            Initializing WASM Engine...
+                        </div>
+                        <div className="font-mono text-slate-500 text-xs">
+                            Fetching Game Assets (This may take a moment)
+                        </div>
+                    </div>
+                </div>
+
                 <iframe
                     src="/sandbox/game.html"
                     title="Bevy WASM Game"
-                    className="w-full h-full border-0 absolute inset-0"
+                    className="w-full h-full border-0 absolute inset-0 z-0"
                     allowFullScreen
+                    onLoad={() => setIsLoading(false)}
                 ></iframe>
             </div>
 
