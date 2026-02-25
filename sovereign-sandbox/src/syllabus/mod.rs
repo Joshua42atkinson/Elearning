@@ -130,11 +130,8 @@ pub struct PhaseConfig {
 }
 
 impl Syllabus {
-    pub fn load(path: &Path) -> Result<Self, String> {
-        let contents = fs::read_to_string(path)
-            .map_err(|e| format!("Failed to read syllabus file: {}", e))?;
-        
-        toml::from_str(&contents)
+    pub fn load_from_str(contents: &str) -> Result<Self, String> {
+        toml::from_str(contents)
             .map_err(|e| format!("Failed to parse syllabus TOML: {}", e))
     }
 }
@@ -373,10 +370,10 @@ impl Plugin for SyllabusPlugin {
     fn build(&self, app: &mut App) {
         app.add_event::<QuestAdvancedEvent>();
         
-        // Load syllabus at startup
-        let syllabus_path = Path::new("assets/syllabus/module_1.toml");
+        // Load syllabus at startup using include_str! so it works in WASM
+        let syllabus_contents = include_str!("../../assets/syllabus/module_1.toml");
         
-        match Syllabus::load(syllabus_path) {
+        match Syllabus::load_from_str(syllabus_contents) {
             Ok(syllabus) => {
                 info!("📚 Syllabus Loaded: {}", syllabus.title);
                 let resource = SyllabusResource::new(syllabus);

@@ -22,6 +22,37 @@
             border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
+        /* Colored Glassmorphism Tags */
+        .glass-tag-indigo {
+            background: rgba(79, 70, 229, 0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(79, 70, 229, 0.3);
+            color: #4f46e5;
+            padding: 0.1rem 0.4rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+        }
+
+        .glass-tag-emerald {
+            background: rgba(16, 185, 129, 0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #059669;
+            padding: 0.1rem 0.4rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+        }
+
+        .glass-tag-purple {
+            background: rgba(147, 51, 234, 0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            color: #7e22ce;
+            padding: 0.1rem 0.4rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+        }
+
         /* Simulated Bevy Canvas glow */
         .bevy-container {
             box-shadow: 0 0 40px rgba(99, 102, 241, 0.15);
@@ -62,8 +93,10 @@
                     Code</span>
             </h1>
             <p class="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-                Welcome to the Sovereign Sandbox. This self-paced, asynchronous module will teach you how to use local
-                AI to translate your pedagogy into interactive game logic.
+                Welcome to the Sovereign Sandbox. This self-paced, asynchronous module will teach you how to use <span
+                    class="glass-tag-indigo">local
+                    AI</span> to translate your <span class="glass-tag-purple">pedagogy</span> into interactive game
+                logic.
             </p>
 
             <div class="flex flex-col sm:flex-row justify-center gap-4">
@@ -86,8 +119,10 @@
             <div class="mb-10">
                 <h2 class="text-sm font-bold text-indigo-600 uppercase tracking-wider mb-2">Step 1 • 12 Minutes</h2>
                 <h3 class="text-3xl font-bold text-slate-900">The Architect's Collection</h3>
-                <p class="text-slate-600 mt-2 max-w-3xl">Watch the three-part "Visionary Broadcast." These core videos
-                    demonstrate the zero-to-AI setup and how natural language bridges the gap to functional code.</p>
+                <p class="text-slate-600 mt-2 max-w-3xl">Watch the three-part <span class="glass-tag-emerald">"Visionary
+                        Broadcast."</span> These core videos
+                    demonstrate the <span class="glass-tag-indigo">zero-to-AI setup</span> and how natural language
+                    bridges the gap to functional code.</p>
             </div>
 
             <div class="grid md:grid-cols-3 gap-8">
@@ -95,15 +130,21 @@
                 <div
                     class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition">
                     <div class="aspect-video bg-slate-800 relative group flex items-center justify-center">
-                        <i data-lucide="play-circle"
-                            class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all cursor-pointer"></i>
-                        <div class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">04:30
-                        </div>
+                        <video controls class="w-full h-full object-cover">
+                            <source src="assets/video1.mp4" type="video/mp4">
+                            <track kind="captions" src="assets/captions1.vtt" srclang="en" label="English" default>
+                            Your browser does not support the video tag.
+                        </video>
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-lg mb-2">1. The Local Forge</h4>
-                        <p class="text-slate-600 text-sm">Zero-to-AI setup using Ollama in under 5 minutes. Securing
+                        <p class="text-slate-600 text-sm mb-4">Zero-to-AI setup using Ollama in under 5 minutes.
+                            Securing
                             your private educational assistant.</p>
+                        <a href="assets/transcript1.txt" target="_blank"
+                            class="text-indigo-600 text-sm font-medium hover:underline flex items-center gap-1">
+                            <i data-lucide="file-text" class="w-4 h-4"></i> Read Transcript
+                        </a>
                     </div>
                 </div>
 
@@ -111,15 +152,20 @@
                 <div
                     class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition">
                     <div class="aspect-video bg-slate-800 relative group flex items-center justify-center">
-                        <i data-lucide="play-circle"
-                            class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all cursor-pointer"></i>
-                        <div class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">05:15
-                        </div>
+                        <video controls class="w-full h-full object-cover">
+                            <source src="assets/video2.mp4" type="video/mp4">
+                            <track kind="captions" src="assets/captions2.vtt" srclang="en" label="English" default>
+                            Your browser does not support the video tag.
+                        </video>
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-lg mb-2">2. From Intent to Logic</h4>
-                        <p class="text-slate-600 text-sm">Real-time prompt-to-script generation. Turning lesson
+                        <p class="text-slate-600 text-sm mb-4">Real-time prompt-to-script generation. Turning lesson
                             objectives into structured game logic.</p>
+                        <a href="assets/transcript2.txt" target="_blank"
+                            class="text-indigo-600 text-sm font-medium hover:underline flex items-center gap-1">
+                            <i data-lucide="file-text" class="w-4 h-4"></i> Read Transcript
+                        </a>
                     </div>
                 </div>
 
@@ -127,15 +173,21 @@
                 <div
                     class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition">
                     <div class="aspect-video bg-slate-800 relative group flex items-center justify-center">
-                        <i data-lucide="play-circle"
-                            class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all cursor-pointer"></i>
-                        <div class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">03:45
-                        </div>
+                        <video controls class="w-full h-full object-cover">
+                            <source src="assets/video3.mp4" type="video/mp4">
+                            <track kind="captions" src="assets/captions3.vtt" srclang="en" label="English" default>
+                            Your browser does not support the video tag.
+                        </video>
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-lg mb-2">3. The Sandbox Bridge</h4>
-                        <p class="text-slate-600 text-sm">Implementing the AI's logic into Minecraft, Roblox, and custom
+                        <p class="text-slate-600 text-sm mb-4">Implementing the AI's logic into Minecraft, Roblox, and
+                            custom
                             Rust engines.</p>
+                        <a href="assets/transcript3.txt" target="_blank"
+                            class="text-indigo-600 text-sm font-medium hover:underline flex items-center gap-1">
+                            <i data-lucide="file-text" class="w-4 h-4"></i> Read Transcript
+                        </a>
                     </div>
                 </div>
             </div>
@@ -149,7 +201,8 @@
                     </h2>
                     <h3 class="text-3xl font-bold text-slate-900">Knowledge Assessment: The Sovereign Sandbox</h3>
                     <p class="text-slate-600 mt-2 max-w-2xl">Apply what you've watched. Interact with the
-                        high-performance Bevy engine demo below. Use natural language commands to alter the NPC behavior
+                        high-performance <span class="glass-tag-purple">Bevy engine demo</span> below. Use natural
+                        language commands to alter the NPC behavior
                         in real-time.</p>
                 </div>
                 <div

@@ -11,7 +11,7 @@ This design document outlines the pedagogical framework, visual design decisions
 ## 2. Front-End Analysis & The Technical Wall
 Based on the Front-End Analysis identifying a profound lack of coding skills among general educators, this project was designed to bypass traditional syntax requirements entirely. The analysis concluded that the primary barrier to immersive, game-based learning (like Roblox or custom engines) is the steep learning curve of programming languages (Lua, C#, Rust). 
 
-**The Solution:** The Bevy engine was specifically integrated with a local AI layer (Ollama) to allow educators to dictate rules, interactions, and logic using natural language (the "Natural Language Blueprint").
+**The Solution:** Initially conceived as a module for Articulate Rise 360 or Google Sites, this project pivoted to a fully integrated Bevy/WASM game environment wrapper. The Bevy engine was specifically integrated with a local AI layer (Ollama) to allow educators to dictate rules, interactions, and logic using natural language (the "Natural Language Blueprint"), delivering an immersive learning experience directly comparable to the technical ecosystems they will use in the field.
 
 ## 3. Pedagogical Grounding
 

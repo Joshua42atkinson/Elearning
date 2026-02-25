@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-bg-hover: rgba(255, 255, 255, 0.1);
+    --primary-glow: rgba(139, 92, 246, 0.5); /* Violet glow */
+    --accent: #c084fc;
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+  }
+
+  body {
+    @apply antialiased overflow-x-hidden min-h-screen text-[var(--text-primary)];
+    background-color: #0f172a; /* Slate 900 base */
+    background-image: 
+      radial-gradient(ellipse at top left, rgba(124, 58, 237, 0.15), transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(236, 72, 153, 0.15), transparent 50%);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  /* Core Glass Panel */
+  .glass-panel {
+    @apply relative overflow-hidden rounded-2xl border backdrop-blur-md shadow-2xl transition-all duration-300;
+    background-color: var(--glass-bg);
+    border-color: var(--glass-border);
+  }
+
+  .glass-panel::before {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-300 pointer-events-none;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+
+  .glass-panel:hover::before {
+    @apply opacity-100;
+  }
+
+  /* Interactive Elements */
+  .glass-button {
+    @apply relative px-6 py-3 rounded-xl font-medium tracking-wide transition-all duration-300 border flex items-center justify-center gap-2;
+    background-color: var(--glass-bg);
+    border-color: var(--glass-border);
+    color: var(--text-primary);
+  }
+
+  .glass-button:hover {
+    @apply transform -translate-y-[2px] shadow-[0_4px_20px_var(--primary-glow)];
+    background-color: var(--glass-bg-hover);
+    border-color: var(--accent);
+  }
+  
+  .glass-button:active {
+    @apply transform translate-y-[1px];
+  }
+
+  .glass-button-primary {
+    @apply bg-violet-600/80 border-violet-400/50 hover:bg-violet-500 hover:shadow-[0_0_20px_rgba(139,92,246,0.6)];
+  }
+
+  /* Glass Input */
+  .glass-input {
+    @apply w-full px-4 py-3 rounded-xl border outline-none transition-all duration-300;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-color: var(--glass-border);
+    color: var(--text-primary);
+  }
+
+  .glass-input:focus {
+    @apply backdrop-blur-lg shadow-[0_0_15px_var(--primary-glow)];
+    background-color: rgba(0, 0, 0, 0.3);
+    border-color: var(--accent);
+  }
+
+  /* Navigation / Topbar */
+  .glass-nav {
+    @apply fixed top-0 w-full z-50 border-b backdrop-blur-lg;
+    background-color: rgba(15, 23, 42, 0.7);
+    border-bottom-color: var(--glass-border);
+  }
+}
+
+/* Scrollbar Styling for webkit */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}

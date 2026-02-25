@@ -16,6 +16,8 @@ pub struct StoryState {
     pub active_dialogue: Option<DialogueNode>,
     pub can_interact: bool,
     pub is_thinking: bool,
+    pub player_input: String,
+    pub is_typing_prompt: bool,
 }
 
 impl Default for StoryState {
@@ -27,6 +29,8 @@ impl Default for StoryState {
             active_dialogue: None,
             can_interact: false,
             is_thinking: false,
+            player_input: String::new(),
+            is_typing_prompt: false,
         }
     }
 }
@@ -93,6 +97,7 @@ impl Plugin for StoryModePlugin {
            .add_systems(Update, (
                generate_dynamic_dialogue,
                handle_dialogue_choices,
+               handle_typing_input,
                update_narrative_display,
                typewriter_tick,
            ));
@@ -144,24 +149,78 @@ fn generate_dynamic_dialogue(
     ai_channel: Res<AiChannel>,
     syllabus: Option<Res<SyllabusResource>>,
 ) {
-    if keys.just_pressed(KeyCode::Space) && story_state.active_dialogue.is_none() {
+    if keys.just_pressed(KeyCode::Space) && story_state.active_dialogue.is_none() && !story_state.is_typing_prompt {
+        // Intercept specific quest phases for the Knowledge Check
+        if let Some(syl) = &syllabus {
+            if syl.current_module_index == 0 && syl.quest_script.current_phase == 1 {
+                // Hardcoded Knowledge Check dialogue
+                story_state.active_dialogue = Some(DialogueNode {
+                    speaker: "The Gamification Architect".to_string(),
+                    text: "Before we proceed, Architect, tell me: Which model architecture guarantees student data never leaves this machine?".to_string(),
+                    choices: vec![
+                        DialogueChoice {
+                            text: "1. Cloud-based API (OpenAI)".to_string(),
+                            consequence: "Incorrect. Cloud APIs send data off-site. Try again.".to_string(),
+                        },
+                        DialogueChoice {
+                            text: "2. Local LLM (Ollama/Moshi)".to_string(),
+                            consequence: "Correct! Local AI ensures absolute data privacy.".to_string(),
+                        },
+                        DialogueChoice {
+                            text: "3. Distributed Blockchain".to_string(),
+                            consequence: "Incorrect. Blockchain is public and immutable. Try again.".to_string(),
+                        },
+                    ]
+                });
+                
+                // Immediately display the knowledge check text
+                if let Some(dialogue) = story_state.active_dialogue.clone() {
+                     story_state.narrative_context.push(dialogue.text);
+                     for choice in dialogue.choices {
+                         story_state.narrative_context.push(choice.text);
+                     }
+                }
+                
+                // Construct a fallback formatted string for the typewriter (simulating AI response)
+                let fallback_text = "Before we proceed, Architect, tell me: Which model architecture guarantees student data never leaves this machine?\n\n1. Cloud-based API (OpenAI)\n2. Local LLM (Ollama/Moshi)\n3. Distributed Blockchain".to_string();
+                
+                let _ = ai_channel.sender.send(AiRequest::Text(fallback_text)); // Dummy request to trigger typewriter
+                story_state.is_thinking = true;
+                return;
+            }
+        }
+
         let context = if let Some(syl) = syllabus {
             if let Some(quest) = syl.current_quest() {
                 let phase = syl.current_phase();
+
+                // Phase 2 Constructivism mechanic
+                if syl.current_module_index == 0 && syl.quest_script.current_phase == 2 {
+                    if !story_state.is_typing_prompt {
+                        story_state.is_typing_prompt = true;
+                        let text = "Architect! It is time to construct your first logic script. Type a natural language command below and press Enter:".to_string();
+                        let _ = ai_channel.sender.send(AiRequest::Text(text));
+                        story_state.is_thinking = true;
+                        return;
+                    }
+                }
+
                 format!(
                     "You are The Gamification Architect, a wise mentor in a LitRPG world. \
                     The player is on quest '{}', currently in phase [{}]: {}. \
-                    Generate a short, encouraging dialogue (2-3 sentences) that guides them. \
-                    RPG mentor style. Call them 'Architect'.",
+                    Generate a short, encouraging dialogue. \
+                    STRICT RULES: Reply in exactly 2 short sentences. Do not hallucinate. Do not break character. Do not use lists. Call the player 'Architect'.",
                     quest.title,
                     phase.phase_type_name(),
                     phase.display_label()
                 )
             } else {
-                "You are The Gamification Architect. Welcome the player to their journey.".to_string()
+                "You are The Gamification Architect. Welcome the player to their journey. \
+                STRICT RULES: Reply in exactly 2 short sentences. Do not hallucinate. Do not break character. Do not use lists.".to_string()
             }
         } else {
-            "You are The Gamification Architect. Welcome the player to their journey.".to_string()
+            "You are The Gamification Architect. Welcome the player to their journey. \
+            STRICT RULES: Reply in exactly 2 short sentences. Do not hallucinate. Do not break character. Do not use lists.".to_string()
         };
 
         let _ = ai_channel.sender.send(AiRequest::Text(context));
@@ -172,6 +231,7 @@ fn generate_dynamic_dialogue(
 fn handle_dialogue_choices(
     keys: Res<ButtonInput<KeyCode>>,
     mut story_state: ResMut<StoryState>,
+    ai_channel: Res<AiChannel>,
 ) {
     let choices_to_process = if let Some(dialogue) = &story_state.active_dialogue {
         Some(dialogue.choices.clone())
@@ -183,17 +243,30 @@ fn handle_dialogue_choices(
         if keys.just_pressed(KeyCode::Digit1) && !choices.is_empty() {
             let choice = &choices[0];
             story_state.narrative_context.push(choice.consequence.clone());
-            story_state.active_dialogue = None;
+            let _ = ai_channel.sender.send(AiRequest::Text(format!("{} (Press Space to continue)", choice.consequence)));
+            story_state.is_thinking = true;
+            // Only clear active dialogue if correct, so they have to try again if wrong
+            if choice.text.contains("Local LLM") {
+                story_state.active_dialogue = None;
+            }
         }
         if keys.just_pressed(KeyCode::Digit2) && choices.len() > 1 {
             let choice = &choices[1];
             story_state.narrative_context.push(choice.consequence.clone());
-            story_state.active_dialogue = None;
+            let _ = ai_channel.sender.send(AiRequest::Text(format!("{} (Press Space to continue)", choice.consequence)));
+            story_state.is_thinking = true;
+            if choice.text.contains("Local LLM") {
+                story_state.active_dialogue = None;
+            }
         }
         if keys.just_pressed(KeyCode::Digit3) && choices.len() > 2 {
             let choice = &choices[2];
             story_state.narrative_context.push(choice.consequence.clone());
-            story_state.active_dialogue = None;
+            let _ = ai_channel.sender.send(AiRequest::Text(format!("{} (Press Space to continue)", choice.consequence)));
+            story_state.is_thinking = true;
+            if choice.text.contains("Local LLM") {
+                story_state.active_dialogue = None;
+            }
         }
     }
 }
@@ -227,15 +300,28 @@ fn typewriter_tick(
     time: Res<Time>,
     mut typewriter: ResMut<TypewriterState>,
     mut narrative_query: Query<&mut Text, With<NarrativeText>>,
+    story_state: Res<StoryState>,
 ) {
-    if !typewriter.is_active { return; }
+    if !typewriter.is_active && !story_state.is_typing_prompt { return; }
+    
+    if story_state.is_typing_prompt && !typewriter.is_active {
+        for mut text in &mut narrative_query {
+            *text = Text::new(format!("{}\n\n> {}▌", typewriter.full_text, story_state.player_input));
+        }
+        return;
+    }
+
     typewriter.timer.tick(time.delta());
     if typewriter.timer.just_finished() {
         typewriter.revealed_chars += 1;
         if typewriter.revealed_chars >= typewriter.full_text.len() {
             typewriter.is_active = false;
             for mut text in &mut narrative_query {
-                *text = Text::new(typewriter.full_text.clone());
+                if story_state.is_typing_prompt {
+                    *text = Text::new(format!("{}\n\n> {}▌", typewriter.full_text, story_state.player_input));
+                } else {
+                    *text = Text::new(typewriter.full_text.clone());
+                }
             }
         } else {
             let visible: String = typewriter.full_text.chars().take(typewriter.revealed_chars).collect();
@@ -243,5 +329,39 @@ fn typewriter_tick(
                 *text = Text::new(format!("{}▌", visible));
             }
         }
+    }
+}
+
+fn handle_typing_input(
+    mut char_evr: EventReader<bevy::input::keyboard::KeyboardInput>,
+    keys: Res<ButtonInput<KeyCode>>,
+    mut story_state: ResMut<StoryState>,
+    ai_channel: Res<AiChannel>,
+) {
+    if !story_state.is_typing_prompt { return; }
+
+    for ev in char_evr.read() {
+        if ev.state.is_pressed() {
+            if let bevy::input::keyboard::Key::Character(c) = &ev.logical_key {
+                if c.chars().count() == 1 {
+                    story_state.player_input.push_str(c.as_str());
+                }
+            }
+        }
+    }
+
+    if keys.just_pressed(KeyCode::Backspace) {
+        story_state.player_input.pop();
+    }
+
+    if keys.just_pressed(KeyCode::Enter) && !story_state.player_input.is_empty() {
+        let input = story_state.player_input.clone();
+        story_state.player_input.clear();
+        story_state.is_typing_prompt = false;
+        
+        // Respond to the typed script
+        let response = format!("Excellent construction! You commanded: \"{}\". The environment has absorbed your logic.", input);
+        let _ = ai_channel.sender.send(AiRequest::Text(response));
+        story_state.is_thinking = true;
     }
 }

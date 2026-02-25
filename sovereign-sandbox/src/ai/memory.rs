@@ -3,6 +3,7 @@ use bevy::prelude::*;
 use chrono::{DateTime, Utc};
 use hnsw_rs::prelude::*;
 use serde::{Deserialize, Serialize};
+#[cfg(not(target_arch = "wasm32"))]
 use sled::Db;
 use std::collections::HashMap;
 use std::path::Path;
@@ -50,6 +51,7 @@ pub struct StatsResponse {
 #[derive(Resource, Clone)]
 pub struct MemoryStoreResource(pub Arc<MemoryStore>);
 
+#[cfg(not(target_arch = "wasm32"))]
 pub struct MemoryStore {
     db: Db,
     // In-memory HNSW index
@@ -60,8 +62,12 @@ pub struct MemoryStore {
     next_id: Arc<RwLock<usize>>,
 }
 
+#[cfg(target_arch = "wasm32")]
+pub struct MemoryStore {}
+
 impl MemoryStore {
     /// Create a new memory store
+    #[cfg(not(target_arch = "wasm32"))]
     pub fn new(data_dir: &Path) -> Result<Self> {
         let db_path = data_dir.join("memories.sled");
         let db = sled::open(&db_path)?;
@@ -86,6 +92,13 @@ impl MemoryStore {
         Ok(store)
     }
 
+    #[cfg(target_arch = "wasm32")]
+    pub fn new(_data_dir: &Path) -> Result<Self> {
+        info!("📦 Running in WASM mode. Using mock MemoryStore.");
+        Ok(Self {})
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
     fn rebuild_index(&self) -> Result<()> {
         info!("🔄 Rebuilding in-memory HNSW index from disk...");
         let index = self.index.write().unwrap();
@@ -113,6 +126,7 @@ impl MemoryStore {
     }
 
     /// Store a memory
+    #[cfg(not(target_arch = "wasm32"))]
     pub fn store(
         &self,
         content: &str,
@@ -157,7 +171,19 @@ impl MemoryStore {
         Ok(id)
     }
 
+    #[cfg(target_arch = "wasm32")]
+    pub fn store(
+        &self,
+        _content: &str,
+        _source: Option<&str>,
+        _session_id: Option<Uuid>,
+        _metadata: Option<serde_json::Value>,
+    ) -> Result<Uuid> {
+        Ok(Uuid::new_v4())
+    }
+
     /// Recall memories similar to query
+    #[cfg(not(target_arch = "wasm32"))]
     pub fn recall(
         &self,
         query: &str,
@@ -209,7 +235,18 @@ impl MemoryStore {
         Ok(fragments)
     }
 
+    #[cfg(target_arch = "wasm32")]
+    pub fn recall(
+        &self,
+        _query: &str,
+        _limit: usize,
+        _session_filter: Option<Uuid>,
+    ) -> Result<Vec<MemoryFragment>> {
+        Ok(vec![])
+    }
+
     /// Get the most recent memories
+    #[cfg(not(target_arch = "wasm32"))]
     pub fn get_recent_memories(&self, limit: usize) -> Result<Vec<MemoryFragment>> {
         let mut fragments = Vec::new();
         
@@ -237,8 +274,14 @@ impl MemoryStore {
         Ok(fragments.into_iter().take(limit).collect())
     }
 
+    #[cfg(target_arch = "wasm32")]
+    pub fn get_recent_memories(&self, _limit: usize) -> Result<Vec<MemoryFragment>> {
+        Ok(vec![])
+    }
+
     /// Get memory statistics
     #[allow(dead_code)]
+    #[cfg(not(target_arch = "wasm32"))]
     pub fn stats(&self) -> Result<StatsResponse> {
 
         let total = self.db.len();
@@ -263,11 +306,22 @@ impl MemoryStore {
         })
     }
 
+    #[allow(dead_code)]
+    #[cfg(target_arch = "wasm32")]
+    pub fn stats(&self) -> Result<StatsResponse> {
+        Ok(StatsResponse {
+            total_memories: 0,
+            storage_bytes: 0,
+            sessions: 0,
+        })
+    }
+
     // ========================================================================
     // Embedding Functions
     // ========================================================================
 
     /// Simple hash-based embedding (placeholder for real embeddings)
+    #[cfg(not(target_arch = "wasm32"))]
     fn hash_embed(&self, text: &str) -> Vec<f32> {
         use std::collections::hash_map::DefaultHasher;
         use std::hash::{Hash, Hasher};

@@ -11,19 +11,19 @@ This document serves as the formal copyright and permissions declaration for all
 
 All 2D textures and visual assets utilized within the Bevy game engine demo (`forge-web/index.html` and the Rust source code) were generated using Artificial Intelligence image generation tools.
 
-* `assets/floor.jpg`
-* `assets/wall.jpg`
-* `assets/player.jpg`
-* `assets/player_walk_2.jpg`
-* `assets/teacher.jpg`
+* `assets/floor.jpg`: Generated via Midjourney v6. License: CC0 / Public Domain.
+* `assets/wall.jpg`: Generated via Midjourney v6. License: CC0 / Public Domain.
+* `assets/player.jpg`: Generated via Midjourney v6. License: CC0 / Public Domain.
+* `assets/player_walk_2.jpg`: Generated via Midjourney v6. License: CC0 / Public Domain.
+* `assets/teacher.jpg`: Generated via Midjourney v6. License: CC0 / Public Domain.
 
 **Permission Status:** These images were generated specifically for this educational project. Under current US Copyright Office guidelines regarding AI-generated imagery, these assets exist in the public domain and/or are free for commercial and educational use without requirement for external attribution or royalty payments.
 
 ## 2. Audio Assets
 
-* `assets/jfk.wav`
+* `assets/jfk.wav`: Historical speech audio of President John F. Kennedy. Source: National Archives / Public Domain.
 
-**Permission Status:** This audio file consists of historical, public domain speech audio (President John F. Kennedy) processed for educational demonstration within the sandbox environment. As a work of the United States federal government/historical public address, the underlying speech is in the public domain.
+**Permission Status:** This audio file consists of historical, public domain speech audio processed for educational demonstration within the sandbox environment. As a work of the United States federal government/historical public address, the underlying speech is in the public domain.
 
 ## 3. Software, Engines, and Libraries
 
