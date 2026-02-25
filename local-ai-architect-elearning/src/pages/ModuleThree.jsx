@@ -72,14 +72,46 @@ export default function ModuleThree() {
                                     <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 text-sm text-amber-200 font-mono mb-4 flex items-center gap-2">
                                         <span className="text-green-400">✓</span> Command accepted. Sandbox generated.
                                     </div>
-                                    <p className="text-slate-300 text-sm leading-relaxed">
-                                        In educational theory, <strong>Constructivism</strong> posits that learners construct knowledge rather than just passively taking it in. Prompt engineering maps perfectly to this.
-                                    </p>
-                                    <ul className="list-disc list-outside ml-5 text-slate-300 text-sm space-y-2">
-                                        <li><strong>The Builder's Mindset:</strong> The student is no longer asking a search engine for an answer; they are commanding an engine to build a tool.</li>
-                                        <li><strong>Bridging Imagination and Implementation:</strong> The "technical wall" of syntax is removed. If a teacher or student can imagine the logic, the AI can manifest it.</li>
-                                        <li><strong>Ownership:</strong> Because this is generated locally, the creator truly owns the output. There is no cloud service that can shut it off or monetize the data.</li>
-                                    </ul>
+                                    <div className="flex flex-col md:flex-row gap-6">
+                                        <div className="flex-1">
+                                            <p className="text-slate-300 text-sm leading-relaxed">
+                                                In educational theory, <strong>Constructivism</strong> posits that learners construct knowledge rather than just passively taking it in. Prompt engineering maps perfectly to this.
+                                            </p>
+                                            <ul className="list-disc list-outside ml-5 text-slate-300 text-sm space-y-2 mt-4">
+                                                <li><strong>The Builder's Mindset:</strong> The student is no longer asking a search engine for an answer; they are commanding an engine to build a tool.</li>
+                                                <li><strong>Bridging Imagination and Implementation:</strong> The "technical wall" of syntax is removed. If a teacher or student can imagine the logic, the AI can manifest it.</li>
+                                                <li><strong>Ownership:</strong> Because this is generated locally, the creator truly owns the output. There is no cloud service that can shut it off or monetize the data.</li>
+                                            </ul>
+                                        </div>
+
+                                        {/* Sandbox Sidebar */}
+                                        <div className="w-full md:w-80 flex-shrink-0">
+                                            <div className="bg-slate-900/50 border border-amber-500/30 rounded-xl p-4 shadow-[0_0_20px_rgba(245,158,11,0.1)]">
+                                                <h4 className="text-amber-300 font-bold text-sm mb-3 flex items-center gap-2">
+                                                    <Gamepad2 size={16} className="text-amber-400" /> FINAL OBJECTIVES
+                                                </h4>
+                                                <ul className="space-y-2">
+                                                    <li className="flex gap-2 text-xs text-slate-300 group">
+                                                        <div className="w-4 h-4 rounded border border-amber-500/50 flex-shrink-0 flex items-center justify-center text-[10px] group-hover:bg-amber-500/20 transition-colors">1</div>
+                                                        <span>Navigate to the <strong>Teacher</strong> to finalize the build.</span>
+                                                    </li>
+                                                    <li className="flex gap-2 text-xs text-slate-300 group">
+                                                        <div className="w-4 h-4 rounded border border-amber-500/50 flex-shrink-0 flex items-center justify-center text-[10px] group-hover:bg-amber-500/20 transition-colors">2</div>
+                                                        <span>Activate the <strong>Logic Lens</strong> [2] to inspect the NPC rules.</span>
+                                                    </li>
+                                                    <li className="flex gap-2 text-xs text-slate-300 group">
+                                                        <div className="w-4 h-4 rounded border border-amber-500/50 flex-shrink-0 flex items-center justify-center text-[10px] group-hover:bg-amber-500/20 transition-colors">3</div>
+                                                        <span>Complete the <strong>Architect Certification</strong> quiz.</span>
+                                                    </li>
+                                                </ul>
+                                                <div className="mt-4 pt-3 border-t border-amber-500/10">
+                                                    <p className="text-[10px] text-slate-500 italic">
+                                                        Final Step: Once complete, take the official Knowledge Check below.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             )}
                         </div>

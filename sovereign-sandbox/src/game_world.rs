@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use crate::ui::knowledge_popup::{KnowledgeCollectedEvent};
 use crate::syllabus::SyllabusResource;
 use crate::scoring::XpGainEvent;
 
@@ -73,6 +74,9 @@ struct RoomLabel;
 
 #[derive(Component)]
 struct DoorGuide;
+
+#[derive(Component)]
+struct ControlsHud;
 
 #[derive(Component)]
 pub struct KnowledgeFragment {
@@ -588,6 +592,40 @@ fn spawn_world(
         },
         Transform::from_xyz(0.0, 0.0, 50.0),
     ));
+
+    // --- On-screen Controls HUD (bottom-right) ---
+    commands.spawn((
+        Node {
+            position_type: PositionType::Absolute,
+            right: Val::Px(12.0),
+            bottom: Val::Px(12.0),
+            padding: UiRect::all(Val::Px(10.0)),
+            flex_direction: FlexDirection::Column,
+            row_gap: Val::Px(2.0),
+            border: UiRect::all(Val::Px(1.0)),
+            ..default()
+        },
+        BackgroundColor(Color::srgba(0.05, 0.05, 0.05, 0.7)),
+        BorderColor(Color::srgb(0.3, 0.3, 0.3)),
+        ControlsHud,
+    )).with_children(|parent| {
+        let controls = [
+            ("⌨ CONTROLS", Color::srgb(1.0, 0.75, 0.0)),
+            ("WASD / ↑↓←→  Move", Color::srgb(0.6, 0.6, 0.6)),
+            ("T          Interact", Color::srgb(0.6, 0.6, 0.6)),
+            ("SPACE      Talk to AI", Color::srgb(0.6, 0.6, 0.6)),
+            ("1, 2, 3    Choices", Color::srgb(0.6, 0.6, 0.6)),
+            ("C / L / M  Tools", Color::srgb(0.6, 0.6, 0.6)),
+            ("ESC        Close", Color::srgb(0.6, 0.6, 0.6)),
+        ];
+        for (label, color) in controls {
+            parent.spawn((
+                Text::new(label),
+                TextFont { font_size: 11.0, ..default() },
+                TextColor(color),
+            ));
+        }
+    });
 }
 
 // ============================================================================
@@ -599,7 +637,9 @@ fn player_movement(
     keys: Res<ButtonInput<KeyCode>>,
     mut player_query: Query<(&mut Player, &mut Transform, &Collider), Without<Terminal>>,
     wall_query: Query<(&Transform, &Collider), (Without<Player>, Without<Terminal>, Without<crate::teacher::TeacherMarker>)>,
+    popup_active: Res<crate::ui::knowledge_popup::PopupActive>,
 ) {
+    if popup_active.0 { return; }
     for (mut player, mut transform, player_col) in &mut player_query {
         let mut direction = Vec3::ZERO;
         
@@ -782,6 +822,7 @@ fn collect_knowledge_fragments(
     mut xp_writer: EventWriter<XpGainEvent>,
     mut trauma: ResMut<CameraTrauma>,
     mut score: ResMut<crate::scoring::PlayerScore>,
+    mut ev_writer: EventWriter<KnowledgeCollectedEvent>,
 ) {
     let Ok(player_tf) = player_query.get_single() else { return };
 
@@ -790,11 +831,18 @@ fn collect_knowledge_fragments(
         if distance < 40.0 {
             // Collect!
             info!("📜 Knowledge Fragment: {} — {}", fragment.title, fragment.content);
-            
+
             // Award XP
             xp_writer.send(XpGainEvent {
                 amount: fragment.xp_value,
                 reason: format!("Knowledge: {}", fragment.title),
+            });
+
+            // Show educational content popup
+            ev_writer.send(KnowledgeCollectedEvent {
+                title: fragment.title.clone(),
+                content: fragment.content.clone(),
+                xp: fragment.xp_value,
             });
 
             // Small screen shake
@@ -1099,52 +1147,83 @@ fn show_interaction_prompt(
     mut commands: Commands,
     player_query: Query<&Transform, With<Player>>,
     npc_query: Query<(&Transform, &InteractionZone), With<crate::teacher::TeacherMarker>>,
+    trigger_query: Query<(&Transform, &QuestTrigger)>,
     prompt_query: Query<Entity, With<InteractionPrompt>>,
     syllabus: Option<Res<SyllabusResource>>,
 ) {
     if let Ok(player_transform) = player_query.get_single() {
         let mut should_show_prompt = false;
-        
+        let mut prompt_text = String::new();
+
+        // 1. Check Teacher proximity
         for (npc_transform, zone) in &npc_query {
             let distance = player_transform.translation.distance(npc_transform.translation);
             
             if distance < zone.radius {
                 should_show_prompt = true;
                 
-                let prompt_text = if let Some(ref syl) = syllabus {
+                prompt_text = if let Some(ref syl) = syllabus {
                     match syl.current_phase() {
                         crate::syllabus::QuestPhase::Exploration { .. } => "The Teacher awaits...".to_string(),
                         crate::syllabus::QuestPhase::Dialogue { .. } => "Press T to continue".to_string(),
                         crate::syllabus::QuestPhase::Task { description, .. } => format!("⚡ {}", description),
-                        crate::syllabus::QuestPhase::Reflection { .. } => "Press T to answer  |  Press H to speak".to_string(),
+                        crate::syllabus::QuestPhase::Reflection { .. } => "Press T to reflect".to_string(),
+                        crate::syllabus::QuestPhase::Quiz { .. } => "Press 1, 2, or 3 to answer".to_string(),
                         crate::syllabus::QuestPhase::Complete => "🏆 Quest Complete!".to_string(),
                     }
                 } else {
                     "Press T to talk".to_string()
                 };
-
-                if prompt_query.is_empty() {
-                    commands.spawn((
-                        Text::new(prompt_text),
-                        TextFont {
-                            font_size: 18.0,
-                            ..default()
-                        },
-                        TextColor(Color::srgb(1.0, 0.75, 0.0)),
-                        Node {
-                            position_type: PositionType::Absolute,
-                            bottom: Val::Px(200.0),
-                            left: Val::Percent(35.0),
-                            ..default()
-                        },
-                        InteractionPrompt,
-                    ));
-                }
                 break;
             }
         }
-        
+
+        // 2. Check other interactable proximity (Terminal, Archive, Server)
         if !should_show_prompt {
+            for (trigger_transform, trigger) in &trigger_query {
+                if trigger.id == "Teacher" { continue; } // Already handled above
+                let distance = player_transform.translation.distance(trigger_transform.translation);
+                if distance < trigger.radius {
+                    should_show_prompt = true;
+                    prompt_text = if let Some(ref syl) = syllabus {
+                        match syl.current_phase() {
+                            crate::syllabus::QuestPhase::Task { description, .. } if description.contains(&trigger.id) => {
+                                format!("⚡ Press T: {}", description)
+                            }
+                            crate::syllabus::QuestPhase::Exploration { target, .. } if *target == trigger.id => {
+                                format!("🗺️ You've reached the {}!", trigger.id)
+                            }
+                            _ => format!("📍 {} — Explore this area", trigger.id),
+                        }
+                    } else {
+                        format!("Press T to interact with {}", trigger.id)
+                    };
+                    break;
+                }
+            }
+        }
+        
+        if should_show_prompt {
+            if prompt_query.is_empty() {
+                commands.spawn((
+                    Text::new(prompt_text),
+                    TextFont {
+                        font_size: 18.0,
+                        ..default()
+                    },
+                    TextColor(Color::srgb(1.0, 0.75, 0.0)),
+                    Node {
+                        position_type: PositionType::Absolute,
+                        bottom: Val::Px(200.0),
+                        left: Val::Percent(25.0),
+                        right: Val::Percent(25.0),
+                        justify_content: JustifyContent::Center,
+                        ..default()
+                    },
+                    InteractionPrompt,
+                ));
+            }
+        } else {
             for entity in &prompt_query {
                 commands.entity(entity).despawn_recursive();
             }

@@ -97,6 +97,7 @@ impl Plugin for StoryModePlugin {
            .add_systems(Update, (
                generate_dynamic_dialogue,
                handle_dialogue_choices,
+               handle_quiz_input,
                handle_typing_input,
                update_narrative_display,
                typewriter_tick,
@@ -138,7 +139,7 @@ fn setup_story_ui(mut commands: Commands) {
         ));
 
         parent.spawn((
-            Text::new("[T] Talk  [H] Speak  [SPACE] Dialogue  [WASD] Move"),
+            Text::new("[WASD] Move  [T] Interact  [SPACE] Dialogue  [1-3] Choices"),
             TextFont { font_size: 11.0, ..default() },
             TextColor(Color::srgb(0.45, 0.45, 0.45)),
         ));
@@ -152,45 +153,7 @@ fn generate_dynamic_dialogue(
     syllabus: Option<Res<SyllabusResource>>,
 ) {
     if keys.just_pressed(KeyCode::Space) && story_state.active_dialogue.is_none() && !story_state.is_typing_prompt {
-        // Intercept specific quest phases for the Knowledge Check
-        if let Some(syl) = &syllabus {
-            if syl.current_module_index == 0 && syl.quest_script.current_phase == 1 {
-                // Hardcoded Knowledge Check dialogue
-                story_state.active_dialogue = Some(DialogueNode {
-                    speaker: "The Gamification Architect".to_string(),
-                    text: "Before we proceed, Architect, tell me: Which model architecture guarantees student data never leaves this machine?".to_string(),
-                    choices: vec![
-                        DialogueChoice {
-                            text: "1. Cloud-based API (OpenAI)".to_string(),
-                            consequence: "Incorrect. Cloud APIs send data off-site. Try again.".to_string(),
-                        },
-                        DialogueChoice {
-                            text: "2. Local LLM (Ollama/Moshi)".to_string(),
-                            consequence: "Correct! Local AI ensures absolute data privacy.".to_string(),
-                        },
-                        DialogueChoice {
-                            text: "3. Distributed Blockchain".to_string(),
-                            consequence: "Incorrect. Blockchain is public and immutable. Try again.".to_string(),
-                        },
-                    ]
-                });
-                
-                // Immediately display the knowledge check text
-                if let Some(dialogue) = story_state.active_dialogue.clone() {
-                     story_state.narrative_context.push(dialogue.text);
-                     for choice in dialogue.choices {
-                         story_state.narrative_context.push(choice.text);
-                     }
-                }
-                
-                // Construct a fallback formatted string for the typewriter (simulating AI response)
-                let fallback_text = "Before we proceed, Architect, tell me: Which model architecture guarantees student data never leaves this machine?\n\n1. Cloud-based API (OpenAI)\n2. Local LLM (Ollama/Moshi)\n3. Distributed Blockchain".to_string();
-                
-                let _ = ai_channel.sender.send(AiRequest::Text(fallback_text)); // Dummy request to trigger typewriter
-                story_state.is_thinking = true;
-                return;
-            }
-        }
+        // Specific quest phase handling is now data-driven via the Syllabus
 
         let context = if let Some(syl) = syllabus {
             if let Some(quest) = syl.current_quest() {
@@ -279,6 +242,8 @@ fn update_narrative_display(
     mut story_state: ResMut<StoryState>,
     mut typewriter: ResMut<TypewriterState>,
     mut narrative_query: Query<&mut Text, With<NarrativeText>>,
+    // Reset teacher is_speaking when AI response arrives (teacher.rs no longer consumes the channel)
+    mut teacher_state: ResMut<crate::teacher::TeacherState>,
 ) {
     if story_state.is_thinking {
         for mut text in &mut narrative_query {
@@ -291,6 +256,7 @@ fn update_narrative_display(
     if let Ok(response) = ai_channel.receiver.try_recv() {
         let crate::ai::AiResponse::Text(content) = response;
         story_state.is_thinking = false;
+        teacher_state.is_speaking = false; // Release the speaking lock
         typewriter.full_text = content.clone();
         typewriter.revealed_chars = 0;
         typewriter.is_active = true;
@@ -365,5 +331,51 @@ fn handle_typing_input(
         let response = format!("Excellent construction! You commanded: \"{}\". The environment has absorbed your logic.", input);
         let _ = ai_channel.sender.send(AiRequest::Text(response));
         story_state.is_thinking = true;
+    }
+}
+
+fn handle_quiz_input(
+    keys: Res<ButtonInput<KeyCode>>,
+    mut story_state: ResMut<StoryState>,
+    mut syllabus: Option<ResMut<crate::syllabus::SyllabusResource>>,
+    ai_channel: Res<AiChannel>,
+    mut event_writer: EventWriter<crate::syllabus::QuestAdvancedEvent>,
+) {
+    let Some(ref mut syl) = syllabus else { return };
+    
+    let (question, options, correct_index) = match syl.current_phase() {
+        crate::syllabus::QuestPhase::Quiz { question, options, correct_index, .. } => {
+            (question.clone(), options.clone(), *correct_index)
+        }
+        _ => return,
+    };
+
+    let mut selected = None;
+    if keys.just_pressed(KeyCode::Digit1) { selected = Some(0); }
+    if keys.just_pressed(KeyCode::Digit2) { selected = Some(1); }
+    if keys.just_pressed(KeyCode::Digit3) { selected = Some(2); }
+
+    if let Some(idx) = selected {
+        if idx < options.len() {
+            if idx == correct_index {
+                // Correct!
+                let response = "Correct! Your understanding of the sovereign grid is deepening.".to_string();
+                let _ = ai_channel.sender.send(AiRequest::Text(response));
+                story_state.is_thinking = true;
+                
+                syl.complete_current_task();
+                syl.advance_phase();
+                
+                event_writer.send(crate::syllabus::QuestAdvancedEvent {
+                    module_index: syl.current_module_index,
+                    step_index: syl.quest_script.current_phase,
+                });
+            } else {
+                // Incorrect
+                let response = format!("Not quite, Architect. Consider the core principles again. (Try another option)");
+                let _ = ai_channel.sender.send(AiRequest::Text(response));
+                story_state.is_thinking = true;
+            }
+        }
     }
 }

@@ -50,30 +50,52 @@ export default function ModuleTwo() {
                             </ul>
                         </div>
 
-                        {/* Interactive Isomorphism Element */}
-                        <div
-                            className="bg-slate-950 rounded-xl border border-slate-700 p-4 w-full md:w-80 cursor-default shadow-inner relative group"
-                            onMouseEnter={() => setIsHovered(true)}
-                            onMouseLeave={() => setIsHovered(false)}
-                        >
-                            <div className="absolute -top-3 left-4 bg-fuchsia-900 border border-fuchsia-500 text-fuchsia-100 text-[10px] uppercase font-bold px-2 py-0.5 rounded shadow-[0_0_10px_rgba(217,70,239,0.4)] flex items-center gap-1">
-                                <Wand2 size={10} /> Hover to "Autocomplete"
-                            </div>
-                            <pre className="font-mono text-xs leading-relaxed overflow-hidden">
-                                <span className="text-blue-400">fn</span> <span className="text-yellow-200">spawn_world</span>(
-                                <br />    <span className="text-slate-400">mut</span> commands: Commands,
-                                <br />) {'{'}
-                                <br />    commands.<span className="text-yellow-200">spawn</span>((
-                                <br />        SpatialBundle::<span className="text-blue-400">default</span>(),
-                                <br />        WorldMarker,
-                                <br />    ));
-                                <div className={`transition-all duration-[1500ms] ease-out ${isHovered ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0'}`}>
-                                    <span className="text-fuchsia-400/80 italic bg-fuchsia-500/10">{'    '}// AI Scaffolding...</span><br />
-                                    <span className="text-fuchsia-300/80 italic bg-fuchsia-500/10">{'    '}println!("World spawned!");</span><br />
-                                    <span className="text-fuchsia-200/80 italic bg-fuchsia-500/10">{'    '}trigger_event(GameReady);</span>
+                        {/* Sandbox Sidebar */}
+                        <div className="w-full md:w-80 space-y-4">
+                            <div className="bg-slate-900/50 border border-fuchsia-500/30 rounded-xl p-4 shadow-[0_0_20px_rgba(217,70,239,0.1)]">
+                                <h4 className="text-fuchsia-300 font-bold text-sm mb-3 flex items-center gap-2">
+                                    <Gamepad2 size={16} className="text-fuchsia-400" /> SANDBOX OBJECTIVES
+                                </h4>
+                                <ul className="space-y-2">
+                                    <li className="flex gap-2 text-xs text-slate-300 group">
+                                        <div className="w-4 h-4 rounded border border-fuchsia-500/50 flex-shrink-0 flex items-center justify-center text-[10px] group-hover:bg-fuchsia-500/20 transition-colors">1</div>
+                                        <span>Locate the <strong>Archive</strong> in the Sovereign Sandbox.</span>
+                                    </li>
+                                    <li className="flex gap-2 text-xs text-slate-300 group">
+                                        <div className="w-4 h-4 rounded border border-fuchsia-500/50 flex-shrink-0 flex items-center justify-center text-[10px] group-hover:bg-fuchsia-500/20 transition-colors">2</div>
+                                        <span>Unlock the <strong>Logic Lens</strong> through interactive dialogue.</span>
+                                    </li>
+                                    <li className="flex gap-2 text-xs text-slate-300 group">
+                                        <div className="w-4 h-4 rounded border border-fuchsia-500/50 flex-shrink-0 flex items-center justify-center text-[10px] group-hover:bg-fuchsia-500/20 transition-colors">3</div>
+                                        <span>Identify the AI's role in the <strong>Synthesis Quiz</strong>.</span>
+                                    </li>
+                                </ul>
+                                <div className="mt-4 pt-3 border-t border-fuchsia-500/10">
+                                    <p className="text-[10px] text-slate-500 italic">
+                                        Tip: Use [WASD] to navigate and [T] to interact with the environment.
+                                    </p>
                                 </div>
-                                <br />{'}'}
-                            </pre>
+                            </div>
+
+                            {/* Isomorphism Element */}
+                            <div
+                                className="bg-slate-950 rounded-xl border border-slate-700 p-4 cursor-default shadow-inner relative group"
+                                onMouseEnter={() => setIsHovered(true)}
+                                onMouseLeave={() => setIsHovered(false)}
+                            >
+                                <div className="absolute -top-3 left-4 bg-fuchsia-900 border border-fuchsia-500 text-fuchsia-100 text-[10px] uppercase font-bold px-2 py-0.5 rounded flex items-center gap-1">
+                                    <Wand2 size={10} /> Hover to Scaffolding
+                                </div>
+                                <pre className="font-mono text-[10px] leading-relaxed overflow-hidden">
+                                    <span className="text-blue-400">fn</span> <span className="text-yellow-200">spawn_world</span>() {'{'}
+                                    <br />    commands.<span className="text-yellow-200">spawn</span>((
+                                    <div className={`transition-all duration-[1000ms] ${isHovered ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0'}`}>
+                                        <span className="text-fuchsia-400/80 italic">{'  '}// AI Scaffolding...</span><br />
+                                        <span className="text-fuchsia-300/80 italic">{'  '}println!("Sovereign world initiated.");</span>
+                                    </div>
+                                    <br />{'}'}
+                                </pre>
+                            </div>
                         </div>
                     </div>
                 </div>

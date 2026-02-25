@@ -40,9 +40,11 @@ impl Plugin for TeacherPlugin {
                 teacher_interaction, 
                 auto_dialogue_on_proximity,
                 teacher_nudge_system,
-                update_teacher_visuals,
+                // NOTE: update_teacher_visuals removed — AI responses flow exclusively
+                // through story_mode::update_narrative_display to prevent race condition.
                 update_moshi_visuals,
                 update_logic_lens,
+                animate_logic_lens_scanline,
             ));
     }
 }
@@ -84,47 +86,30 @@ fn teacher_nudge_system(
 }
 
 fn spawn_teacher(mut commands: Commands, _asset_server: Res<AssetServer>) {
-    // Spawn the Teacher Entity (Visual Representation)
+    // Teacher entity (used for Moshi visual pulsing — no visible UI bubble;
+    // AI dialogue is displayed via story_mode DialogueBox at the bottom)
     commands.spawn((
-        Text::new("🧙 The Gamification Architect"),
+        Text::new(""),
         TextFont {
             font_size: 24.0,
             ..default()
         },
-        TextColor(Color::srgb(0.0, 1.0, 1.0)), // Cyan / Neon Blue
+        TextColor(Color::srgb(0.0, 1.0, 1.0)),
         Node {
-            position_type: PositionType::Absolute,
-            right: Val::Px(50.0),
-            top: Val::Px(50.0),
+            display: Display::None, // Hidden — kept only so Moshi visuals have a target
             ..default()
         },
         Teacher,
     ));
-
-    // Spawn a bubble for what the teacher says
-    commands.spawn((
-        Text::new("..."),
-        TextFont {
-            font_size: 18.0,
-            ..default()
-        },
-        TextColor(Color::srgb(0.8, 0.8, 0.8)),
-        Node {
-            position_type: PositionType::Absolute,
-            right: Val::Px(50.0),
-            top: Val::Px(80.0),
-            max_width: Val::Px(400.0),
-            ..default()
-        },
-        TeacherBubble,
-    ));
 }
 
-#[derive(Component)]
-struct TeacherBubble;
+// TeacherBubble removed — all AI text routes through story_mode DialogueBox.
 
 #[derive(Component)]
 struct LogicLensDisplay;
+
+#[derive(Component)]
+struct LogicLensScanline;
 
 // ============================================================================
 // Auto-Dialogue System (Pokémon-style: NPC talks when you walk up)
@@ -193,6 +178,22 @@ fn auto_dialogue_on_proximity(
                 teacher_state.is_speaking = true;
                 teacher_state.auto_dialogue_sent = true;
             }
+            QuestPhase::Quiz { ref question, ref options, .. } => {
+                // Ask the quiz question and list options
+                let options_str = options.iter().enumerate()
+                    .map(|(i, opt)| format!("{}. {}", i+1, opt))
+                    .collect::<Vec<_>>().join("\n");
+                
+                let prompt = format!(
+                    "ROLE: Pedagogical Orchestrator. \
+                    Ask the Architect this quiz question: '{}'\n\nOptions:\n{}\n\nInstruction: Present the question and options clearly. Call them 'Architect'.",
+                    question,
+                    options_str
+                );
+                let _ = ai_channel.sender.send(crate::ai::AiRequest::Text(prompt));
+                teacher_state.is_speaking = true;
+                teacher_state.auto_dialogue_sent = true;
+            }
             _ => {
                 // Task phases or Complete — Teacher stays silent
             }
@@ -253,19 +254,9 @@ fn teacher_interaction(
     }
 }
 
-fn update_teacher_visuals(
-    ai_channel: ResMut<AiChannel>,
-    mut teacher_state: ResMut<TeacherState>,
-    mut query: Query<&mut Text, With<TeacherBubble>>,
-) {
-    if let Ok(response) = ai_channel.receiver.try_recv() {
-        let crate::ai::AiResponse::Text(content) = response;
-        teacher_state.is_speaking = false;
-        for mut text in &mut query {
-            *text = Text::new(content.clone());
-        }
-    }
-}
+// update_teacher_visuals removed — was consuming from AI channel causing a race
+// condition with story_mode::update_narrative_display. All AI responses now
+// flow exclusively through the bottom DialogueBox in story_mode.rs.
 
 fn update_logic_lens(
     mut commands: Commands,
@@ -297,22 +288,57 @@ fn update_logic_lens(
         if let Ok((_entity, mut text)) = display_query.get_single_mut() {
             *text = Text::new(context_text);
         } else if display_query.is_empty() {
+            // Spawn the main display box
             commands.spawn((
-                Text::new(context_text),
-                TextFont {
-                    font_size: 14.0,
-                    ..default()
-                },
-                TextColor(Color::srgb(0.0, 1.0, 0.0)), // Neon Green
                 Node {
                     position_type: PositionType::Absolute,
                     left: Val::Px(20.0),
                     bottom: Val::Px(200.0),
-                    max_width: Val::Px(300.0),
+                    padding: UiRect::all(Val::Px(15.0)),
+                    flex_direction: FlexDirection::Column,
+                    border: UiRect::all(Val::Px(1.0)),
+                    max_width: Val::Px(320.0),
+                    overflow: Overflow::clip(),
                     ..default()
                 },
+                BackgroundColor(Color::srgba(0.1, 0.0, 0.1, 0.6)), // Transparent Fuchsia tint
+                BorderColor(Color::srgb(1.0, 0.0, 1.0)), // Pure Fuchsia
                 LogicLensDisplay,
-            ));
+            )).with_children(|parent| {
+                // Header
+                parent.spawn((
+                    Text::new("SCANNING LOGIC..."),
+                    TextFont {
+                        font_size: 10.0,
+                        ..default()
+                    },
+                    TextColor(Color::srgb(1.0, 0.0, 1.0)),
+                ));
+
+                // Main Text
+                parent.spawn((
+                    Text::new(context_text),
+                    TextFont {
+                        font_size: 14.0,
+                        ..default()
+                    },
+                    TextColor(Color::srgb(1.0, 0.6, 1.0)), // Light Fuchsia
+                ));
+
+                // Scanline effect
+                parent.spawn((
+                    Node {
+                        position_type: PositionType::Absolute,
+                        left: Val::Px(0.0),
+                        right: Val::Px(0.0),
+                        top: Val::Px(0.0),
+                        height: Val::Px(2.0),
+                        ..default()
+                    },
+                    BackgroundColor(Color::srgba(1.0, 0.0, 1.0, 0.4)),
+                    LogicLensScanline,
+                ));
+            });
         }
     } else {
         for (entity, _) in &display_query {
@@ -341,5 +367,15 @@ fn update_moshi_visuals(
             font.font_size = 24.0;
             *color = TextColor(Color::srgb(0.0, 1.0, 1.0));
         }
+    }
+}
+
+fn animate_logic_lens_scanline(
+    time: Res<Time>,
+    mut query: Query<&mut Node, With<LogicLensScanline>>,
+) {
+    let t = (time.elapsed_secs() * 1.5) % 1.0;
+    for mut node in &mut query {
+        node.top = Val::Percent(t * 100.0);
     }
 }

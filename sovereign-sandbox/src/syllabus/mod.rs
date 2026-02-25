@@ -18,6 +18,8 @@ pub enum QuestPhase {
     Task { description: String, completed: bool, rewards: Option<Vec<ToolId>> },
     /// Player answers a reflection question (voice or choice).
     Reflection { question: String, answered: bool, rewards: Option<Vec<ToolId>> },
+    /// Player must answer a multiple-choice question.
+    Quiz { question: String, options: Vec<String>, correct_index: usize, answered: bool, rewards: Option<Vec<ToolId>> },
     /// Module complete.
     Complete,
 }
@@ -30,6 +32,7 @@ impl QuestPhase {
             QuestPhase::Dialogue { gagne_step, .. } => format!("💬 {}", gagne_step_name(*gagne_step)),
             QuestPhase::Task { description, .. } => format!("⚡ {}", description),
             QuestPhase::Reflection { question, .. } => format!("🪞 {}", question),
+            QuestPhase::Quiz { question, .. } => format!("❓ {}", question),
             QuestPhase::Complete => "🏆 Complete!".to_string(),
         }
     }
@@ -41,6 +44,7 @@ impl QuestPhase {
             QuestPhase::Dialogue { .. } => "LISTEN",
             QuestPhase::Task { .. } => "DO",
             QuestPhase::Reflection { .. } => "REFLECT",
+            QuestPhase::Quiz { .. } => "QUIZ",
             QuestPhase::Complete => "DONE",
         }
     }
@@ -126,6 +130,8 @@ pub struct PhaseConfig {
     pub gagne_step: Option<usize>,
     pub description: Option<String>,
     pub question: Option<String>,
+    pub options: Option<Vec<String>>,
+    pub correct_index: Option<usize>,
     pub rewards: Option<Vec<String>>,
 }
 
@@ -182,6 +188,13 @@ impl QuestScript {
                     },
                     "reflection" => QuestPhase::Reflection {
                         question: c.question.clone().unwrap_or_else(|| "What did you learn?".to_string()),
+                        answered: false,
+                        rewards,
+                    },
+                    "quiz" => QuestPhase::Quiz {
+                        question: c.question.clone().unwrap_or_else(|| "Answer this question".to_string()),
+                        options: c.options.clone().unwrap_or_default(),
+                        correct_index: c.correct_index.unwrap_or(0),
                         answered: false,
                         rewards,
                     },
@@ -293,6 +306,7 @@ impl SyllabusResource {
             QuestPhase::Task { description, .. } => Some(description.clone()),
             QuestPhase::Reflection { question, .. } => Some(question.clone()),
             QuestPhase::Exploration { target, .. } => Some(format!("Walk to the {}", target)),
+            QuestPhase::Quiz { question, .. } => Some(question.clone()),
             QuestPhase::Complete => Some("Quest Complete!".to_string()),
         }
     }
@@ -309,6 +323,7 @@ impl SyllabusResource {
             QuestPhase::Dialogue { rewards, .. } => rewards.clone(),
             QuestPhase::Task { rewards, .. } => rewards.clone(),
             QuestPhase::Reflection { rewards, .. } => rewards.clone(),
+            QuestPhase::Quiz { rewards, .. } => rewards.clone(),
             QuestPhase::Complete => None,
         };
 
@@ -342,6 +357,9 @@ impl SyllabusResource {
                 *completed = true;
             }
             if let QuestPhase::Reflection { answered, .. } = phase {
+                *answered = true;
+            }
+            if let QuestPhase::Quiz { answered, .. } = phase {
                 *answered = true;
             }
         }

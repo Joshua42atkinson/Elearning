@@ -7,9 +7,6 @@ edition = "2021"
 # Safe dependencies that work in browser
 bevy = { version = "0.15", features = ["jpeg", "png", "webp"] }
 
-# UI Inspection (for the "Workbench" feel)
-bevy-inspector-egui = "0.28"
-
 # Serialization
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
@@ -47,10 +44,14 @@ sentencepiece = "0.11"
 moshi = { git = "https://github.com/kyutai-labs/moshi", package = "moshi" }
 web-sys = "0.3.90"
 
-# Profile optimizations for Bevy
 [profile.dev]
 opt-level = 1
 
 [profile.dev.package."*"]
 opt-level = 3
 
+[profile.release]
+opt-level = "z"    # Optimize for size (critical for WASM)
+lto = true         # Link-time optimization
+strip = true       # Strip debug symbols
+panic = "abort"    # Smaller panic handler

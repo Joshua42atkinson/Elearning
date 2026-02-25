@@ -13,6 +13,7 @@ struct BootTimer(Timer);
 #[derive(States, Debug, Clone, PartialEq, Eq, Hash, Default)]
 pub enum GameState {
     #[default]
+    Menu,
     Boot,
     Playing,
 }
@@ -27,6 +28,8 @@ mod story_mode;
 mod quiz;
 mod scoring;
 mod puzzle;
+mod ui;
+mod title_screen;
 
 use ai::AiPlugin;
 use ai::memory::{MemoryStore, MemoryStoreResource};
@@ -39,6 +42,8 @@ use story_mode::StoryModePlugin;
 use quiz::QuizPlugin;
 use scoring::ScoringPlugin;
 use puzzle::PuzzlePlugin;
+use ui::knowledge_popup::KnowledgePopupPlugin;
+use title_screen::TitleScreenPlugin;
 use std::sync::Arc;
 use std::path::Path;
 
@@ -87,9 +92,11 @@ fn main() {
         .add_plugins(QuizPlugin)
         .add_plugins(ScoringPlugin)
         .add_plugins(PuzzlePlugin)
+        .add_plugins(KnowledgePopupPlugin)
+        .add_plugins(TitleScreenPlugin)
         .insert_resource(ClearColor(Color::srgb(0.02, 0.02, 0.04))) // Deep space blue-black
-        .insert_resource(BootTimer(Timer::from_seconds(0.1, TimerMode::Repeating)))
-        .add_systems(Startup, setup_boot)
+        .insert_resource(BootTimer(Timer::from_seconds(0.08, TimerMode::Repeating)))
+        .add_systems(OnEnter(GameState::Boot), setup_boot)
         .add_systems(Update, animate_boot_text.run_if(in_state(GameState::Boot)))
         .run();
 }
@@ -120,7 +127,16 @@ fn animate_boot_text(
     mut next_state: ResMut<NextState<GameState>>,
     mut commands: Commands,
     boot_entities: Query<Entity, With<BootText>>,
+    keys: Res<ButtonInput<KeyCode>>,
 ) {
+    // Skip boot cinematic on any keypress
+    if keys.get_just_pressed().next().is_some() {
+        for entity in &boot_entities {
+            commands.entity(entity).despawn_recursive();
+        }
+        next_state.set(GameState::Playing);
+        return;
+    }
     timer.0.tick(time.delta());
     if timer.0.just_finished() {
         let messages = [
