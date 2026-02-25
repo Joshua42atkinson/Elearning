@@ -2,7 +2,7 @@
     "cleanUrls": true,
     "rewrites": [
         {
-            "source": "/sandbox/(.*)",
+            "source": "/sandbox/(.*\\..*)",
             "destination": "/sandbox/$1"
         },
         {
