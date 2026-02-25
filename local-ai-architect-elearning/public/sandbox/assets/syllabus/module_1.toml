@@ -52,8 +52,10 @@ type = "dialogue"
 gagne_step = 6
 
 [[modules.phases]]
-type = "reflection"
-question = "Can you explain why local AI matters for student privacy?"
+type = "quiz"
+question = "Which model architecture guarantees student data never leaves this machine?"
+options = ["Cloud-based API (OpenAI)", "Local LLM (Ollama/Moshi)", "Distributed Blockchain"]
+correct_index = 1
 
 [[modules.phases]]
 type = "dialogue"
@@ -66,15 +68,15 @@ description = "Using natural language to create game behaviors."
 objective = "Convert lesson plans into structured logic using AI assistance."
 
 [modules.events]
-gain_attention = ""
-inform_objectives = ""
-recall_prior_knowledge = ""
-present_content = ""
-provide_guidance = ""
-elicit_performance = ""
-provide_feedback = ""
-assess_performance = ""
-enhance_retention = ""
+gain_attention = "Now that we have our engine, we need to teach it the rules of our game. But we aren't going to write code just yet. We're going to use natural language to describe our pedagogical intent."
+inform_objectives = "In this module, we will use our Local Assistant to translate a simple lesson plan into structured game logic."
+recall_prior_knowledge = "Remember how you ask an assistant to summarize a text? Creating game logic is the same—except we ask it to 'summarize' our lesson into 'if-then' statements."
+present_content = "By providing a prompt that defines the boundaries of our world, the AI acts as a compiler for our imagination. It takes your teaching expertise and turns it into interaction."
+provide_guidance = "Look at the Archive. It contains the logic templates we'll use."
+elicit_performance = "Try typing a logic command into the script terminal."
+provide_feedback = "The logic has been absorbed. Notice how the rules changed in the sandbox."
+assess_performance = "Why is it important for the teacher to remain the 'Architect' of the logic?"
+enhance_retention = "You've successfully translated a thought into a rule. Next, we bring that rule to life."
 
 [[modules.phases]]
 type = "exploration"
@@ -90,8 +92,15 @@ type = "dialogue"
 gagne_step = 1
 
 [[modules.phases]]
-type = "dialogue"
-gagne_step = 2
+type = "task"
+description = "Interact with the Logic Archive to unlock the Logic Lens"
+rewards = ["LogicLens"]
+
+[[modules.phases]]
+type = "quiz"
+question = "What is the primary role of the Local AI in this module?"
+options = ["Replacing the teacher", "Translating natural language to rules", "Generating random text"]
+correct_index = 1
 
 [[modules]]
 id = "video_3"
@@ -100,15 +109,15 @@ description = "Moving logic into interactive spaces."
 objective = "Implement AI-generated logic into a game environment."
 
 [modules.events]
-gain_attention = ""
-inform_objectives = ""
-recall_prior_knowledge = ""
-present_content = ""
-provide_guidance = ""
-elicit_performance = ""
-provide_feedback = ""
-assess_performance = ""
-enhance_retention = ""
+gain_attention = "The logic is set. The engine is running. Now, we step into the world we've built and see it through the eyes of our students."
+inform_objectives = "We're going to take the rules we wrote and bring them into the Sovereign Sandbox for final implementation."
+recall_prior_knowledge = "We take the rules we just wrote with our assistant and place them into a character. The assistant did the technical translation; you stay focused on the teaching."
+present_content = "Now, the lesson is alive. When a student interacts with this world, they aren't just reading—they are experiencing. Your lesson plan has become an interaction."
+provide_guidance = "Launch the Sovereign Sandbox. Observe how the Teacher NPC uses your syllabus content."
+elicit_performance = "Press 'T' to interact with the Teacher. Ask about your next lesson."
+provide_feedback = "The technical barrier has disappeared. If you can describe a learning experience, you can build it."
+assess_performance = "What is the ultimate goal of the Local AI Architect?"
+enhance_retention = "You are now creating the tools your students need to thrive. Welcome to the era of sovereign education."
 
 [[modules.phases]]
 type = "exploration"
@@ -116,9 +125,25 @@ target = "Server"
 
 [[modules.phases]]
 type = "dialogue"
-gagne_step = 0
-inform_objectives = "We're going to take the rules we wrote and bring them into the Sovereign Sandbox."
-recall_prior_knowledge = "We take the rules we just wrote with our assistant and place them into a character. Because our assistant did the technical translation, we can stay focused on the teaching."
+gagne_step = 1
+
+[[modules.phases]]
+type = "dialogue"
+gagne_step = 2
+
+[[modules.phases]]
+type = "task"
+description = "Use the Logic Lens near the Teacher to see the underlying rules"
+
+[[modules.phases]]
+type = "quiz"
+question = "What becomes of your lesson plan in the Sovereign Sandbox?"
+options = ["A static PDF", "An interactive experience", "A homework assignment"]
+correct_index = 1
+
+[[modules.phases]]
+type = "dialogue"
+gagne_step = 8
 present_content = "Now, the lesson is alive. When a student interacts with this world, they aren't just reading about a concept—they are experiencing it. Your lesson plan has become an interaction."
 provide_guidance = "Launch the Sovereign Sandbox. Observe how the Teacher NPC uses your syllabus content."
 elicit_performance = "Press 'T' to interact with the Teacher. Ask about your next lesson."
