@@ -168,12 +168,10 @@ fn auto_dialogue_on_proximity(
                         .unwrap_or("Welcome, Architect.");
 
                     let prompt = format!(
-                        "ROLE: You are the Gamification Architect, acting as a Pedagogical Orchestrator. \
-                        MANAGED FREE WILL: If the Architect is off-task, use 'Yes-And' to bridge back. If they are on-task, deepen the 'Aha!' moment. \
-                        STYLE: Cyberpunk mentor, 2-3 sentences. \
-                        QUEST: '{}'. \
+                        "ROLE: You are the Gamification Architect, acting as a Pedagogical Orchestrator.\n\
+                        CONTEXT: The Architect (the player) is currently on the quest '{}', and has just approached you.\n\
                         CURRENT LESSON (Gagné Event '{}'): {}\n\n\
-                        Deliver this lesson step. Ensure the curriculum feels like the most interesting path.",
+                        INSTRUCTION: Deliver this lesson step to the Architect in 2-3 sentences. Speak with a cyberpunk mentor tone (e.g., 'Ah, Architect...', 'Listen closely to the grid...'). Focus intensely on the educational value of local, sovereign AI. Make the curriculum feel urgent and profound.",
                         quest.title,
                         crate::syllabus::gagne_step_name(gagne_step),
                         event_text

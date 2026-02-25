@@ -1,0 +1,784 @@
+/* Matrix-Rust Design System */
+:root {
+    --phosphor-amber: #FFBF00;
+    --phosphor-amber-dim: rgba(255, 191, 0, 0.2);
+    --industrial-rust: #B7410E;
+    --deep-charcoal: #1A1A1A;
+    --terminal-black: #0D0D0D;
+    --status-green: #40FF00;
+    --alert-red: #C9462A;
+
+    --font-header: 'VT323', monospace;
+    --font-code: 'JetBrains Mono', monospace;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=JetBrains+Mono:wght@400;700&display=swap');
+
+body {
+    background-color: var(--deep-charcoal);
+    color: var(--phosphor-amber);
+    font-family: var(--font-code);
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.container {
+    width: 95%;
+    max-width: 1200px;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-family: var(--font-header);
+    border-bottom: 2px solid var(--industrial-rust);
+    padding-bottom: 1rem;
+}
+
+h1 {
+    font-size: 3rem;
+    margin: 0;
+    text-shadow: 0 0 10px var(--phosphor-amber-dim);
+}
+
+/* Mission Panel */
+.mission-panel {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 250px;
+    padding: 1rem;
+    border: 1px solid var(--industrial-rust);
+    background-color: rgba(13, 13, 13, 0.9);
+    font-family: var(--font-header);
+    box-shadow: 0 0 5px var(--industrial-rust);
+    z-index: 100;
+}
+
+.mission-panel h3 {
+    margin-top: 0;
+    color: var(--industrial-rust);
+    border-bottom: 1px dashed var(--industrial-rust);
+}
+
+#mission-list {
+    list-style: none;
+    padding: 0;
+}
+
+#mission-list li {
+    margin-bottom: 5px;
+    color: var(--phosphor-amber);
+}
+
+#mission-list li.completed {
+    color: var(--status-green);
+    text-decoration: line-through;
+}
+
+/* Air Gap Control */
+.air-gap-control {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+    font-family: var(--font-header);
+    font-size: 1.2rem;
+}
+
+.status-text {
+    margin-left: 10px;
+    color: var(--status-green);
+}
+
+.status-text.offline {
+    color: var(--industrial-rust);
+}
+
+/* Toggle Switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--industrial-rust);
+    transition: .4s;
+    border: 1px solid var(--phosphor-amber);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 3px;
+    background-color: var(--terminal-black);
+    transition: .4s;
+}
+
+input:checked+.slider {
+    background-color: var(--status-green);
+}
+
+input:checked+.slider:before {
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 0;
+    /* Industrial look - sharp corners */
+}
+
+/* Split Pane Layout */
+.split-container {
+    display: flex;
+    flex: 1;
+    gap: 20px;
+    position: relative;
+    height: 60vh;
+}
+
+.split-pane {
+    flex: 1;
+    border: 1px solid var(--industrial-rust);
+    background-color: var(--terminal-black);
+    padding: 1rem;
+    transition: all 0.5s ease;
+    overflow: hidden;
+    display: flex;
+    /* Centering content */
+    flex-direction: column;
+}
+
+.left-pane {
+    flex: 0 0 0;
+    /* Initially hidden/collapsed */
+    opacity: 0;
+    border: none;
+    padding: 0;
+}
+
+.split-pane.expanded {
+    flex: 1;
+    opacity: 1;
+    border: 1px solid var(--industrial-rust);
+    padding: 1rem;
+}
+
+.pane-content h2 {
+    font-family: var(--font-header);
+    color: var(--industrial-rust);
+    text-align: center;
+    border-bottom: 1px dashed var(--industrial-rust);
+    padding-bottom: 0.5rem;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    font-family: var(--font-code);
+}
+
+.feature-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #333;
+}
+
+.feature-list li.negative:before {
+    content: "[!] ";
+    color: var(--alert-red);
+}
+
+/* Terminal Window - The Forge */
+.terminal-window {
+    background-color: var(--terminal-black);
+    color: var(--phosphor-amber);
+    font-family: var(--font-code);
+    padding: 1rem;
+    height: 100%;
+    position: relative;
+    overflow-y: auto;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.terminal-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--industrial-rust);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    color: var(--industrial-rust);
+    font-size: 0.8rem;
+}
+
+.terminal-content p {
+    margin: 5px 0;
+    line-height: 1.4;
+}
+
+/* Input Line */
+.input-line {
+    display: flex;
+    align-items: center;
+}
+
+.prompt {
+    margin-right: 10px;
+    color: var(--status-green);
+}
+
+#terminal-input {
+    background: transparent;
+    border: none;
+    color: var(--phosphor-amber);
+    font-family: var(--font-code);
+    font-size: 1rem;
+    flex: 1;
+    outline: none;
+    caret-color: var(--phosphor-amber);
+}
+
+/* CRT Scanline Effect */
+.scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: rgba(255, 191, 0, 0.1);
+    animation: scan 6s linear infinite;
+    pointer-events: none;
+    z-index: 10;
+}
+
+@keyframes scan {
+    0% {
+        top: 0%;
+    }
+
+    100% {
+        top: 100%;
+    }
+}
+
+/* Button */
+.control-panel {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.btn {
+    background-color: transparent;
+    color: var(--phosphor-amber);
+    border: 1px solid var(--industrial-rust);
+    padding: 10px 20px;
+    font-family: var(--font-header);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.btn:hover {
+    background-color: var(--phosphor-amber);
+    color: var(--terminal-black);
+    box-shadow: 0 0 15px var(--phosphor-amber);
+}
+
+/* --- MODULE NAVIGATION --- */
+.main-nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.nav-btn {
+    background: transparent;
+    border: 1px solid var(--industrial-rust);
+    color: #555;
+    /* Dimmed state */
+    padding: 8px 16px;
+    font-family: var(--font-header);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0.6;
+}
+
+.nav-btn:hover {
+    border-color: var(--phosphor-amber);
+    color: var(--phosphor-amber);
+    opacity: 0.8;
+}
+
+.nav-btn.active {
+    background-color: var(--industrial-rust);
+    color: var(--terminal-black);
+    border-color: var(--industrial-rust);
+    opacity: 1;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(183, 65, 14, 0.5);
+}
+
+/* --- MODULE VISIBILITY --- */
+.module-container {
+    display: none;
+    /* Hidden by default */
+    flex: 1;
+    flex-direction: column;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.module-container.active {
+    display: flex;
+}
+
+.module-container.hidden {
+    display: none;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- MODULE 2: LOGIC ENGINE --- */
+.prompt-engine {
+    align-items: stretch;
+}
+
+.prompt-engine .split-pane {
+    opacity: 1;
+    /* Always visible for Module 2 */
+    flex: 1;
+}
+
+/* Intent Input */
+.instruction-text {
+    text-align: center;
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+#prompt-input {
+    width: 90%;
+    height: 300px;
+    background-color: #111;
+    border: 1px dotted var(--industrial-rust);
+    color: var(--phosphor-amber);
+    font-family: var(--font-code);
+    padding: 1rem;
+    resize: none;
+    outline: none;
+    margin: 0 auto;
+    display: block;
+}
+
+#prompt-input:focus {
+    border-color: var(--phosphor-amber);
+    box-shadow: 0 0 5px var(--phosphor-amber-dim);
+}
+
+/* Translation Controls Wrapper */
+.translation-controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    /* Narrow central column */
+}
+
+#translate-btn {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    padding: 20px 10px;
+    font-size: 1rem;
+    letter-spacing: 2px;
+}
+
+/* Logic Output */
+.code-window {
+    background-color: #050505;
+    border: 1px solid #333;
+    padding: 10px;
+    height: 300px;
+    overflow-y: auto;
+    font-family: var(--font-code);
+    font-size: 0.9rem;
+    display: flex;
+}
+
+.line-numbers {
+    color: #444;
+    border-right: 1px solid #333;
+    padding-right: 10px;
+    margin-right: 10px;
+    text-align: right;
+    user-select: none;
+}
+
+#generated-code {
+    color: #aaa;
+}
+
+/* Matrix Stream Visualization Placeholder */
+.data-stream {
+    width: 4px;
+    height: 80%;
+    background: #000;
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* When active, this will animate */
+.data-stream.active {
+    box-shadow: 0 0 8px var(--status-green);
+    background: rgba(64, 255, 0, 0.1);
+}
+
+.data-stream::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to bottom, transparent, var(--status-green), transparent);
+    animation: streamFlow 1s linear infinite;
+    display: none;
+}
+
+.data-stream.active::after {
+    display: block;
+}
+
+@keyframes streamFlow {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- GAMIFIED UI (THE ARCHITECT'S DESK) --- */
+.app-container {
+    display: flex;
+    width: 95%;
+    max-width: 1400px;
+    /* Wider for sidebar */
+    height: 90vh;
+    border: 1px solid var(--industrial-rust);
+    background-color: var(--deep-charcoal);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+/* SIDEBAR: QUEST LOG */
+.quest-log {
+    width: 300px;
+    /* Fixed width sidebar */
+    border-right: 1px solid var(--industrial-rust);
+    background-color: rgba(5, 5, 5, 0.8);
+    display: flex;
+    flex-direction: column;
+}
+
+.log-header {
+    padding: 1.5rem;
+    border-bottom: 2px solid var(--industrial-rust);
+    background: linear-gradient(to bottom, rgba(183, 65, 14, 0.1), transparent);
+}
+
+.log-header h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: var(--phosphor-amber);
+}
+
+/* PLAYER STATUS */
+.player-status {
+    border: 1px solid #333;
+    padding: 10px;
+    background-color: #000;
+}
+
+.level-badge {
+    font-family: var(--font-header);
+    font-size: 1.5rem;
+    color: var(--status-green);
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.xp-container {
+    height: 10px;
+    background-color: #222;
+    border: 1px solid #444;
+    margin-bottom: 5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.xp-bar {
+    height: 100%;
+    background-color: var(--phosphor-amber);
+    box-shadow: 0 0 5px var(--phosphor-amber);
+    transition: width 0.5s ease;
+}
+
+.xp-text {
+    font-size: 0.8rem;
+    text-align: right;
+    color: #666;
+}
+
+/* QUEST NAVIGATION */
+.quest-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.quest-btn {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background: transparent;
+    border: 1px solid #333;
+    margin-bottom: 10px;
+    padding: 15px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.3s ease;
+    position: relative;
+    opacity: 0.7;
+}
+
+.quest-btn:hover {
+    border-color: var(--phosphor-amber);
+    opacity: 1;
+}
+
+.quest-btn.active {
+    background-color: rgba(255, 191, 0, 0.1);
+    border-color: var(--phosphor-amber);
+    box-shadow: inset 0 0 10px rgba(255, 191, 0, 0.1);
+    opacity: 1;
+}
+
+.quest-btn.locked {
+    opacity: 0.4;
+    cursor: not-allowed;
+    filter: grayscale(100%);
+}
+
+.quest-icon {
+    font-family: var(--font-header);
+    font-size: 2rem;
+    margin-right: 15px;
+    color: var(--industrial-rust);
+    width: 30px;
+    text-align: center;
+}
+
+.quest-btn.active .quest-icon {
+    color: var(--phosphor-amber);
+    text-shadow: 0 0 5px var(--phosphor-amber);
+}
+
+.quest-info {
+    flex: 1;
+}
+
+.quest-title {
+    display: block;
+    font-family: var(--font-header);
+    font-size: 1.2rem;
+    color: var(--phosphor-amber);
+}
+
+.quest-desc {
+    display: block;
+    font-size: 0.8rem;
+    color: #777;
+    margin-top: 3px;
+}
+
+.lock-icon {
+    font-size: 1.2rem;
+}
+
+/* MAIN STAGE */
+.stage {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    position: relative;
+    /* Grid background */
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+}
+
+.quest-container {
+    display: none;
+    height: 100%;
+    flex-direction: column;
+    animation: fadeIn 0.5s ease;
+}
+
+.quest-container.active {
+    display: flex;
+}
+
+.quest-header {
+    border-bottom: 1px solid var(--industrial-rust);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.quest-header h2 {
+    font-size: 2rem;
+    margin: 0;
+    color: var(--phosphor-amber);
+    font-family: var(--font-header);
+}
+
+.quest-header p {
+    margin: 5px 0 0 0;
+    color: #888;
+    font-style: italic;
+}
+
+/* HIDE OLD CONTAINER Elements that interfere */
+body>.container {
+    display: none;
+    /* In case old HTML lingers */
+}
+
+/* Main Nav replaced by Sidebar */
+.main-nav {
+    display: none;
+}
+
+/* Mission Panel position fix for Stage */
+.mission-panel {
+    position: static;
+    /* Flow with document in Stage */
+    width: 100%;
+    max-width: none;
+    margin-bottom: 20px;
+    background-color: rgba(13, 13, 13, 0.5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mission-panel h3 {
+    border: none;
+    margin: 0;
+    margin-right: 20px;
+}
+
+.mission-panel ul {
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    flex-wrap: wrap;
+}
+
+/* --- MODULE 3: VISUAL RUNTIME --- */
+.execution-container {
+    margin-top: 20px;
+    border: 1px solid var(--industrial-rust);
+    background-color: var(--terminal-black);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.execution-container.hidden {
+    display: none;
+}
+
+.sim-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-bottom: 1px dashed var(--industrial-rust);
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.sim-header h3 {
+    margin: 0;
+    color: var(--phosphor-amber);
+    font-family: var(--font-header);
+}
+
+.small-btn {
+    font-size: 0.9rem;
+    padding: 5px 10px;
+}
+
+#sim-canvas {
+    background-color: #000;
+    border: 1px solid var(--phosphor-amber-dim);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    /* Grid Pattern */
+    background-image:
+        linear-gradient(rgba(183, 65, 14, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(183, 65, 14, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.sim-status {
+    margin-top: 5px;
+    font-family: var(--font-code);
+    font-size: 0.8rem;
+    color: #555;
+    width: 100%;
+    text-align: right;
+}

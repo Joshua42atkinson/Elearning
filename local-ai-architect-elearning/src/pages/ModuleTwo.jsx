@@ -15,18 +15,7 @@ export default function ModuleTwo() {
                 </div>
             </div>
 
-            <div className="glass-panel p-1 rounded-2xl aspect-video relative group overflow-hidden bg-black/40">
-                {/* Placeholder for ADA 508 Compliant Video */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 z-10">
-                    <PlayCircle size={64} className="text-fuchsia-400 mb-4 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all cursor-pointer" />
-                    <h3 className="text-xl font-bold text-white mb-2">Video 2: The Connection (06:45)</h3>
-                    <p className="text-slate-400 max-w-md">
-                        Click to play. Includes closed captions and downloadable transcript for ADA 508 compliance.
-                    </p>
-                </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
                 <div className="glass-panel p-6 space-y-4">
                     <h3 className="text-xl font-bold text-white flex items-center gap-2">
                         <Server className="text-fuchsia-400" /> The Local Server
@@ -42,6 +31,29 @@ export default function ModuleTwo() {
                     </h3>
                     <p className="text-slate-300 text-sm leading-relaxed">
                         Code editors like <strong>Cursor</strong> and <strong>Zed</strong> are built for AI. By overriding their default API endpoint with our LM Studio local server URL, we get world-class autocompletion and code generation without paying subscription fees or sending code to the cloud.
+                    </p>
+                </div>
+
+                <div className="glass-panel p-6 space-y-4 md:col-span-2">
+                    <h3 className="text-xl font-bold text-white">Scaffolding & The Zone of Proximal Development</h3>
+                    <p className="text-slate-300 text-sm leading-relaxed">
+                        In educational theory, Vygotsky's <strong>Zone of Proximal Development (ZPD)</strong> is the space between what a learner can do independently and what they can do with guidance. Integrating a local LLM into your IDE provides dynamic <strong>Scaffolding</strong>:
+                    </p>
+                    <ul className="list-disc list-outside ml-5 text-slate-300 text-sm space-y-2">
+                        <li><strong>Flow State:</strong> Just like a well-balanced game adjusts difficulty, the AI provides just enough code completion to keep you progressing without overwhelming frustration.</li>
+                        <li><strong>Contextual Help:</strong> The AI sees your entire codebase, offering highly specific, "in-the-moment" explanations instead of generic textbook answers.</li>
+                        <li><strong>Fading:</strong> As your mastery improves, you naturally rely less on the AI autocomplete, allowing the "scaffolding" to fade away as you build independent competency.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div className="glass-panel p-1 rounded-2xl aspect-video relative group overflow-hidden bg-black/40">
+                {/* Placeholder for ADA 508 Compliant Video */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 z-10">
+                    <PlayCircle size={64} className="text-fuchsia-400 mb-4 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all cursor-pointer" />
+                    <h3 className="text-xl font-bold text-white mb-2">Video 2: The Connection (06:45)</h3>
+                    <p className="text-slate-400 max-w-md">
+                        Click to play. Includes closed captions and downloadable transcript for ADA 508 compliance.
                     </p>
                 </div>
             </div>

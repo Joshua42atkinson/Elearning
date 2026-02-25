@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovereign Sandbox Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            color: white;
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body class="flex items-center justify-center relative">
+
+    <div id="loading-ui"
+        class="text-center z-10 flex flex-col items-center p-10 bg-slate-900/60 backdrop-blur-xl rounded-3xl border border-white/10 shadow-[0_0_40px_rgba(139,92,246,0.2)]">
+        <div
+            class="w-20 h-20 bg-violet-600/20 rounded-2xl flex items-center justify-center mb-6 border border-violet-500/30 shadow-[0_0_20px_rgba(139,92,246,0.3)]">
+            <i data-lucide="gamepad-2" class="w-10 h-10 text-violet-300"></i>
+        </div>
+        <h4
+            class="text-2xl font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">
+            Bevy WASM Engine Ready</h4>
+        <p class="text-slate-300 max-w-md mb-8 leading-relaxed">Click below to initialize the Rust WASM engine and load
+            the 3D sandbox.</p>
+        <button id="start-game-btn"
+            class="px-8 py-3 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white rounded-xl font-semibold transition-all duration-300 cursor-pointer shadow-[0_0_20px_rgba(139,92,246,0.4)] hover:shadow-[0_0_30px_rgba(139,92,246,0.6)] hover:-translate-y-0.5 border border-white/10">
+            Initialize Sandbox
+        </button>
+    </div>
+
+    <!-- Target for Bevy WASM -->
+    <canvas id="bevy-canvas"
+        style="display: none; width: 100%; height: 100%; position: absolute; top:0; left:0;"></canvas>
+
+    <script>
+        lucide.createIcons();
+    </script>
+    <script type="module">
+        document.getElementById('start-game-btn').addEventListener('click', async (e) => {
+            const btn = e.target;
+            const ui = document.getElementById('loading-ui');
+            const canvas = document.getElementById('bevy-canvas');
+
+            btn.innerText = "Loading WASM Engine...";
+            btn.disabled = true;
+            btn.classList.add("opacity-50", "cursor-not-allowed");
+
+            try {
+                // Import the wasm-bindgen wrapper
+                const { default: init } = await import('./wasm/sovereign-sandbox.js');
+                // Initialize WASM
+                await init();
+
+                // Hide placeholders and show canvas
+                ui.style.display = 'none';
+                canvas.style.display = 'block';
+            } catch (err) {
+                if (err.message && err.message.includes("Using exceptions for control flow")) {
+                    // This is expected behavior from winit! It throws this to exit the current call stack.
+                    // The WASM engine is actually ready and the loop is running.
+                    ui.style.display = 'none';
+                    canvas.style.display = 'block';
+                    return;
+                }
+                console.error("WASM Load Error", err);
+                btn.innerText = "Error Loading Engine";
+                btn.classList.replace("bg-indigo-600", "bg-red-600");
+                const errDiv = document.createElement("div");
+                errDiv.id = "error-dump";
+                errDiv.style.color = "red";
+                errDiv.style.marginTop = "1rem";
+                errDiv.style.fontSize = "12px";
+                errDiv.innerText = err.toString() + "\\n" + (err.stack || "");
+                ui.appendChild(errDiv);
+            }
+        });
+    </script>
+</body>
+
+</html>

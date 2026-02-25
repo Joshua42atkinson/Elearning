@@ -6,6 +6,17 @@ struct BootText;
 #[derive(Resource)]
 struct BootTimer(Timer);
 
+// ============================================================================
+// Game States
+// ============================================================================
+
+#[derive(States, Debug, Clone, PartialEq, Eq, Hash, Default)]
+pub enum GameState {
+    #[default]
+    Boot,
+    Playing,
+}
+
 mod ai;
 mod teacher;
 mod syllabus;
@@ -14,6 +25,8 @@ mod inventory;
 mod game_world;
 mod story_mode;
 mod quiz;
+mod scoring;
+mod puzzle;
 
 use ai::AiPlugin;
 use ai::memory::{MemoryStore, MemoryStoreResource};
@@ -24,6 +37,8 @@ use inventory::InventoryPlugin;
 use game_world::GameWorldPlugin;
 use story_mode::StoryModePlugin;
 use quiz::QuizPlugin;
+use scoring::ScoringPlugin;
+use puzzle::PuzzlePlugin;
 use std::sync::Arc;
 use std::path::Path;
 
@@ -38,20 +53,8 @@ fn main() {
         Ok(store) => Arc::new(store),
         Err(e) => {
             eprintln!("Warning: Failed to initialize MemoryStore: {}. Running without persistent memory.", e);
-            // In WASM, creating a directory fails. We can just instantiate a dummy MemoryStore.
-            // But since MemoryStore::new might fail on WASM entirely if it relies on fs, 
-            // we should probably just gracefully handle the lack of memory if we can.
-            // For now, if it fails, we will try to create a default one if possible, or we just panic in non-wasm.
-            // Since we need an Arc<MemoryStore> we'll construct one that might not have a path.
-            // Actually, MemoryStore::new might fail. Let's look at what we can do.
-            // For now, let's just create it with a dummy path or let it fail gracefully if we can.
-            // Wait, we need a valid MemoryStore. Let's just create an empty one.
             #[cfg(target_arch = "wasm32")]
             {
-                // On WASM, we just accept that memory persistence is disabled.
-                // Depending on MemoryStore implementation, we might need a dummy file or we can just panic for now if it requires it, 
-                // but wait, we want to fix the panic. Let's look at memory.rs if needed, or just let it panic if it can't recover.
-                // Actually `MemoryStore::new` usually initializes an empty vector or something. Maybe we can just pass a dummy name.
                 panic!("Memory Store failed to load on WASM. Needs mock integration.");
             }
             #[cfg(not(target_arch = "wasm32"))]
@@ -73,27 +76,26 @@ fn main() {
             ..default()
         }).set(ImagePlugin::default_nearest()))
         .insert_resource(MemoryStoreResource(memory_store))
-        .add_plugins(SyllabusPlugin) // Load the Syllabus
-        .add_plugins(AiPlugin) // Add the Brain
-        .add_plugins(TeacherPlugin) // Add the Teacher Entity
-        .add_plugins(QuestUIPlugin) // Add the Quest Progression UI
-        .add_plugins(InventoryPlugin) // Add the Inventory System
-        .add_plugins(GameWorldPlugin) // Add the 2D RPG World
-        .add_plugins(StoryModePlugin) // Add LitRPG Story Mode
+        .init_state::<GameState>()
+        .add_plugins(SyllabusPlugin)
+        .add_plugins(AiPlugin)
+        .add_plugins(TeacherPlugin)
+        .add_plugins(QuestUIPlugin)
+        .add_plugins(InventoryPlugin)
+        .add_plugins(GameWorldPlugin)
+        .add_plugins(StoryModePlugin)
         .add_plugins(QuizPlugin)
-        .insert_resource(ClearColor(Color::srgb(0.05, 0.05, 0.05))) // Deep Charcoal (Almost Black)
+        .add_plugins(ScoringPlugin)
+        .add_plugins(PuzzlePlugin)
+        .insert_resource(ClearColor(Color::srgb(0.02, 0.02, 0.04))) // Deep space blue-black
         .insert_resource(BootTimer(Timer::from_seconds(0.1, TimerMode::Repeating)))
-        .add_systems(Startup, setup)
-        .add_systems(Update, animate_boot_text)
-        .add_plugins(bevy_inspector_egui::quick::WorldInspectorPlugin::new())
+        .add_systems(Startup, setup_boot)
+        .add_systems(Update, animate_boot_text.run_if(in_state(GameState::Boot)))
         .run();
 }
 
-fn setup(mut commands: Commands) {
-    // Camera is now spawned by GameWorldPlugin
-    // commands.spawn(Camera2d);
-
-    // Initial "Cursor"
+fn setup_boot(mut commands: Commands) {
+    // Boot cinematic text
     commands.spawn((
         Text::new("> INITIALIZING KERNEL...\n> "),
         TextFont {
@@ -114,50 +116,46 @@ fn setup(mut commands: Commands) {
 fn animate_boot_text(
     time: Res<Time>,
     mut timer: ResMut<BootTimer>,
-    mut query: Query<&mut Text, With<BootText>>,
+    mut query: Query<(&mut Text, &mut TextColor), With<BootText>>,
+    mut next_state: ResMut<NextState<GameState>>,
+    mut commands: Commands,
+    boot_entities: Query<Entity, With<BootText>>,
 ) {
     timer.0.tick(time.delta());
     if timer.0.just_finished() {
-        for mut text in &mut query {
-            // Neon Wizard Boot Sequence
-            let messages = [
-                "> INITIALIZING KERNEL...",
-                "> LOAD_BRAIN... [OK]",
-                "> ATTUNING EARS... [OK]",
-                "> CONNECTING TO THE NOOSPHERE...",
-                "> WELCOME, ARCHITECT."
-            ];
+        let messages = [
+            "> INITIALIZING KERNEL...",
+            "> LOAD_BRAIN... [OK]",
+            "> ATTUNING EARS... [OK]",
+            "> MAPPING ACADEMY...",
+            "> CONNECTING TO THE NOOSPHERE...",
+            "> WELCOME, ARCHITECT."
+        ];
 
-            // Simple state machine simulation using current text length as state
-            // In a real app, use a proper State resource.
-            // Just for the demo vibe:
-            if text.0.contains("ARCHITECT") {
-                // Done
-                return;
+        let elapsed = time.elapsed_secs();
+        
+        for (mut text, mut color) in &mut query {
+            if elapsed < 1.5 {
+                *text = Text::new(messages[0]);
+            } else if elapsed < 3.0 {
+                *text = Text::new(format!("{}\n{}", messages[0], messages[1]));
+            } else if elapsed < 4.5 {
+                *text = Text::new(format!("{}\n{}\n{}", messages[0], messages[1], messages[2]));
+            } else if elapsed < 6.0 {
+                *text = Text::new(format!("{}\n{}\n{}\n{}", messages[0], messages[1], messages[2], messages[3]));
+            } else if elapsed < 7.5 {
+                *text = Text::new(format!("{}\n{}\n{}\n{}\n{}", messages[0], messages[1], messages[2], messages[3], messages[4]));
+            } else if elapsed < 9.0 {
+                *text = Text::new(format!("{}\n{}\n{}\n{}\n{}\n{}", messages[0], messages[1], messages[2], messages[3], messages[4], messages[5]));
+                // Flash to cyan for the welcome message
+                *color = TextColor(Color::srgb(0.0, 1.0, 1.0));
+            } else {
+                // Transition to Playing state
+                for entity in &boot_entities {
+                    commands.entity(entity).despawn_recursive();
+                }
+                next_state.set(GameState::Playing);
             }
-            
-            // Random-ish glitch effect or simply append
-            if text.0.len() % 50 == 0 {
-                 text.0.push_str("\n> ");
-            }
-            
-            // Append characters from the "source" message that matches current progress
-            // Actually, let's just cycle messages based on time for simplicity in this demo keyframe
-            // Clearing and rewriting lines for a terminal feel
-             
-             let elapsed = time.elapsed_secs();
-             if elapsed < 2.0 {
-                 *text = Text::new(messages[0]);
-             } else if elapsed < 4.0 {
-                 *text = Text::new(format!("{}\n{}", messages[0], messages[1]));
-             } else if elapsed < 6.0 {
-                 *text = Text::new(format!("{}\n{}\n{}", messages[0], messages[1], messages[2]));
-             } else if elapsed < 8.0 {
-                 *text = Text::new(format!("{}\n{}\n{}\n{}", messages[0], messages[1], messages[2], messages[3]));
-             } else {
-                 *text = Text::new(format!("{}\n{}\n{}\n{}\n{}", messages[0], messages[1], messages[2], messages[3], messages[4]));
-             }
         }
     }
 }
-

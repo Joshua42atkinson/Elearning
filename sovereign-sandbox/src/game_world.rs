@@ -1,6 +1,6 @@
 use bevy::prelude::*;
-use bevy::render::render_resource::Extent3d;
 use crate::syllabus::SyllabusResource;
+use crate::scoring::XpGainEvent;
 
 // ============================================================================
 // Components
@@ -24,7 +24,6 @@ pub struct Position {
 #[allow(dead_code)]
 #[derive(Component)]
 pub struct Velocity {
-
     pub x: f32,
     pub y: f32,
 }
@@ -35,7 +34,6 @@ pub struct Collider {
     pub width: f32,
     pub height: f32,
 }
-
 
 #[derive(Component)]
 pub struct InteractionZone {
@@ -57,13 +55,133 @@ pub struct QuestTrigger {
     pub radius: f32,
 }
 
-
 // ============================================================================
 // Resources & Components
 // ============================================================================
 
 #[derive(Component)]
 pub struct GameCamera;
+
+#[derive(Component)]
+struct AmbientGlow {
+    base_alpha: f32,
+    speed: f32,
+}
+
+#[derive(Component)]
+struct RoomLabel;
+
+#[derive(Component)]
+struct DoorGuide;
+
+#[derive(Component)]
+pub struct KnowledgeFragment {
+    pub title: String,
+    pub content: String,
+    pub xp_value: u32,
+}
+
+#[derive(Component)]
+struct FloatingText {
+    lifetime: Timer,
+    velocity: Vec3,
+}
+
+#[derive(Component)]
+struct Particle {
+    lifetime: Timer,
+    velocity: Vec3,
+}
+
+#[derive(Resource)]
+pub struct CameraTrauma {
+    pub intensity: f32, // 0.0 to 1.0
+}
+
+impl Default for CameraTrauma {
+    fn default() -> Self {
+        Self { intensity: 0.0 }
+    }
+}
+
+#[derive(Resource)]
+struct RoomDiscovery(Vec<String>);
+
+// ============================================================================
+// Map Data — The Academy
+// ============================================================================
+
+const TILE: f32 = 64.0;
+
+/// Room definition: origin (top-left in tile coords), width, height in tiles
+#[allow(dead_code)]
+struct RoomDef {
+    name: &'static str,
+    ox: i32,
+    oy: i32,
+    w: i32,
+    h: i32,
+}
+
+/// A doorway between two rooms — position and orientation
+#[allow(dead_code)]
+struct DoorDef {
+    x: i32,
+    y: i32,
+    horizontal: bool, // true = horizontal passage (opening in top/bottom wall)
+}
+
+fn rooms() -> Vec<RoomDef> {
+    vec![
+        // Academy Hall — center, 12×10 tiles
+        RoomDef { name: "Academy Hall",   ox: -6, oy: -5, w: 12, h: 10 },
+        // Terminal Lab — west, 8×8 tiles
+        RoomDef { name: "Terminal Lab",   ox: -18, oy: -4, w: 8,  h: 8 },
+        // Archive Vault — south, 8×8 tiles
+        RoomDef { name: "Archive Vault",  ox: -4, oy: -17, w: 8,  h: 8 },
+        // Server Core — east, 8×8 tiles
+        RoomDef { name: "Server Core",    ox: 10, oy: -4, w: 8,  h: 8 },
+    ]
+}
+
+fn doors() -> Vec<DoorDef> {
+    vec![
+        // West corridor: Academy Hall west wall to Terminal Lab east wall
+        // Passage at y=-1..1 (3 tiles tall), from x=-10 to x=-6
+        DoorDef { x: -7, y: -1, horizontal: false },
+        DoorDef { x: -8, y: -1, horizontal: false },
+        DoorDef { x: -9, y: -1, horizontal: false },
+        DoorDef { x: -10, y: -1, horizontal: false },
+        DoorDef { x: -7, y: 0,  horizontal: false },
+        DoorDef { x: -8, y: 0,  horizontal: false },
+        DoorDef { x: -9, y: 0,  horizontal: false },
+        DoorDef { x: -10, y: 0,  horizontal: false },
+        // South corridor: Academy Hall south wall to Archive Vault north wall
+        // Passage at x=-1..1 (3 tiles wide), from y=-5 to y=-9
+        DoorDef { x: -1, y: -6,  horizontal: true },
+        DoorDef { x: 0,  y: -6,  horizontal: true },
+        DoorDef { x: 1,  y: -6,  horizontal: true },
+        DoorDef { x: -1, y: -7,  horizontal: true },
+        DoorDef { x: 0,  y: -7,  horizontal: true },
+        DoorDef { x: 1,  y: -7,  horizontal: true },
+        DoorDef { x: -1, y: -8,  horizontal: true },
+        DoorDef { x: 0,  y: -8,  horizontal: true },
+        DoorDef { x: 1,  y: -8,  horizontal: true },
+        DoorDef { x: -1, y: -9,  horizontal: true },
+        DoorDef { x: 0,  y: -9,  horizontal: true },
+        DoorDef { x: 1,  y: -9,  horizontal: true },
+        // East corridor: Academy Hall east wall to Server Core west wall
+        // Passage at y=-1..1 (3 tiles tall), from x=6 to x=10
+        DoorDef { x: 6,  y: -1, horizontal: false },
+        DoorDef { x: 7,  y: -1, horizontal: false },
+        DoorDef { x: 8,  y: -1, horizontal: false },
+        DoorDef { x: 9,  y: -1, horizontal: false },
+        DoorDef { x: 6,  y: 0,  horizontal: false },
+        DoorDef { x: 7,  y: 0,  horizontal: false },
+        DoorDef { x: 8,  y: 0,  horizontal: false },
+        DoorDef { x: 9,  y: 0,  horizontal: false },
+    ]
+}
 
 // ============================================================================
 // Plugin
@@ -73,11 +191,14 @@ pub struct GameWorldPlugin;
 
 impl Plugin for GameWorldPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, (setup_camera, spawn_player, spawn_world, spawn_tutorial))
+        app.insert_resource(CameraTrauma::default())
+           .insert_resource(RoomDiscovery(vec![]))
+           .add_systems(Startup, (setup_camera, spawn_player, spawn_world, spawn_tutorial))
            .add_systems(Update, (
                player_movement,
                update_transforms,
                camera_follow_player,
+               camera_shake,
                check_proximity_interactions,
                show_interaction_prompt,
                hide_tutorial_on_interaction,
@@ -87,18 +208,21 @@ impl Plugin for GameWorldPlugin {
                fade_out_rewards,
                reveal_memories,
                teacher_gravitational_pull,
+               animate_ambient_glows,
+               collect_knowledge_fragments,
+               update_floating_text,
+               update_particles,
+               check_room_discovery,
+               spawn_particles_on_quest_advance,
            ));
     }
 }
-
-
 
 // ============================================================================
 // Systems
 // ============================================================================
 
 fn setup_camera(mut commands: Commands) {
-    // Spawn a 2D camera for the game world
     commands.spawn((
         Camera2d,
         GameCamera,
@@ -106,7 +230,6 @@ fn setup_camera(mut commands: Commands) {
 }
 
 fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
-    // Spawn the player character in the center
     commands.spawn((
         Sprite {
             image: asset_server.load("player.jpg"),
@@ -125,320 +248,359 @@ fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
     ));
 }
 
-
 fn spawn_world(
     mut commands: Commands, 
     asset_server: Res<AssetServer>,
-    mut images: ResMut<Assets<Image>>,
 ) {
-    // 1. Generate Procedural "Cyberpunk Floor" Texture (Dark Grid)
-    let floor_size = Extent3d {
-        width: 64,
-        height: 64,
-        depth_or_array_layers: 1,
-    };
-    let mut floor_data = vec![0u8; 64 * 64 * 4]; // RGBA
-    for y in 0..64 {
-        for x in 0..64 {
-            let index = (y * 64 + x) * 4;
-            // Background: Dark Blue-Grey
-            floor_data[index] = 10;
-            floor_data[index + 1] = 15;
-            floor_data[index + 2] = 20;
-            floor_data[index + 3] = 255;
+    let floor_handle = asset_server.load("floor.jpg");
+    let wall_handle = asset_server.load("wall.jpg");
 
-            // Grid Lines (Edges) - Cyan
-            if x == 0 || y == 0 || x == 63 || y == 63 {
-                floor_data[index] = 0;
-                floor_data[index + 1] = 255;
-                floor_data[index + 2] = 255;
-                floor_data[index + 3] = 50; // Low opacity for subtle grid
+    // Collect all door tile positions for quick lookup
+    let door_tiles: Vec<(i32, i32)> = doors().iter().map(|d| (d.x, d.y)).collect();
+
+    // --- Spawn room floors ---
+    for room in &rooms() {
+        for x in room.ox..(room.ox + room.w) {
+            for y in room.oy..(room.oy + room.h) {
+                commands.spawn((
+                    Sprite {
+                        image: floor_handle.clone(),
+                        custom_size: Some(Vec2::new(TILE, TILE)),
+                        ..default()
+                    },
+                    Transform::from_xyz(x as f32 * TILE, y as f32 * TILE, -10.0),
+                ));
             }
         }
     }
-    let floor_image = Image::new(
-        floor_size,
-        bevy::render::render_resource::TextureDimension::D2,
-        floor_data,
-        bevy::render::render_resource::TextureFormat::Rgba8UnormSrgb,
-        bevy::render::render_asset::RenderAssetUsages::RENDER_WORLD,
-    );
-    let floor_handle = images.add(floor_image);
 
-    // 2. Generate Procedural "Industrial Wall" Texture
-    let mut wall_data = vec![0u8; 64 * 64 * 4];
-    for y in 0..64 {
-        for x in 0..64 {
-            let index = (y * 64 + x) * 4;
-            // Base: Dark Metal
-            wall_data[index] = 40;
-            wall_data[index + 1] = 40;
-            wall_data[index + 2] = 45;
-            wall_data[index + 3] = 255;
-
-            // Hazard Stripe at bottom
-            if y < 10 {
-                // Yellow/Black diagonal stripes
-                if (x + y) % 20 < 10 {
-                    wall_data[index] = 255;
-                    wall_data[index + 1] = 200;
-                    wall_data[index + 2] = 0;
-                } else {
-                    wall_data[index] = 10;
-                    wall_data[index + 1] = 10;
-                    wall_data[index + 2] = 10;
-                }
-            }
-        }
-    }
-    let wall_image = Image::new(
-        floor_size, // Same size
-        bevy::render::render_resource::TextureDimension::D2,
-        wall_data,
-        bevy::render::render_resource::TextureFormat::Rgba8UnormSrgb,
-        bevy::render::render_asset::RenderAssetUsages::RENDER_WORLD,
-    );
-    let wall_handle = images.add(wall_image);
-    
-    // Spawn Tiles
-    let tile_size = 64.0;
-    let grid_size = 50; 
-    
-    for x in -grid_size..grid_size {
-        for y in -grid_size..grid_size {
-            commands.spawn((
-                Sprite {
-                    image: floor_handle.clone(),
-                    custom_size: Some(Vec2::new(tile_size, tile_size)), 
-                    ..default()
-                },
-                Transform::from_xyz(x as f32 * tile_size, y as f32 * tile_size, -10.0), 
-            ));
-        }
-    }
-    
-    // Spawn Walls
-    let wall_positions = vec![
-        (-320.0, 0.0, 640.0, 32.0),
-        (320.0, 0.0, 640.0, 32.0),
-        (0.0, -320.0, 32.0, 640.0),
-        (0.0, 320.0, 32.0, 640.0),
-    ];
-    
-    for (x, y, w, h) in wall_positions {
+    // --- Spawn corridor floors ---
+    for door in &doors() {
         commands.spawn((
             Sprite {
-                image: wall_handle.clone(),
-                custom_size: Some(Vec2::new(w, h)),
+                image: floor_handle.clone(),
+                custom_size: Some(Vec2::new(TILE, TILE)),
                 ..default()
             },
-            Transform::from_xyz(x, y, 0.5),
-            Collider { width: w, height: h },
+            Transform::from_xyz(door.x as f32 * TILE, door.y as f32 * TILE, -10.0),
         ));
     }
-    
-    // 3. Generate Procedural "Terminal" Texture
-    let mut terminal_data = vec![0u8; 64 * 64 * 4];
-    for y in 0..64 {
-        for x in 0..64 {
-            let index = (y * 64 + x) * 4;
-            // Case: Dark Grey
-            terminal_data[index] = 50;
-            terminal_data[index + 1] = 50;
-            terminal_data[index + 2] = 55;
-            terminal_data[index + 3] = 255;
-            
-            // Screen: Glowing Orange (Center)
-            if x > 10 && x < 54 && y > 20 && y < 50 {
-                terminal_data[index] = 255;
-                terminal_data[index + 1] = 165;
-                terminal_data[index + 2] = 0;
-                
-                // Scanlines
-                if y % 4 == 0 {
-                    terminal_data[index + 3] = 200;
+
+    // --- Spawn walls (room perimeters minus doorways) ---
+    for room in &rooms() {
+        for x in (room.ox - 1)..=(room.ox + room.w) {
+            for y in (room.oy - 1)..=(room.oy + room.h) {
+                // Only spawn wall on the perimeter
+                let on_perimeter = x == room.ox - 1 || x == room.ox + room.w
+                    || y == room.oy - 1 || y == room.oy + room.h;
+                if !on_perimeter {
+                    continue;
                 }
-            }
-            
-            // Keyboard hints
-            if y < 15 && x > 10 && x < 54 && x % 4 == 0 && y % 4 == 0 {
-                 terminal_data[index] = 200;
-                 terminal_data[index + 1] = 200;
-                 terminal_data[index + 2] = 200;
+
+                // Skip if this tile is a doorway
+                if door_tiles.contains(&(x, y)) {
+                    continue;
+                }
+                // Skip if this tile is inside another room's floor
+                let inside_another_room = rooms().iter().any(|r| {
+                    x >= r.ox && x < r.ox + r.w && y >= r.oy && y < r.oy + r.h
+                });
+                if inside_another_room {
+                    continue;
+                }
+
+                commands.spawn((
+                    Sprite {
+                        image: wall_handle.clone(),
+                        custom_size: Some(Vec2::new(TILE, TILE)),
+                        ..default()
+                    },
+                    Transform::from_xyz(x as f32 * TILE, y as f32 * TILE, 0.5),
+                    Collider { width: TILE, height: TILE },
+                ));
             }
         }
     }
-    let terminal_image = Image::new(
-        floor_size,
-        bevy::render::render_resource::TextureDimension::D2,
-        terminal_data,
-        bevy::render::render_resource::TextureFormat::Rgba8UnormSrgb,
-        bevy::render::render_asset::RenderAssetUsages::RENDER_WORLD,
-    );
-    let terminal_handle = images.add(terminal_image);
 
-    // 4. Generate Procedural "Archive" Texture (Holocron)
-    let mut archive_data = vec![0u8; 64 * 64 * 4];
-    for y in 0..64 {
-        for x in 0..64 {
-            let index = (y * 64 + x) * 4;
-            // Transparent background
-            archive_data[index + 3] = 0;
-
-            let dx = x as f32 - 32.0;
-            let dy = y as f32 - 32.0;
-            let dist = (dx * dx + dy * dy).sqrt();
-
-            // Outer Ring
-            if dist > 25.0 && dist < 30.0 {
-                archive_data[index] = 100;
-                archive_data[index + 1] = 0;
-                archive_data[index + 2] = 200; // Purple
-                archive_data[index + 3] = 255;
-            }
-            // Inner Core
-            if dist < 15.0 {
-                archive_data[index] = 0;
-                archive_data[index + 1] = 200; // Cyan/Blue
-                archive_data[index + 2] = 255;
-                archive_data[index + 3] = 200; 
+    // --- Spawn corridor walls (sides of corridors) ---
+    // West corridor walls (top and bottom edges)
+    for x in -10..=-7 {
+        for &y in &[-2, 1] {
+            if !door_tiles.contains(&(x, y)) {
+                commands.spawn((
+                    Sprite {
+                        image: wall_handle.clone(),
+                        custom_size: Some(Vec2::new(TILE, TILE)),
+                        ..default()
+                    },
+                    Transform::from_xyz(x as f32 * TILE, y as f32 * TILE, 0.5),
+                    Collider { width: TILE, height: TILE },
+                ));
             }
         }
     }
-        let archive_image = Image::new(
-        floor_size,
-        bevy::render::render_resource::TextureDimension::D2,
-        archive_data,
-        bevy::render::render_resource::TextureFormat::Rgba8UnormSrgb,
-        bevy::render::render_asset::RenderAssetUsages::RENDER_WORLD,
-    );
-    let archive_handle = images.add(archive_image);
-
-    // 5. Generate Procedural "Server" Texture
-    let mut server_data = vec![0u8; 64 * 64 * 4];
-    for y in 0..64 {
-        for x in 0..64 {
-            let index = (y * 64 + x) * 4;
-            // Rack Body
-            if x > 10 && x < 54 {
-                server_data[index] = 20;
-                server_data[index + 1] = 20;
-                server_data[index + 2] = 25;
-                server_data[index + 3] = 255;
-                
-                // Lights
-                if y % 8 == 0 && x > 15 && x < 20 {
-                    server_data[index] = 0;
-                    server_data[index + 1] = 255;
-                    server_data[index + 2] = 0;
-                }
-                 if y % 8 == 0 && x > 25 && x < 30 {
-                    server_data[index] = 255;
-                    server_data[index + 1] = 0;
-                    server_data[index + 2] = 0;
-                }
-            } else {
-                 server_data[index + 3] = 0; // Transparent sides
+    // East corridor walls
+    for x in 6..=9 {
+        for &y in &[-2, 1] {
+            if !door_tiles.contains(&(x, y)) {
+                commands.spawn((
+                    Sprite {
+                        image: wall_handle.clone(),
+                        custom_size: Some(Vec2::new(TILE, TILE)),
+                        ..default()
+                    },
+                    Transform::from_xyz(x as f32 * TILE, y as f32 * TILE, 0.5),
+                    Collider { width: TILE, height: TILE },
+                ));
             }
         }
     }
-    let server_image = Image::new(
-        floor_size,
-        bevy::render::render_resource::TextureDimension::D2,
-        server_data,
-        bevy::render::render_resource::TextureFormat::Rgba8UnormSrgb,
-        bevy::render::render_asset::RenderAssetUsages::RENDER_WORLD,
-    );
-    let server_handle = images.add(server_image);
+    // South corridor walls (left and right edges)
+    for y in -9..=-6 {
+        for &x in &[-2, 2] {
+            if !door_tiles.contains(&(x, y)) {
+                commands.spawn((
+                    Sprite {
+                        image: wall_handle.clone(),
+                        custom_size: Some(Vec2::new(TILE, TILE)),
+                        ..default()
+                    },
+                    Transform::from_xyz(x as f32 * TILE, y as f32 * TILE, 0.5),
+                    Collider { width: TILE, height: TILE },
+                ));
+            }
+        }
+    }
 
-    // Spawn Teacher NPC
+    // --- Spawn Interactable Entities ---
+
+    // Teacher NPC — in Academy Hall
+    let teacher_pos = Vec3::new(2.0 * TILE, 2.0 * TILE, 1.0);
     commands.spawn((
         Sprite {
             image: asset_server.load("teacher.jpg"),
             custom_size: Some(Vec2::new(64.0, 64.0)),
             ..default()
         },
-        Transform::from_xyz(150.0, 150.0, 1.0),
+        Transform::from_translation(teacher_pos),
         Collider { width: 40.0, height: 40.0 },
-        InteractionZone { radius: 80.0 },
+        InteractionZone { radius: 100.0 },
         crate::teacher::TeacherMarker,
         MemoryLink,
-        QuestTrigger { id: "Teacher".to_string(), radius: 80.0 },
-    ));
+        QuestTrigger { id: "Teacher".to_string(), radius: 100.0 },
+    )).with_children(|parent| {
+        // Name label
+        parent.spawn((
+            Text::new("The Architect"),
+            TextFont { font_size: 14.0, ..default() },
+            TextColor(Color::srgb(0.0, 1.0, 1.0)),
+            Transform::from_xyz(0.0, 50.0, 1.0),
+        ));
+        // Ambient glow
+        parent.spawn((
+            Sprite {
+                color: Color::srgba(0.0, 1.0, 1.0, 0.15),
+                custom_size: Some(Vec2::new(96.0, 96.0)),
+                ..default()
+            },
+            Transform::from_xyz(0.0, 0.0, -0.1),
+            AmbientGlow { base_alpha: 0.15, speed: 2.0 },
+        ));
+    });
 
-    // Spawn Ollama Terminal
+    // Terminal — in Terminal Lab
+    let terminal_pos = Vec3::new(-14.0 * TILE, 0.0 * TILE, 1.0);
     commands.spawn((
         Sprite {
-            image: terminal_handle.clone(),
-            custom_size: Some(Vec2::new(64.0, 64.0)),
+            image: asset_server.load("terminal.jpg"),
+            custom_size: Some(Vec2::new(96.0, 96.0)),
             ..default()
         },
-        Transform::from_xyz(-100.0, 150.0, 1.0),
+        Transform::from_translation(terminal_pos),
         Collider { width: 40.0, height: 40.0 },
-        InteractionZone { radius: 60.0 },
+        InteractionZone { radius: 80.0 },
         MemoryLink,
         Terminal,
-        QuestTrigger { id: "Terminal".to_string(), radius: 60.0 },
+        QuestTrigger { id: "Terminal".to_string(), radius: 80.0 },
     )).with_children(|parent| {
         parent.spawn((
-            Text::new("Terminal"),
+            Text::new("Ollama Terminal"),
             TextFont { font_size: 14.0, ..default() },
-            TextColor(Color::WHITE),
-            Transform::from_xyz(0.0, 40.0, 1.0),
+            TextColor(Color::srgb(0.0, 1.0, 0.5)),
+            Transform::from_xyz(0.0, 50.0, 1.0),
+        ));
+        parent.spawn((
+            Sprite {
+                color: Color::srgba(0.0, 1.0, 0.5, 0.12),
+                custom_size: Some(Vec2::new(96.0, 96.0)),
+                ..default()
+            },
+            Transform::from_xyz(0.0, 0.0, -0.1),
+            AmbientGlow { base_alpha: 0.12, speed: 1.5 },
         ));
     });
 
-    // Spawn The Archive (Module 2 Target)
+    // Archive — in Archive Vault
+    let archive_pos = Vec3::new(0.0 * TILE, -13.0 * TILE, 1.0);
     commands.spawn((
         Sprite {
-            image: archive_handle.clone(),
-            custom_size: Some(Vec2::new(64.0, 64.0)),
+            image: asset_server.load("archive.jpg"),
+            custom_size: Some(Vec2::new(96.0, 96.0)),
             ..default()
         },
-        Transform::from_xyz(-200.0, -200.0, 1.0),
+        Transform::from_translation(archive_pos),
         Collider { width: 40.0, height: 40.0 },
-        InteractionZone { radius: 60.0 },
+        InteractionZone { radius: 80.0 },
         MemoryLink,
-        QuestTrigger { id: "Archive".to_string(), radius: 60.0 },
+        QuestTrigger { id: "Archive".to_string(), radius: 80.0 },
     )).with_children(|parent| {
         parent.spawn((
-            Text::new("Archive"),
+            Text::new("The Archive"),
             TextFont { font_size: 14.0, ..default() },
-            TextColor(Color::WHITE),
-            Transform::from_xyz(0.0, 40.0, 1.0),
+            TextColor(Color::srgb(1.0, 0.75, 0.0)),
+            Transform::from_xyz(0.0, 50.0, 1.0),
+        ));
+        parent.spawn((
+            Sprite {
+                color: Color::srgba(1.0, 0.75, 0.0, 0.12),
+                custom_size: Some(Vec2::new(96.0, 96.0)),
+                ..default()
+            },
+            Transform::from_xyz(0.0, 0.0, -0.1),
+            AmbientGlow { base_alpha: 0.12, speed: 1.8 },
         ));
     });
 
-    // Spawn The Server (Module 3 Target)
+    // Server — in Server Core
+    let server_pos = Vec3::new(14.0 * TILE, 0.0 * TILE, 1.0);
     commands.spawn((
         Sprite {
-            image: server_handle.clone(),
-            custom_size: Some(Vec2::new(64.0, 64.0)),
+            image: asset_server.load("server.jpg"),
+            custom_size: Some(Vec2::new(96.0, 96.0)),
             ..default()
         },
-        Transform::from_xyz(200.0, -200.0, 1.0),
+        Transform::from_translation(server_pos),
         Collider { width: 40.0, height: 40.0 },
-        InteractionZone { radius: 60.0 },
+        InteractionZone { radius: 80.0 },
         MemoryLink,
-        QuestTrigger { id: "Server".to_string(), radius: 60.0 },
+        QuestTrigger { id: "Server".to_string(), radius: 80.0 },
     )).with_children(|parent| {
         parent.spawn((
-            Text::new("Server"),
+            Text::new("Server Core"),
             TextFont { font_size: 14.0, ..default() },
-            TextColor(Color::WHITE),
-            Transform::from_xyz(0.0, 40.0, 1.0),
+            TextColor(Color::srgb(1.0, 0.3, 0.3)),
+            Transform::from_xyz(0.0, 50.0, 1.0),
+        ));
+        parent.spawn((
+            Sprite {
+                color: Color::srgba(1.0, 0.3, 0.3, 0.12),
+                custom_size: Some(Vec2::new(96.0, 96.0)),
+                ..default()
+            },
+            Transform::from_xyz(0.0, 0.0, -0.1),
+            AmbientGlow { base_alpha: 0.12, speed: 2.5 },
         ));
     });
+
+    // --- Room Labels (floating text at room entrances) ---
+    let room_labels = [
+        ("⟐ Academy Hall ⟐", 0.0, 3.0 * TILE, Color::srgb(1.0, 1.0, 1.0)),
+        ("⟐ Terminal Lab ⟐", -14.0 * TILE, 3.0 * TILE, Color::srgb(0.0, 1.0, 0.5)),
+        ("⟐ Archive Vault ⟐", 0.0, -10.0 * TILE, Color::srgb(1.0, 0.75, 0.0)),
+        ("⟐ Server Core ⟐", 14.0 * TILE, 3.0 * TILE, Color::srgb(1.0, 0.3, 0.3)),
+    ];
+
+    for (label, lx, ly, color) in room_labels {
+        commands.spawn((
+            Text::new(label),
+            TextFont { font_size: 18.0, ..default() },
+            TextColor(color),
+            Transform::from_xyz(lx, ly, 2.0),
+            RoomLabel,
+        ));
+    }
+
+    // --- Door guide strips (subtle glow at corridor openings) ---
+    let guide_positions: Vec<(f32, f32)> = vec![
+        // West corridor entrance
+        (-6.0 * TILE, -0.5 * TILE),
+        // East corridor entrance
+        (5.5 * TILE, -0.5 * TILE),
+        // South corridor entrance
+        (-0.5 * TILE, -5.5 * TILE),
+    ];
+
+    for (gx, gy) in guide_positions {
+        commands.spawn((
+            Sprite {
+                color: Color::srgba(1.0, 0.75, 0.0, 0.2),
+                custom_size: Some(Vec2::new(TILE * 2.0, 8.0)),
+                ..default()
+            },
+            Transform::from_xyz(gx, gy, 0.3),
+            DoorGuide,
+            AmbientGlow { base_alpha: 0.2, speed: 1.0 },
+        ));
+    }
+
+    // --- Knowledge Fragments (educational collectibles) ---
+    let fragments = [
+        (-8.0, -1.0, "Data Sovereignty", "FERPA requires student data to stay on school premises. Local AI means zero data leaves your network."),
+        (-9.0, 0.0, "Open Weights", "Open-weight models like Llama can run entirely offline — no API keys, no cloud bills, no privacy concerns."),
+        (-1.0, -7.0, "Gagné's First Event", "Gagné's 9 Events start with 'Gain Attention' — hook the learner before teaching begins."),
+        (0.0, -8.0, "Constructivism", "Constructivist learning: knowledge is built, not received. Every puzzle you solve builds understanding."),
+        (7.0, -1.0, "Edge Computing", "Running AI on the 'edge' (local device) means instant responses — no network latency, no downtime."),
+        (8.0, 0.0, "Model Quantization", "Quantization shrinks AI models by 75% with minimal quality loss — making local deployment practical."),
+        (3.0, 3.0, "Socratic Method", "The Socratic method asks questions instead of giving answers. Great teachers guide discovery, not memorization."),
+        (-3.0, 3.0, "Flow State", "Mihaly Csikszentmihalyi's Flow: the sweet spot between challenge and skill where learning feels effortless."),
+    ];
+
+    for (fx, fy, title, content) in fragments {
+        commands.spawn((
+            Sprite {
+                color: Color::srgba(1.0, 0.85, 0.0, 0.7),
+                custom_size: Some(Vec2::new(20.0, 20.0)),
+                ..default()
+            },
+            Transform::from_xyz(fx * TILE, fy * TILE, 0.8),
+            KnowledgeFragment {
+                title: title.to_string(),
+                content: content.to_string(),
+                xp_value: 25,
+            },
+            AmbientGlow { base_alpha: 0.7, speed: 3.0 },
+        )).with_children(|parent| {
+            parent.spawn((
+                Text::new("?"),
+                TextFont { font_size: 16.0, ..default() },
+                TextColor(Color::srgb(1.0, 0.85, 0.0)),
+                Transform::from_xyz(0.0, 18.0, 0.1),
+            ));
+        });
+    }
+
+    // --- Vignette overlay (atmosphere) ---
+    commands.spawn((
+        Sprite {
+            color: Color::srgba(0.0, 0.0, 0.0, 0.0),
+            custom_size: Some(Vec2::new(1280.0 * 2.0, 720.0 * 2.0)),
+            ..default()
+        },
+        Transform::from_xyz(0.0, 0.0, 50.0),
+    ));
 }
 
-
+// ============================================================================
+// Movement with Wall Collision
+// ============================================================================
 
 fn player_movement(
     time: Res<Time>,
     keys: Res<ButtonInput<KeyCode>>,
-    mut player_query: Query<(&mut Player, &mut Transform)>,
+    mut player_query: Query<(&mut Player, &mut Transform, &Collider), Without<Terminal>>,
+    wall_query: Query<(&Transform, &Collider), (Without<Player>, Without<Terminal>, Without<crate::teacher::TeacherMarker>)>,
 ) {
-    for (mut player, mut transform) in &mut player_query {
+    for (mut player, mut transform, player_col) in &mut player_query {
         let mut direction = Vec3::ZERO;
         
         if keys.pressed(KeyCode::KeyW) || keys.pressed(KeyCode::ArrowUp) {
@@ -456,13 +618,50 @@ fn player_movement(
         
         if direction.length() > 0.0 {
             direction = direction.normalize();
-            transform.translation += direction * player.speed * time.delta_secs();
+            let velocity = direction * player.speed * time.delta_secs();
             player.is_moving = true;
             
             if direction.x < 0.0 {
                 player.facing_left = true;
             } else if direction.x > 0.0 {
                 player.facing_left = false;
+            }
+
+            let half_pw = player_col.width / 2.0;
+            let half_ph = player_col.height / 2.0;
+
+            // Try X movement
+            let new_x = transform.translation.x + velocity.x;
+            let mut x_blocked = false;
+            for (wall_tf, wall_col) in &wall_query {
+                let half_ww = wall_col.width / 2.0;
+                let half_wh = wall_col.height / 2.0;
+                if (new_x - wall_tf.translation.x).abs() < half_pw + half_ww
+                    && (transform.translation.y - wall_tf.translation.y).abs() < half_ph + half_wh
+                {
+                    x_blocked = true;
+                    break;
+                }
+            }
+            if !x_blocked {
+                transform.translation.x = new_x;
+            }
+
+            // Try Y movement
+            let new_y = transform.translation.y + velocity.y;
+            let mut y_blocked = false;
+            for (wall_tf, wall_col) in &wall_query {
+                let half_ww = wall_col.width / 2.0;
+                let half_wh = wall_col.height / 2.0;
+                if (transform.translation.x - wall_tf.translation.x).abs() < half_pw + half_ww
+                    && (new_y - wall_tf.translation.y).abs() < half_ph + half_wh
+                {
+                    y_blocked = true;
+                    break;
+                }
+            }
+            if !y_blocked {
+                transform.translation.y = new_y;
             }
         } else {
             player.is_moving = false;
@@ -490,14 +689,12 @@ fn animate_player(
                 sprite.image = asset_server.load(frame_path);
             }
         } else {
-            // Reset to idle
             if player.current_frame != 0 {
                 player.current_frame = 0;
                 sprite.image = asset_server.load("player.jpg");
             }
         }
         
-        // Handle flipping
         if player.facing_left {
             sprite.flip_x = true;
         } else {
@@ -524,13 +721,279 @@ fn camera_follow_player(
 ) {
     if let Ok(player_transform) = player_query.get_single() {
         if let Ok(mut camera_transform) = camera_query.get_single_mut() {
-            // Smooth camera follow (LERP)
             let target = player_transform.translation;
             let current = camera_transform.translation;
-            let smoothness = 5.0; // Higher = faster
+            let smoothness = 5.0;
             
             camera_transform.translation.x = current.x + (target.x - current.x) * smoothness * time.delta_secs();
             camera_transform.translation.y = current.y + (target.y - current.y) * smoothness * time.delta_secs();
+        }
+    }
+}
+
+// ============================================================================
+// Camera Shake
+// ============================================================================
+
+fn camera_shake(
+    time: Res<Time>,
+    mut trauma: ResMut<CameraTrauma>,
+    mut camera_query: Query<&mut Transform, With<Camera2d>>,
+) {
+    if trauma.intensity <= 0.0 { return; }
+
+    // Decay trauma
+    trauma.intensity = (trauma.intensity - time.delta_secs() * 3.0).max(0.0);
+    
+    let shake = trauma.intensity * trauma.intensity; // Quadratic for nicer feel
+    let offset_x = (ops::sin(time.elapsed_secs() * 37.0)) * shake * 8.0;
+    let offset_y = (ops::sin(time.elapsed_secs() * 53.0)) * shake * 6.0;
+    
+    for mut transform in &mut camera_query {
+        transform.translation.x += offset_x;
+        transform.translation.y += offset_y;
+    }
+}
+
+// ============================================================================
+// Ambient Glow Animation
+// ============================================================================
+
+fn animate_ambient_glows(
+    time: Res<Time>,
+    mut query: Query<(&AmbientGlow, &mut Sprite)>,
+) {
+    for (glow, mut sprite) in &mut query {
+        let pulse = (ops::sin(time.elapsed_secs() * glow.speed) + 1.0) / 2.0;
+        let alpha = glow.base_alpha * (0.5 + 0.5 * pulse);
+        let c = sprite.color.to_srgba();
+        sprite.color = Color::srgba(c.red, c.green, c.blue, alpha);
+    }
+}
+
+// ============================================================================
+// Knowledge Fragment Collection
+// ============================================================================
+
+fn collect_knowledge_fragments(
+    mut commands: Commands,
+    player_query: Query<&Transform, With<Player>>,
+    fragment_query: Query<(Entity, &Transform, &KnowledgeFragment)>,
+    mut xp_writer: EventWriter<XpGainEvent>,
+    mut trauma: ResMut<CameraTrauma>,
+    mut score: ResMut<crate::scoring::PlayerScore>,
+) {
+    let Ok(player_tf) = player_query.get_single() else { return };
+
+    for (entity, frag_tf, fragment) in &fragment_query {
+        let distance = player_tf.translation.distance(frag_tf.translation);
+        if distance < 40.0 {
+            // Collect!
+            info!("📜 Knowledge Fragment: {} — {}", fragment.title, fragment.content);
+            
+            // Award XP
+            xp_writer.send(XpGainEvent {
+                amount: fragment.xp_value,
+                reason: format!("Knowledge: {}", fragment.title),
+            });
+
+            // Small screen shake
+            trauma.intensity = 0.15;
+
+            // Spawn floating text
+            let pos = frag_tf.translation;
+            spawn_floating_text(
+                &mut commands,
+                pos,
+                &format!("📜 {} +{}XP", fragment.title, fragment.xp_value),
+                Color::srgb(1.0, 0.85, 0.0),
+            );
+
+            // Spawn particles
+            spawn_particle_burst(&mut commands, pos, Color::srgb(1.0, 0.85, 0.0), 8);
+
+            score.fragments_collected += 1;
+
+            // Despawn the fragment
+            commands.entity(entity).despawn_recursive();
+        }
+    }
+}
+
+// ============================================================================
+// Room Discovery
+// ============================================================================
+
+fn check_room_discovery(
+    mut commands: Commands,
+    player_query: Query<&Transform, With<Player>>,
+    mut discovery: ResMut<RoomDiscovery>,
+    mut xp_writer: EventWriter<XpGainEvent>,
+    mut trauma: ResMut<CameraTrauma>,
+) {
+    let Ok(player_tf) = player_query.get_single() else { return };
+    let px = player_tf.translation.x;
+    let py = player_tf.translation.y;
+
+    // Check which room the player is in
+    let current_room = if px > -6.0 * TILE && px < 6.0 * TILE && py > -5.0 * TILE && py < 5.0 * TILE {
+        Some("Academy Hall")
+    } else if px < -10.0 * TILE && px > -18.0 * TILE {
+        Some("Terminal Lab")
+    } else if py < -9.0 * TILE && py > -17.0 * TILE {
+        Some("Archive Vault")
+    } else if px > 10.0 * TILE && px < 18.0 * TILE {
+        Some("Server Core")
+    } else {
+        None
+    };
+
+    if let Some(room_name) = current_room {
+        if !discovery.0.contains(&room_name.to_string()) {
+            discovery.0.push(room_name.to_string());
+            
+            xp_writer.send(XpGainEvent {
+                amount: 50,
+                reason: format!("Discovered {}", room_name),
+            });
+
+            trauma.intensity = 0.1;
+
+            spawn_floating_text(
+                &mut commands,
+                player_tf.translation,
+                &format!("🗺️ {} Discovered! +50XP", room_name),
+                Color::srgb(0.0, 1.0, 1.0),
+            );
+
+            spawn_particle_burst(&mut commands, player_tf.translation, Color::srgb(0.0, 1.0, 1.0), 12);
+            
+            info!("🗺️ New room discovered: {}", room_name);
+        }
+    }
+}
+
+// ============================================================================
+// Particles on Quest Advance
+// ============================================================================
+
+fn spawn_particles_on_quest_advance(
+    mut commands: Commands,
+    mut events: EventReader<crate::syllabus::QuestAdvancedEvent>,
+    player_query: Query<&Transform, With<Player>>,
+    mut trauma: ResMut<CameraTrauma>,
+    mut xp_writer: EventWriter<XpGainEvent>,
+) {
+    for _event in events.read() {
+        if let Ok(player_tf) = player_query.get_single() {
+            // Medium shake
+            trauma.intensity = 0.35;
+
+            // Amber particle burst
+            spawn_particle_burst(&mut commands, player_tf.translation, Color::srgb(1.0, 0.75, 0.0), 16);
+
+            // XP for quest progress
+            xp_writer.send(XpGainEvent {
+                amount: 75,
+                reason: "Quest Progress".to_string(),
+            });
+
+            spawn_floating_text(
+                &mut commands,
+                player_tf.translation,
+                "⚡ Quest Advanced! +75XP",
+                Color::srgb(1.0, 0.75, 0.0),
+            );
+        }
+    }
+}
+
+// ============================================================================
+// Floating Text System
+// ============================================================================
+
+fn spawn_floating_text(commands: &mut Commands, position: Vec3, text: &str, color: Color) {
+    commands.spawn((
+        Text::new(text),
+        TextFont { font_size: 16.0, ..default() },
+        TextColor(color),
+        Transform::from_translation(position + Vec3::new(0.0, 30.0, 10.0)),
+        FloatingText {
+            lifetime: Timer::from_seconds(2.0, TimerMode::Once),
+            velocity: Vec3::new(0.0, 50.0, 0.0),
+        },
+    ));
+}
+
+fn update_floating_text(
+    mut commands: Commands,
+    time: Res<Time>,
+    mut query: Query<(Entity, &mut FloatingText, &mut Transform, &mut TextColor)>,
+) {
+    for (entity, mut ft, mut transform, mut color) in &mut query {
+        ft.lifetime.tick(time.delta());
+        
+        // Float upward
+        transform.translation += ft.velocity * time.delta_secs();
+        
+        // Fade out
+        let t = ft.lifetime.fraction();
+        let c = color.0.to_srgba();
+        color.0 = Color::srgba(c.red, c.green, c.blue, 1.0 - t);
+        
+        if ft.lifetime.finished() {
+            commands.entity(entity).despawn_recursive();
+        }
+    }
+}
+
+// ============================================================================
+// Particle System
+// ============================================================================
+
+fn spawn_particle_burst(commands: &mut Commands, position: Vec3, color: Color, count: usize) {
+    for i in 0..count {
+        let angle = (i as f32 / count as f32) * std::f32::consts::TAU;
+        let speed = 80.0 + (i as f32 * 10.0) % 40.0;
+        let vel = Vec3::new(ops::cos(angle) * speed, ops::sin(angle) * speed, 0.0);
+        
+        commands.spawn((
+            Sprite {
+                color,
+                custom_size: Some(Vec2::new(6.0, 6.0)),
+                ..default()
+            },
+            Transform::from_translation(position + Vec3::new(0.0, 0.0, 5.0)),
+            Particle {
+                lifetime: Timer::from_seconds(0.8, TimerMode::Once),
+                velocity: vel,
+            },
+        ));
+    }
+}
+
+fn update_particles(
+    mut commands: Commands,
+    time: Res<Time>,
+    mut query: Query<(Entity, &mut Particle, &mut Transform, &mut Sprite)>,
+) {
+    for (entity, mut particle, mut transform, mut sprite) in &mut query {
+        particle.lifetime.tick(time.delta());
+        
+        // Move
+        transform.translation += particle.velocity * time.delta_secs();
+        // Slow down
+        particle.velocity *= 0.95;
+        
+        // Fade and shrink
+        let t = particle.lifetime.fraction();
+        let c = sprite.color.to_srgba();
+        sprite.color = Color::srgba(c.red, c.green, c.blue, 1.0 - t);
+        let size = 6.0 * (1.0 - t * 0.5);
+        sprite.custom_size = Some(Vec2::new(size, size));
+        
+        if particle.lifetime.finished() {
+            commands.entity(entity).despawn_recursive();
         }
     }
 }
@@ -546,8 +1009,6 @@ struct InteractionPrompt;
 struct RewardGlow {
     pub timer: Timer,
 }
-
-
 
 fn check_proximity_interactions(
     player_query: Query<&Transform, With<Player>>,
@@ -566,7 +1027,6 @@ fn check_proximity_interactions(
                     if trigger.id == target {
                         let distance = player_transform.translation.distance(trigger_transform.translation);
                         if distance < trigger.radius {
-                            // Target reached!
                             let rewards = syl.advance_phase();
                             if let Some(tools) = rewards {
                                 for tool in tools {
@@ -585,7 +1045,7 @@ fn check_proximity_interactions(
             }
         }
 
-        // 2. Check Teacher Interaction (for dialogue availability)
+        // 2. Check Teacher Interaction
         let mut in_range = false;
         
         for (npc_transform, zone) in &npc_query {
@@ -597,12 +1057,10 @@ fn check_proximity_interactions(
             }
         }
         
-        // Update story state to enable/disable interaction
         let previously_can_interact = story_state.can_interact;
         story_state.can_interact = in_range;
         
         if in_range && !previously_can_interact {
-            // Trigger dialogue automatically when entering range
             info!("Player entered Teacher range - triggering dialogue");
         }
     }
@@ -617,22 +1075,18 @@ fn teacher_gravitational_pull(
     let Ok(player_transform) = player_query.get_single() else { return };
     let Some(syl) = syllabus else { return };
 
-    // Only pulsate during Exploration phase (the "pull")
     if !matches!(syl.current_phase(), crate::syllabus::QuestPhase::Exploration { .. }) {
         for (_, mut sprite, _) in &mut teacher_query {
-            sprite.color = Color::WHITE; // Reset color
+            sprite.color = Color::WHITE;
         }
         return;
     }
 
     for (teacher_transform, mut sprite, _zone) in &mut teacher_query {
         let distance = player_transform.translation.distance(teacher_transform.translation);
-        
-        // Intensity increases as player gets closer
         let intensity = (400.0 - distance).max(0.0) / 400.0; 
         let pulse = (ops::sin(time.elapsed_secs() * 2.0) + 1.0) / 2.0;
         
-        // Cyan beckoning pulse
         sprite.color = Color::srgb(
             0.0, 
             0.8 + 0.2 * intensity, 
@@ -640,8 +1094,6 @@ fn teacher_gravitational_pull(
         );
     }
 }
-
-
 
 fn show_interaction_prompt(
     mut commands: Commands,
@@ -659,7 +1111,6 @@ fn show_interaction_prompt(
             if distance < zone.radius {
                 should_show_prompt = true;
                 
-                // Phase-aware prompt text
                 let prompt_text = if let Some(ref syl) = syllabus {
                     match syl.current_phase() {
                         crate::syllabus::QuestPhase::Exploration { .. } => "The Teacher awaits...".to_string(),
@@ -672,19 +1123,18 @@ fn show_interaction_prompt(
                     "Press T to talk".to_string()
                 };
 
-                // Spawn prompt if it doesn't exist
                 if prompt_query.is_empty() {
                     commands.spawn((
                         Text::new(prompt_text),
                         TextFont {
-                            font_size: 16.0,
+                            font_size: 18.0,
                             ..default()
                         },
-                        TextColor(Color::srgb(1.0, 0.75, 0.0)), // Phosphor Amber
+                        TextColor(Color::srgb(1.0, 0.75, 0.0)),
                         Node {
                             position_type: PositionType::Absolute,
-                            top: Val::Px(300.0),
-                            left: Val::Percent(50.0),
+                            bottom: Val::Px(200.0),
+                            left: Val::Percent(35.0),
                             ..default()
                         },
                         InteractionPrompt,
@@ -694,7 +1144,6 @@ fn show_interaction_prompt(
             }
         }
         
-        // Remove prompt if out of range
         if !should_show_prompt {
             for entity in &prompt_query {
                 commands.entity(entity).despawn_recursive();
@@ -705,16 +1154,16 @@ fn show_interaction_prompt(
 
 fn spawn_tutorial(mut commands: Commands) {
     commands.spawn((
-        Text::new("→ Walk to the Teacher to begin"),
+        Text::new("→ Walk to the Teacher to begin your quest"),
         TextFont {
-            font_size: 24.0,
+            font_size: 22.0,
             ..default()
         },
         TextColor(Color::srgb(1.0, 1.0, 1.0)),
         Node {
             position_type: PositionType::Absolute,
-            top: Val::Px(100.0),
-            left: Val::Percent(50.0),
+            bottom: Val::Px(240.0),
+            left: Val::Percent(25.0),
             ..default()
         },
         TutorialPrompt,
@@ -732,6 +1181,7 @@ fn hide_tutorial_on_interaction(
         }
     }
 }
+
 #[derive(Component)]
 struct TutorialPrompt;
 
@@ -742,10 +1192,9 @@ fn spawn_quest_reward(
 ) {
     for _event in events.read() {
         if let Ok(player_transform) = player_query.get_single() {
-            // Spawn a golden ring at player position
             commands.spawn((
                 Sprite {
-                    color: Color::srgba(1.0, 0.75, 0.0, 0.8), // Phosphor Amber
+                    color: Color::srgba(1.0, 0.75, 0.0, 0.8),
                     custom_size: Some(Vec2::new(10.0, 10.0)),
                     ..default()
                 },
@@ -766,12 +1215,10 @@ fn fade_out_rewards(
     for (entity, mut glow, mut sprite) in &mut query {
         glow.timer.tick(time.delta());
         
-        // Expand and fade
         let t = glow.timer.fraction();
         let size = 10.0 + t * 100.0;
         sprite.custom_size = Some(Vec2::new(size, size));
         
-        // Simple alpha fade
         let color = sprite.color.to_srgba();
         sprite.color = Color::srgba(color.red, color.green, color.blue, 0.8 * (1.0 - t));
         
@@ -790,11 +1237,10 @@ fn reveal_memories(
     let compass_active = inventory.active_tool == Some(crate::inventory::ToolId::OllamaCompass);
     
     if compass_active {
-        // Spawn glows for all memory links that don't have one
         for (entity, transform) in &targets_query {
             let glow_id = commands.spawn((
                 Sprite {
-                    color: Color::srgba(0.0, 1.0, 1.0, 0.4), // Cyan Glow
+                    color: Color::srgba(0.0, 1.0, 1.0, 0.4),
                     custom_size: Some(Vec2::new(60.0, 60.0)),
                     ..default()
                 },
@@ -806,7 +1252,6 @@ fn reveal_memories(
             info!("✨ Compass revealed a semantic memory link!");
         }
     } else {
-        // Remove all glows if compass is inactive
         for entity in &glow_query {
             commands.entity(entity).despawn_recursive();
         }
@@ -820,21 +1265,25 @@ fn terminal_interaction(
     mut syllabus: Option<ResMut<SyllabusResource>>,
     mut event_writer: EventWriter<crate::syllabus::QuestAdvancedEvent>,
     mut reward_writer: EventWriter<crate::inventory::ItemGetEvent>,
+    puzzle_state: Res<crate::puzzle::PuzzleState>,
 ) {
+    // Don't process terminal interaction if puzzle system will handle it
+    if puzzle_state.is_active || puzzle_state.solved { return; }
+
     if keys.just_pressed(KeyCode::KeyT) {
         if let Ok(player_transform) = player_query.get_single() {
             if let Some(ref mut syl) = syllabus {
-                // Only advance if current phase is a Task
                 let task_desc = if let crate::syllabus::QuestPhase::Task { description, .. } = syl.current_phase() {
+                    // Skip Terminal tasks — those are handled by puzzle.rs
+                    if description.contains("Terminal") { return; }
                     Some(description.clone())
                 } else {
                     None
                 };
 
                 if let Some(description) = task_desc {
-                    // Check if player is near a valid trigger for this task
                     for (trigger_transform, trigger) in &trigger_query {
-                         if description.contains(&trigger.id) || (trigger.id == "Terminal" && description.contains("Terminal")) {
+                         if description.contains(&trigger.id) {
                             let distance = player_transform.translation.distance(trigger_transform.translation);
                             if distance < trigger.radius {
                                 syl.complete_current_task();

@@ -15,17 +15,7 @@ export default function ModuleThree() {
                 </div>
             </div>
 
-            <div className="glass-panel p-1 rounded-2xl aspect-video relative group overflow-hidden bg-black/40">
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 z-10">
-                    <PlayCircle size={64} className="text-indigo-400 mb-4 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all cursor-pointer" />
-                    <h3 className="text-xl font-bold text-white mb-2">Video 3: Creation (08:20)</h3>
-                    <p className="text-slate-400 max-w-md">
-                        Click to play. Includes closed captions and downloadable transcript for ADA 508 compliance.
-                    </p>
-                </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
                 <div className="glass-panel p-6 space-y-4">
                     <h3 className="text-xl font-bold text-white flex items-center gap-2">
                         <Blocks className="text-indigo-400" /> Building with AI
@@ -43,14 +33,36 @@ export default function ModuleThree() {
                         The AI generates the exact syntax required for your game engine (like Rust for Bevy, or Luau for Roblox). You simply accept the changes and immediately test the interactions in your sandbox.
                     </p>
                 </div>
+
+                <div className="glass-panel p-6 space-y-4 md:col-span-2">
+                    <h3 className="text-xl font-bold text-white">Active Constructivism</h3>
+                    <p className="text-slate-300 text-sm leading-relaxed">
+                        <strong>Constructivism</strong> suggests that learners construct knowledge best by actively building tangible artifacts. "Prompt Engineering" bridges the gap between passive reading and active creation by functioning as a high-level creative tool:
+                    </p>
+                    <ul className="list-disc list-outside ml-5 text-slate-300 text-sm space-y-2">
+                        <li><strong>From Consumers to Creators:</strong> Instead of memorizing syntax, learners focus on architecture, logic, and systems design—the higher-order thinking skills of software engineering.</li>
+                        <li><strong>Immediate Feedback Loop:</strong> Compiling the generated code into a playable sandbox provides instantaneous validation of their logical instructions.</li>
+                        <li><strong>Iterative Problem Solving:</strong> When a prompt fails to produce the desired game mechanic, the student learns to refine their instructions, debugging their logic in natural language.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div className="glass-panel p-1 rounded-2xl aspect-video relative group overflow-hidden bg-black/40">
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 z-10">
+                    <PlayCircle size={64} className="text-indigo-400 mb-4 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all cursor-pointer" />
+                    <h3 className="text-xl font-bold text-white mb-2">Video 3: Creation (08:20)</h3>
+                    <p className="text-slate-400 max-w-md">
+                        Click to play. Includes closed captions and downloadable transcript for ADA 508 compliance.
+                    </p>
+                </div>
             </div>
 
             <div className="flex justify-between pt-8">
                 <Link to="/module-2" className="glass-button text-slate-400 hover:text-white">
                     <ArrowLeft size={20} /> Back to IDE Integration
                 </Link>
-                <Link to="/knowledge-check" className="glass-button glass-button-primary shadow-[0_0_20px_rgba(139,92,246,0.3)] border-indigo-400/50 bg-indigo-600/80 hover:bg-indigo-500 hover:shadow-[0_0_20px_rgba(99,102,241,0.6)]">
-                    Take Knowledge Check <ArrowRight size={20} />
+                <Link to="/sandbox" className="glass-button glass-button-primary shadow-[0_0_20px_rgba(139,92,246,0.3)] border-indigo-400/50 bg-indigo-600/80 hover:bg-indigo-500 hover:shadow-[0_0_20px_rgba(99,102,241,0.6)]">
+                    Play Sandbox <ArrowRight size={20} />
                 </Link>
             </div>
 

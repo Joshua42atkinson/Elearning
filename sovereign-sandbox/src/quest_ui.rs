@@ -58,12 +58,13 @@ fn setup_quest_ui(mut commands: Commands) {
         .spawn((
             Node {
                 position_type: PositionType::Absolute,
-                left: Val::Px(20.0),
-                top: Val::Px(120.0), // Below boot text
-                padding: UiRect::all(Val::Px(15.0)),
+                left: Val::Px(12.0),
+                top: Val::Px(12.0),
+                padding: UiRect::all(Val::Px(10.0)),
                 flex_direction: FlexDirection::Column,
-                row_gap: Val::Px(8.0),
+                row_gap: Val::Px(6.0),
                 border: UiRect::all(Val::Px(2.0)),
+                max_width: Val::Px(260.0),
                 ..default()
             },
             BackgroundColor(Color::srgb(0.1, 0.1, 0.1)), // Deep Charcoal
@@ -75,7 +76,7 @@ fn setup_quest_ui(mut commands: Commands) {
             parent.spawn((
                 Text::new("═══ QUEST LOG ═══"),
                 TextFont {
-                    font_size: 18.0,
+                    font_size: 14.0,
                     ..default()
                 },
                 TextColor(Color::srgb(1.0, 0.75, 0.0)), // Phosphor Amber
@@ -117,8 +118,8 @@ fn setup_quest_ui(mut commands: Commands) {
             // Progress Bar Container
             parent
                 .spawn(Node {
-                    width: Val::Px(250.0),
-                    height: Val::Px(20.0),
+                    width: Val::Px(220.0),
+                    height: Val::Px(14.0),
                     border: UiRect::all(Val::Px(1.0)),
                     ..default()
                 })

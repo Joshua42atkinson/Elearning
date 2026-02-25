@@ -15,18 +15,7 @@ export default function ModuleOne() {
                 </div>
             </div>
 
-            <div className="glass-panel p-1 rounded-2xl aspect-video relative group overflow-hidden bg-black/40">
-                {/* Placeholder for ADA 508 Compliant Video */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 z-10">
-                    <PlayCircle size={64} className="text-violet-400 mb-4 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all cursor-pointer" />
-                    <h3 className="text-xl font-bold text-white mb-2">Video 1: The Setup (04:12)</h3>
-                    <p className="text-slate-400 max-w-md">
-                        Click to play. Includes closed captions and downloadable transcript for ADA 508 compliance.
-                    </p>
-                </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
                 <div className="glass-panel p-6 space-y-4">
                     <h3 className="text-xl font-bold text-white flex items-center gap-2">
                         <ShieldCheck className="text-green-400" /> Privacy First
@@ -41,6 +30,29 @@ export default function ModuleOne() {
                     <blockquote className="border-l-4 border-violet-500 pl-4 text-slate-300 italic text-sm">
                         "We all want our students to be active participants in their learning, not just passive readers. Today, we’re going to set up a private assistant that helps you build those active experiences right from your own computer."
                     </blockquote>
+                </div>
+
+                <div className="glass-panel p-6 space-y-4 md:col-span-2">
+                    <h3 className="text-xl font-bold text-white">The Safe Failure Space</h3>
+                    <p className="text-slate-300 text-sm leading-relaxed">
+                        In game design, a <strong>Safe Failure Space</strong> is an environment where players can experiment, fail, and try again without permanent, punishing consequences. By running models locally:
+                    </p>
+                    <ul className="list-disc list-outside ml-5 text-slate-300 text-sm space-y-2">
+                        <li>You create an air-gapped sandbox where "stupid" questions don't exist.</li>
+                        <li>Students can explore controversial or deeply confusing topics without a corporate server logging their history.</li>
+                        <li>The anxiety of the "blank page" is replaced by the low-stakes experimentation of a dialogue box.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div className="glass-panel p-1 rounded-2xl aspect-video relative group overflow-hidden bg-black/40">
+                {/* Placeholder for ADA 508 Compliant Video */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 z-10">
+                    <PlayCircle size={64} className="text-violet-400 mb-4 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all cursor-pointer" />
+                    <h3 className="text-xl font-bold text-white mb-2">Video 1: The Setup (04:12)</h3>
+                    <p className="text-slate-400 max-w-md">
+                        Click to play. Includes closed captions and downloadable transcript for ADA 508 compliance.
+                    </p>
                 </div>
             </div>
 

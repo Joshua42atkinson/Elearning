@@ -108,37 +108,39 @@ fn setup_story_ui(mut commands: Commands) {
     commands.spawn((
         Node {
             position_type: PositionType::Absolute,
-            bottom: Val::Px(20.0),
-            left: Val::Px(20.0),
-            right: Val::Px(20.0),
-            padding: UiRect::all(Val::Px(20.0)),
+            bottom: Val::Px(12.0),
+            left: Val::Percent(10.0),
+            right: Val::Percent(10.0),
+            max_height: Val::Px(180.0),
+            padding: UiRect::new(Val::Px(20.0), Val::Px(20.0), Val::Px(14.0), Val::Px(14.0)),
             border: UiRect::all(Val::Px(2.0)),
             flex_direction: FlexDirection::Column,
-            row_gap: Val::Px(10.0),
+            row_gap: Val::Px(8.0),
+            overflow: Overflow::clip_y(),
             ..default()
         },
-        BackgroundColor(Color::srgba(0.05, 0.05, 0.05, 0.95)),
-        BorderColor(Color::srgb(1.0, 0.75, 0.0)),
+        BackgroundColor(Color::srgba(0.03, 0.03, 0.06, 0.92)),
+        BorderColor(Color::srgb(0.5, 0.375, 0.0)),
         DialogueBox,
     ))
     .with_children(|parent| {
         parent.spawn((
             Text::new("🧙 The Gamification Architect"),
-            TextFont { font_size: 18.0, ..default() },
+            TextFont { font_size: 15.0, ..default() },
             TextColor(Color::srgb(0.0, 1.0, 1.0)),
         ));
 
         parent.spawn((
-            Text::new("Welcome, Architect. Walk to the Teacher to begin your quest..."),
-            TextFont { font_size: 16.0, ..default() },
-            TextColor(Color::srgb(1.0, 1.0, 1.0)),
+            Text::new("Walk to the Teacher to begin your quest..."),
+            TextFont { font_size: 14.0, ..default() },
+            TextColor(Color::srgb(0.9, 0.9, 0.9)),
             NarrativeText,
         ));
 
         parent.spawn((
-            Text::new("Press T to interact | Press H to speak | Press SPACE for dialogue"),
-            TextFont { font_size: 12.0, ..default() },
-            TextColor(Color::srgb(0.6, 0.6, 0.6)),
+            Text::new("[T] Talk  [H] Speak  [SPACE] Dialogue  [WASD] Move"),
+            TextFont { font_size: 11.0, ..default() },
+            TextColor(Color::srgb(0.45, 0.45, 0.45)),
         ));
     });
 }

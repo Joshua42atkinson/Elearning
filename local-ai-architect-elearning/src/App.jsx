@@ -1,9 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Home, Layers, Video, FileText, CheckCircle2 } from 'lucide-react';
+import { Home, Layers, Video, FileText, CheckCircle2, Gamepad2 } from 'lucide-react';
 import HomePage from './pages/HomePage';
 import ModuleOne from './pages/ModuleOne';
 import ModuleTwo from './pages/ModuleTwo';
 import ModuleThree from './pages/ModuleThree';
+import SandboxEmbed from './pages/SandboxEmbed';
 import KnowledgeCheck from './pages/KnowledgeCheck';
 import Documentation from './pages/Documentation';
 
@@ -15,9 +16,10 @@ function Navigation() {
     switch (currentPath) {
       case '/': return '0%';
       case '/module-1': return '20%';
-      case '/module-2': return '40%';
-      case '/module-3': return '60%';
-      case '/knowledge-check': return '80%';
+      case '/module-2': return '35%';
+      case '/module-3': return '50%';
+      case '/sandbox': return '65%';
+      case '/knowledge-check': return '85%';
       case '/documentation': return '100%';
       default: return '0%';
     }
@@ -28,6 +30,7 @@ function Navigation() {
     { name: 'Mod 1: Setup', path: '/module-1', icon: <Layers size={18} /> },
     { name: 'Mod 2: Logic', path: '/module-2', icon: <Video size={18} /> },
     { name: 'Mod 3: Implement', path: '/module-3', icon: <Video size={18} /> },
+    { name: 'Sandbox', path: '/sandbox', icon: <Gamepad2 size={18} /> },
     { name: 'Quiz', path: '/knowledge-check', icon: <CheckCircle2 size={18} /> },
     { name: 'Docs', path: '/documentation', icon: <FileText size={18} /> },
   ];
@@ -48,8 +51,8 @@ function Navigation() {
                 key={item.path}
                 to={item.path}
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${currentPath === item.path
-                    ? 'bg-violet-600/20 text-violet-300 border border-violet-500/30 shadow-[0_0_15px_rgba(139,92,246,0.3)]'
-                    : 'text-slate-300 hover:bg-white/5 hover:text-white border border-transparent'
+                  ? 'bg-violet-600/20 text-violet-300 border border-violet-500/30 shadow-[0_0_15px_rgba(139,92,246,0.3)]'
+                  : 'text-slate-300 hover:bg-white/5 hover:text-white border border-transparent'
                   }`}
               >
                 {item.icon}
@@ -89,6 +92,7 @@ function App() {
             <Route path="/module-1" element={<ModuleOne />} />
             <Route path="/module-2" element={<ModuleTwo />} />
             <Route path="/module-3" element={<ModuleThree />} />
+            <Route path="/sandbox" element={<SandboxEmbed />} />
             <Route path="/knowledge-check" element={<KnowledgeCheck />} />
             <Route path="/documentation" element={<Documentation />} />
           </Routes>

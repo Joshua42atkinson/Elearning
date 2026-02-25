@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 # Safe dependencies that work in browser
-bevy = { version = "0.15", features = ["jpeg"] }
+bevy = { version = "0.15", features = ["jpeg", "png", "webp"] }
 
 # UI Inspection (for the "Workbench" feel)
 bevy-inspector-egui = "0.28"

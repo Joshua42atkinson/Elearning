@@ -168,12 +168,13 @@ fn setup_inventory_ui(mut commands: Commands) {
         .spawn((
             Node {
                 position_type: PositionType::Absolute,
-                right: Val::Px(20.0),
-                top: Val::Px(120.0),
-                padding: UiRect::all(Val::Px(15.0)),
+                right: Val::Px(12.0),
+                top: Val::Px(12.0),
+                padding: UiRect::all(Val::Px(10.0)),
                 flex_direction: FlexDirection::Column,
-                row_gap: Val::Px(10.0),
+                row_gap: Val::Px(6.0),
                 border: UiRect::all(Val::Px(2.0)),
+                max_width: Val::Px(220.0),
                 ..default()
             },
             BackgroundColor(Color::srgb(0.1, 0.1, 0.1)), // Deep Charcoal
@@ -183,12 +184,12 @@ fn setup_inventory_ui(mut commands: Commands) {
         .with_children(|parent| {
             // Header: "INVENTORY"
             parent.spawn((
-                Text::new("═══ INVENTORY ═══"),
+                Text::new("═ INVENTORY ═"),
                 TextFont {
-                    font_size: 18.0,
+                    font_size: 13.0,
                     ..default()
                 },
-                TextColor(Color::srgb(1.0, 0.75, 0.0)), // Phosphor Amber
+                TextColor(Color::srgb(1.0, 0.75, 0.0)),
             ));
 
             // Tool Slots
@@ -230,12 +231,12 @@ fn setup_inventory_ui(mut commands: Commands) {
 
              // Header: "THINKING CAPS"
              parent.spawn((
-                Text::new("═══ THINKING CAPS ═══"),
+                Text::new("═ THINKING CAPS ═"),
                 TextFont {
-                    font_size: 18.0,
+                    font_size: 13.0,
                     ..default()
                 },
-                TextColor(Color::srgb(0.0, 1.0, 1.0)), // Cyan
+                TextColor(Color::srgb(0.0, 1.0, 1.0)),
                 Node {
                     margin: UiRect::top(Val::Px(20.0)),
                     ..default()
@@ -371,11 +372,13 @@ fn show_acquisition_notification(
             commands.spawn((
                 Node {
                     position_type: PositionType::Absolute,
-                    left: Val::Percent(50.0),
-                    top: Val::Percent(40.0),
-                    padding: UiRect::all(Val::Px(20.0)),
+                    left: Val::Percent(25.0),
+                    right: Val::Percent(25.0),
+                    top: Val::Percent(30.0),
+                    padding: UiRect::all(Val::Px(25.0)),
                     border: UiRect::all(Val::Px(3.0)),
                     flex_direction: FlexDirection::Column,
+                    align_items: AlignItems::Center,
                     row_gap: Val::Px(10.0),
                     ..default()
                 },
