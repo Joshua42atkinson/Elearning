@@ -1,5 +1,14 @@
 {
+    "cleanUrls": true,
     "rewrites": [
+        {
+            "source": "/sandbox/(.*)",
+            "destination": "/sandbox/$1"
+        },
+        {
+            "source": "/assets/(.*)",
+            "destination": "/assets/$1"
+        },
         {
             "source": "/(.*)",
             "destination": "/index.html"
