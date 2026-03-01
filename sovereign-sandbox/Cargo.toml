@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 # Safe dependencies that work in browser
-bevy = { version = "0.15", features = ["jpeg", "png", "webp"] }
+bevy = { version = "0.15", features = ["jpeg", "png", "webp", "mp3", "wav"] }
 
 # Serialization
 serde = { version = "1.0", features = ["derive"] }

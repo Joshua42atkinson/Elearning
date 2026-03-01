@@ -1,7 +1,5 @@
 use bevy::prelude::*;
 use serde::Deserialize;
-use std::fs;
-use std::path::Path;
 use crate::inventory::ToolId;
 
 // ============================================================================
@@ -296,20 +294,7 @@ impl SyllabusResource {
         self.syllabus.modules.get(self.current_module_index)
     }
 
-    pub fn current_event_text(&self) -> Option<String> {
-        let quest = self.current_quest()?;
-        // Derive from current phase if it's a dialogue phase
-        match self.quest_script.current() {
-            QuestPhase::Dialogue { gagne_step, .. } => {
-                quest.events.get_step_text(*gagne_step).map(|s| s.to_string())
-            }
-            QuestPhase::Task { description, .. } => Some(description.clone()),
-            QuestPhase::Reflection { question, .. } => Some(question.clone()),
-            QuestPhase::Exploration { target, .. } => Some(format!("Walk to the {}", target)),
-            QuestPhase::Quiz { question, .. } => Some(question.clone()),
-            QuestPhase::Complete => Some("Quest Complete!".to_string()),
-        }
-    }
+
 
     /// The current phase of the quest
     pub fn current_phase(&self) -> &QuestPhase {
@@ -345,10 +330,7 @@ impl SyllabusResource {
         current_rewards
     }
 
-    /// Legacy compat: advance step (calls advance_phase)
-    pub fn advance_step(&mut self) {
-        self.advance_phase();
-    }
+
 
     /// Mark the current task as completed (for Task phases)
     pub fn complete_current_task(&mut self) {
@@ -386,7 +368,8 @@ pub struct SyllabusPlugin;
 
 impl Plugin for SyllabusPlugin {
     fn build(&self, app: &mut App) {
-        app.add_event::<QuestAdvancedEvent>();
+        app.add_event::<QuestAdvancedEvent>()
+           .add_systems(Update, check_syllabus_completion.run_if(in_state(crate::GameState::Playing)));
         
         // Load syllabus at startup using include_str! so it works in WASM
         let syllabus_contents = include_str!("../../assets/syllabus/module_1.toml");
@@ -402,6 +385,17 @@ impl Plugin for SyllabusPlugin {
                 error!("Failed to load syllabus: {}", e);
                 panic!("Syllabus is required but failed to load!");
             }
+        }
+    }
+}
+
+fn check_syllabus_completion(
+    syllabus: Option<Res<SyllabusResource>>,
+    mut next_state: ResMut<NextState<crate::GameState>>,
+) {
+    if let Some(syl) = syllabus {
+        if syl.current_module_index >= syl.syllabus.modules.len() {
+            next_state.set(crate::GameState::Victory);
         }
     }
 }

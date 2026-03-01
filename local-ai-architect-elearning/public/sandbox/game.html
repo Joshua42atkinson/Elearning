@@ -39,6 +39,7 @@
             class="px-8 py-3 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white rounded-xl font-semibold transition-all duration-300 cursor-pointer shadow-[0_0_20px_rgba(139,92,246,0.4)] hover:shadow-[0_0_30px_rgba(139,92,246,0.6)] hover:-translate-y-0.5 border border-white/10">
             Initialize Sandbox
         </button>
+        <div id="debug-info" class="mt-4 text-xs text-slate-500 font-mono"></div>
     </div>
 
     <!-- Target for Bevy WASM -->
@@ -47,6 +48,18 @@
 
     <script>
         lucide.createIcons();
+        
+        // Debug information
+        const debugDiv = document.getElementById('debug-info');
+        function log(message) {
+            console.log(message);
+            if (debugDiv) {
+                debugDiv.innerHTML += message + '<br>';
+            }
+        }
+        
+        log('Page loaded, checking WASM support...');
+        log('WebAssembly support: ' + (typeof WebAssembly === 'object' ? 'Yes' : 'No'));
     </script>
     <script type="module">
         document.getElementById('start-game-btn').addEventListener('click', async (e) => {
@@ -59,31 +72,57 @@
             btn.classList.add("opacity-50", "cursor-not-allowed");
 
             try {
+                log('Attempting to load WASM module...');
+                
+                // Check if we can access the WASM file
+                const wasmResponse = await fetch('./wasm/sovereign-sandbox_bg.wasm');
+                log('WASM file response: ' + wasmResponse.status + ' ' + wasmResponse.statusText);
+                log('WASM content type: ' + wasmResponse.headers.get('content-type'));
+                
+                if (!wasmResponse.ok) {
+                    throw new Error('Failed to fetch WASM file: ' + wasmResponse.statusText);
+                }
+                
                 // Import the wasm-bindgen wrapper
+                log('Importing JavaScript wrapper...');
                 const { default: init } = await import('./wasm/sovereign-sandbox.js');
+                
+                log('Initializing WASM module...');
                 // Initialize WASM
                 await init();
+                
+                log('WASM initialization complete!');
+                log('Hiding loading UI, showing canvas...');
 
                 // Hide placeholders and show canvas
                 ui.style.display = 'none';
                 canvas.style.display = 'block';
+                
+                log('Sandbox should now be running!');
+                
             } catch (err) {
+                log('Error: ' + err.message);
+                log('Stack: ' + (err.stack || 'No stack trace'));
+                
                 if (err.message && err.message.includes("Using exceptions for control flow")) {
                     // This is expected behavior from winit! It throws this to exit the current call stack.
                     // The WASM engine is actually ready and the loop is running.
+                    log('Expected winit exception detected, engine should be running...');
                     ui.style.display = 'none';
                     canvas.style.display = 'block';
                     return;
                 }
+                
                 console.error("WASM Load Error", err);
                 btn.innerText = "Error Loading Engine";
-                btn.classList.replace("bg-indigo-600", "bg-red-600");
+                btn.classList.replace("bg-gradient-to-r", "bg-red-600");
                 const errDiv = document.createElement("div");
                 errDiv.id = "error-dump";
                 errDiv.style.color = "red";
                 errDiv.style.marginTop = "1rem";
                 errDiv.style.fontSize = "12px";
-                errDiv.innerText = err.toString() + "\\n" + (err.stack || "");
+                errDiv.style.whiteSpace = "pre-wrap";
+                errDiv.innerText = err.toString() + "\n" + (err.stack || "");
                 ui.appendChild(errDiv);
             }
         });

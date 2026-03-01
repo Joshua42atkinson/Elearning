@@ -52,14 +52,7 @@ impl ToolId {
         }
     }
 
-    pub fn unlock_step(&self) -> usize {
-        match self {
-            ToolId::OllamaCompass => 3,   // Present Content
-            ToolId::LogicLens => 6,       // Provide Feedback
-            ToolId::FeedbackMirror => 8,  // Enhance Retention
-            _ => 99, // Hats don't unlock via Gagne steps, but by purchase
-        }
-    }
+
 }
 
 // ============================================================================

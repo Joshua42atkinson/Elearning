@@ -37,23 +37,17 @@ pub mod moshi;
 pub mod moshi {
     use bevy::prelude::*;
     use crossbeam_channel::Sender;
-    use std::sync::{Arc, Mutex};
     
     #[derive(Resource)]
     pub struct MoshiVoice {
         pub is_speaking: bool,
         pub amplitude: f32,
         pub command_tx: Sender<MoshiCommand>,
-        pub state_rx: Arc<Mutex<(bool, f32)>>,
     }
-    pub enum MoshiCommand {
-        Start,
-        Stop,
-        Context(String),
-    }
+    pub enum MoshiCommand {}
 }
 
-use crate::ai::moshi::{MoshiVoice, MoshiCommand};
+use crate::ai::moshi::MoshiVoice;
 
 #[derive(Debug, Clone)]
 pub enum AiRequest {
@@ -73,6 +67,7 @@ pub struct AiChannel {
 
 pub struct AiPlugin;
 
+#[allow(dead_code)]
 const TEACHER_PERSONA_PROMPT: &str = r#"You are the Gamification Architect, a wise and slightly eccentric mentor in the Sovereign Syllabus.
 Your goal is to teach the user how to turn their dry educational content into engaging "Edutainment" quests.
 You operate under the philosophy of **Managed Free Will**:
@@ -233,27 +228,12 @@ fn extract_dialogue_from_prompt(prompt: &str) -> String {
     }
 }
 
-fn process_ai_requests(
-    receiver: Res<AiReceiver>,
-    moshi_voice: Option<Res<MoshiVoice>>,
-) {
-    let Some(moshi) = moshi_voice else { return };
 
-    while let Ok(req) = receiver.0.try_recv() {
-        match req {
-            AiRequest::Text(text) => {
-                // Forward text prompts to Moshi as Context
-                let _ = moshi.command_tx.send(MoshiCommand::Context(text));
-            }
-        }
-    }
-}
 
 fn inject_persona(
     moshi_voice: Option<Res<MoshiVoice>>,
 ) {
-    if let Some(moshi) = moshi_voice {
-         info!("💉 Injecting Teacher Persona into Moshi...");
-         let _ = moshi.command_tx.send(MoshiCommand::Context(TEACHER_PERSONA_PROMPT.to_string()));
+    if let Some(_moshi) = moshi_voice {
+         info!("💉 Injecting Teacher Persona into Moshi... (Disabled)");
     }
 }

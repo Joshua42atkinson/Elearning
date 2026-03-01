@@ -160,14 +160,12 @@ fn generate_dynamic_dialogue(
                 let phase = syl.current_phase();
 
                 // Phase 2 Constructivism mechanic
-                if syl.current_module_index == 0 && syl.quest_script.current_phase == 2 {
-                    if !story_state.is_typing_prompt {
-                        story_state.is_typing_prompt = true;
-                        let text = "Architect! It is time to construct your first logic script. Type a natural language command below and press Enter:".to_string();
-                        let _ = ai_channel.sender.send(AiRequest::Text(text));
-                        story_state.is_thinking = true;
-                        return;
-                    }
+                if syl.current_module_index == 0 && syl.quest_script.current_phase == 2 && !story_state.is_typing_prompt {
+                    story_state.is_typing_prompt = true;
+                    let text = "Architect! It is time to construct your first logic script. Type a natural language command below and press Enter:".to_string();
+                    let _ = ai_channel.sender.send(AiRequest::Text(text));
+                    story_state.is_thinking = true;
+                    return;
                 }
 
                 format!(
@@ -198,11 +196,7 @@ fn handle_dialogue_choices(
     mut story_state: ResMut<StoryState>,
     ai_channel: Res<AiChannel>,
 ) {
-    let choices_to_process = if let Some(dialogue) = &story_state.active_dialogue {
-        Some(dialogue.choices.clone())
-    } else {
-        None
-    };
+    let choices_to_process = story_state.active_dialogue.as_ref().map(|dialogue| dialogue.choices.clone());
     
     if let Some(choices) = choices_to_process {
         if keys.just_pressed(KeyCode::Digit1) && !choices.is_empty() {
@@ -343,7 +337,7 @@ fn handle_quiz_input(
 ) {
     let Some(ref mut syl) = syllabus else { return };
     
-    let (question, options, correct_index) = match syl.current_phase() {
+    let (_question, options, correct_index) = match syl.current_phase() {
         crate::syllabus::QuestPhase::Quiz { question, options, correct_index, .. } => {
             (question.clone(), options.clone(), *correct_index)
         }
@@ -372,7 +366,7 @@ fn handle_quiz_input(
                 });
             } else {
                 // Incorrect
-                let response = format!("Not quite, Architect. Consider the core principles again. (Try another option)");
+                let response = "Not quite, Architect. Consider the core principles again. (Try another option)".to_string();
                 let _ = ai_channel.sender.send(AiRequest::Text(response));
                 story_state.is_thinking = true;
             }

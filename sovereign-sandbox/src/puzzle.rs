@@ -78,7 +78,7 @@ fn activate_puzzle(
     syllabus: Option<Res<crate::syllabus::SyllabusResource>>,
     mut puzzle: ResMut<PuzzleState>,
     mut commands: Commands,
-    overlay_query: Query<Entity, With<PuzzleOverlay>>,
+    _overlay_query: Query<Entity, With<PuzzleOverlay>>,
 ) {
     if puzzle.is_active || puzzle.solved { return; }
 

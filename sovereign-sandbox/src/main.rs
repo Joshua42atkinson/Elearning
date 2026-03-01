@@ -16,6 +16,7 @@ pub enum GameState {
     Menu,
     Boot,
     Playing,
+    Victory,
 }
 
 mod ai;
@@ -30,6 +31,8 @@ mod scoring;
 mod puzzle;
 mod ui;
 mod title_screen;
+mod audio;
+mod combat;
 
 use ai::AiPlugin;
 use ai::memory::{MemoryStore, MemoryStoreResource};
@@ -43,7 +46,10 @@ use quiz::QuizPlugin;
 use scoring::ScoringPlugin;
 use puzzle::PuzzlePlugin;
 use ui::knowledge_popup::KnowledgePopupPlugin;
+use ui::victory_screen::VictoryScreenPlugin;
 use title_screen::TitleScreenPlugin;
+use audio::GameAudioPlugin;
+use combat::CombatPlugin;
 use std::sync::Arc;
 use std::path::Path;
 
@@ -92,8 +98,11 @@ fn main() {
         .add_plugins(QuizPlugin)
         .add_plugins(ScoringPlugin)
         .add_plugins(PuzzlePlugin)
+        .add_plugins(CombatPlugin)
         .add_plugins(KnowledgePopupPlugin)
         .add_plugins(TitleScreenPlugin)
+        .add_plugins(GameAudioPlugin)
+        .add_plugins(VictoryScreenPlugin)
         .insert_resource(ClearColor(Color::srgb(0.02, 0.02, 0.04))) // Deep space blue-black
         .insert_resource(BootTimer(Timer::from_seconds(0.08, TimerMode::Repeating)))
         .add_systems(OnEnter(GameState::Boot), setup_boot)

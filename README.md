@@ -8,17 +8,14 @@ This project serves as a production-ready roadmap for "The Local AI Architect." 
 
 ## 2. Core Modules
 
-### [Module 1: The Local Forge (LM Studio Setup)](./module-1-setup/README.md)
-Objective: Configure a private, local AI environment using LM Studio, understanding the functional and ethical implications of "air-gapped" intelligence and localhost servers.
+## 2. Core Modules (Inside the Unified React App)
 
-### [Module 2: IDE Integration (Cursor / Zed)](./module-2-logic/README.md)
-Objective: Connect the LM Studio local API server to professional AI-Native IDEs like Cursor and Zed, enabling powerful autocompletion and generative code without the cloud.
+The curriculum is delivered through a high-performance, isomorphic React application that embeds the Bevy engine.
 
-### [Module 3: The Sandbox Bridge (Building with AI)](./module-3-implementation/README.md)
-Objective: Use natural language prompting within your connected IDE to automatically generate, compile, and implement game logic in your engine of choice (Bevy, Roblox).
-
-### [Module 4: The Sovereign Sandbox (Rust/Bevy Engine)](./module-4-demo/README.md)
-Objective: Build a dedicated, high-performance educational game engine using **Rust** and **Bevy**. This "Sovereign Sandbox" removes reliance on proprietary platforms like Roblox, offering a truly open-source, local-first environment for 3D logic visualization.
+- **Module 1: The Local Forge** — Configure a private, local AI environment using LM Studio.
+- **Module 2: IDE Integration** — Connect local LLMs to AI-native editors (Cursor/Zed).
+- **Module 3: The Sandbox Bridge** — Translate pedagogy into game logic using AI scaffolding.
+- **Module 4: The Sovereign Sandbox** — A practical assessment in a 3D Bevy/WASM environment.
 
 ## 3. Expanded Vision: Hybrid Media Strategy
 To truly scale "The Local AI Architect," we are integrating a multi-modal learning approach:

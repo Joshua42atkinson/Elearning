@@ -1,8 +1,20 @@
-import { Gamepad2, ArrowLeft, ArrowRight, Loader2, Keyboard, Info } from 'lucide-react';
+/**
+ * SandboxEmbed - Main sandbox learning page
+ * 
+ * This page provides a 3-step learning experience:
+ * 1. WATCH - Educational videos about AI and game development
+ * 2. PLAY - Interactive WASM-based sandbox game assessment
+ * 3. READ - Downloadable blueprint materials
+ * 
+ * The page features a Bevy/Rust WASM game that runs entirely in the browser
+ * for a hands-on learning assessment experience.
+ */
+import { ArrowLeft, ArrowRight, Loader2, Keyboard, Info, FileText, Wand2, Box } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
 export default function SandboxEmbed() {
+    // Loading state for the WASM iframe - shows spinner while game loads
     const [isLoading, setIsLoading] = useState(true);
 
     return (
@@ -25,60 +37,63 @@ export default function SandboxEmbed() {
             {/* STEP 1: WATCH - Restored from static site */}
             <section id="watch" className="space-y-10">
                 <div className="border-l-4 border-indigo-500 pl-6">
-                    <h2 className="text-sm font-bold text-indigo-400 uppercase tracking-widest mb-2">Step 1 • 15 Minutes</h2>
-                    <h3 className="text-4xl font-bold text-white">The Architect's Collection</h3>
-                    <p className="text-slate-400 mt-2 max-w-3xl">Watch the three-part <span className="text-indigo-300 italic">"Visionary Broadcast."</span> These videos demonstrate the zero-to-AI setup and how natural language bridges the gap to functional code.</p>
+                    <h2 className="text-sm font-bold text-indigo-400 uppercase tracking-widest mb-2">Step 1 • 45 Minutes</h2>
+                    <h3 className="text-4xl font-bold text-white">Shaping Your Perspective</h3>
+                    <p className="text-slate-400 mt-2 max-w-3xl">Before diving into code, we must shape how we think about Artificial Intelligence. Watch these three curated <span className="text-indigo-300 italic">"Visionary Broadcasts"</span> from leading edutainment creators to understand the underlying architecture and future potential of the systems you will be building.</p>
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-8 text-left">
-                    {/* Video 1 */}
+                    {/* Video 1: Kurzgesagt */}
                     <div className="glass-panel group hover:shadow-[0_0_30px_rgba(99,102,241,0.2)]">
-                        <div className="aspect-video bg-slate-900 relative flex items-center justify-center overflow-hidden">
-                            <video controls className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity">
-                                <source src="/sandbox/assets/video1.mp4" type="video/mp4" />
-                            </video>
-                            <PlayCircle className="absolute text-white/20 group-hover:scale-125 transition-transform pointer-events-none" size={48} />
+                        <div className="aspect-video bg-slate-900 relative overflow-hidden rounded-t-2xl">
+                            <iframe
+                                src="https://www.youtube.com/embed/fa8k8IQ1_X0"
+                                title="Kurzgesagt - AI Explained"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                className="w-full h-full absolute inset-0"
+                            ></iframe>
                         </div>
                         <div className="p-6">
-                            <h4 className="font-bold text-lg text-white mb-2">1. The Local Forge</h4>
-                            <p className="text-slate-400 text-sm mb-4">Zero-to-AI setup using Ollama in under 5 minutes. Securing your private educational assistant.</p>
-                            <a href="/sandbox/assets/transcript1.txt" target="_blank" className="text-indigo-400 text-sm font-medium hover:underline flex items-center gap-1">
-                                <FileText size={16} /> Read Transcript
-                            </a>
+                            <h4 className="font-bold text-lg text-white mb-2">1. The Mind of the Machine</h4>
+                            <p className="text-slate-400 text-sm mb-4">By Kurzgesagt. Understanding the architecture of Large Language Models. A visual perspective on how neural networks "think" and learn from vast datasets.</p>
                         </div>
                     </div>
 
-                    {/* Video 2 */}
+                    {/* Video 2: AI NPCs */}
                     <div className="glass-panel group hover:shadow-[0_0_30px_rgba(139,92,246,0.2)]">
-                        <div className="aspect-video bg-slate-900 relative flex items-center justify-center overflow-hidden">
-                            <video controls className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity">
-                                <source src="/sandbox/assets/video2.mp4" type="video/mp4" />
-                            </video>
-                            <PlayCircle className="absolute text-white/20 group-hover:scale-125 transition-transform pointer-events-none" size={48} />
+                        <div className="aspect-video bg-slate-900 relative overflow-hidden rounded-t-2xl">
+                            <iframe
+                                src="https://www.youtube.com/embed/a91EPM7TBX4"
+                                title="Simulating AI NPCs"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                className="w-full h-full absolute inset-0"
+                            ></iframe>
                         </div>
                         <div className="p-6">
-                            <h4 className="font-bold text-lg text-white mb-2">2. From Intent to Logic</h4>
-                            <p className="text-slate-400 text-sm mb-4">Real-time prompt-to-script generation. Turning lesson objectives into structured logic.</p>
-                            <a href="/sandbox/assets/transcript2.txt" target="_blank" className="text-indigo-400 text-sm font-medium hover:underline flex items-center gap-1">
-                                <FileText size={16} /> Read Transcript
-                            </a>
+                            <h4 className="font-bold text-lg text-white mb-2">2. Simulating Sentience</h4>
+                            <p className="text-slate-400 text-sm mb-4">By Answer in Progress. Exploring Generative Agents and the future of Non-Player Characters mapping complex social behaviors into virtual environments.</p>
                         </div>
                     </div>
 
-                    {/* Video 3 */}
+                    {/* Video 3: Future of Coding */}
                     <div className="glass-panel group hover:shadow-[0_0_30px_rgba(16,185,129,0.2)]">
-                        <div className="aspect-video bg-slate-900 relative flex items-center justify-center overflow-hidden">
-                            <video controls className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity">
-                                <source src="/sandbox/assets/video3.mp4" type="video/mp4" />
-                            </video>
-                            <PlayCircle className="absolute text-white/20 group-hover:scale-125 transition-transform pointer-events-none" size={48} />
+                        <div className="aspect-video bg-slate-900 relative overflow-hidden rounded-t-2xl">
+                            <iframe
+                                src="https://www.youtube.com/embed/w4rG5GY9IlA"
+                                title="The Future of Programming"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                className="w-full h-full absolute inset-0"
+                            ></iframe>
                         </div>
                         <div className="p-6">
-                            <h4 className="font-bold text-lg text-white mb-2">3. The Sandbox Bridge</h4>
-                            <p className="text-slate-400 text-sm mb-4">Implementing the AI's logic into Minecraft, Roblox, and custom Rust engines.</p>
-                            <a href="/sandbox/assets/transcript3.txt" target="_blank" className="text-indigo-400 text-sm font-medium hover:underline flex items-center gap-1">
-                                <FileText size={16} /> Read Transcript
-                            </a>
+                            <h4 className="font-bold text-lg text-white mb-2">3. The End of Syntax?</h4>
+                            <p className="text-slate-400 text-sm mb-4">By Tina Huang. The future of programming is evolving from writing raw code to directing artificial intelligence. A look at how this reshapes software engineering.</p>
                         </div>
                     </div>
                 </div>
@@ -102,10 +117,14 @@ export default function SandboxEmbed() {
 
                     <iframe
                         src="/sandbox/game.html"
-                        title="Bevy WASM Game"
-                        className="w-full h-full border-0 absolute inset-0 z-0"
+                        title="Bevy WASM Game - Interactive Sandbox Assessment"
+                        className="w-full h-full border-0 absolute inset-0 z-0 bg-slate-950"
                         allowFullScreen
                         onLoad={() => setIsLoading(false)}
+                        onError={(error) => {
+                            console.error('Sandbox iframe failed to load:', error);
+                            setIsLoading(false);
+                        }}
                     ></iframe>
                 </div>
 
@@ -148,12 +167,31 @@ export default function SandboxEmbed() {
                         <p className="text-slate-300 text-lg">Download the supplementary instructional materials. This guide provides the exact COSTAR prompt structures needed to build your own social scaffolding.</p>
 
                         <div className="pt-4">
-                            <a href="/sandbox/assets/Blueprint_EDCI56900.pdf" download className="inline-flex items-center gap-3 px-10 py-5 bg-white text-indigo-900 rounded-2xl font-bold hover:bg-indigo-50 transition-all shadow-xl hover:-translate-y-1">
+                            <a href="/sandbox/assets/Blueprint_Infographic.png" download className="inline-flex items-center gap-3 px-10 py-5 bg-white text-indigo-900 rounded-2xl font-bold hover:bg-indigo-50 transition-all shadow-xl hover:-translate-y-1">
                                 <ArrowRight size={20} className="text-indigo-600 rotate-90" />
-                                Download PDF Blueprint
+                                Download Blueprint Poster
                             </a>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            {/* NEW: THE MUSEUM LINK */}
+            <section id="museum" className="space-y-10">
+                <div className="flex flex-col md:flex-row items-center gap-10 p-10 rounded-[2.5rem] bg-gradient-to-br from-violet-600/10 via-fuchsia-600/10 to-amber-600/10 border border-violet-500/20 relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-grid-white/[0.02] bg-[center_top_-1px]" />
+                    <div className="w-24 h-24 rounded-3xl bg-violet-600/20 border border-violet-400/30 flex items-center justify-center text-violet-300 shadow-[0_0_30px_rgba(139,92,246,0.2)] shrink-0">
+                        <Box size={48} />
+                    </div>
+                    <div className="flex-1 space-y-4 text-center md:text-left">
+                        <h3 className="text-3xl font-black text-white">The Museum of Mechanics</h3>
+                        <p className="text-slate-400 leading-relaxed max-w-2xl">
+                            Ready for true inspiration? Explore our curated archive of open-source educational engines. From physics labs to historical sequences, see how other architects are shaping the future of play.
+                        </p>
+                    </div>
+                    <Link to="/museum" className="px-8 py-4 bg-violet-600 text-white font-black rounded-2xl hover:bg-violet-500 transition-all shadow-xl shadow-violet-600/20 hover:scale-105 flex items-center gap-2">
+                        VISIT THE GALLERY <ArrowRight size={20} />
+                    </Link>
                 </div>
             </section>
 
@@ -161,9 +199,14 @@ export default function SandboxEmbed() {
                 <Link to="/module-3" className="glass-button text-slate-400 hover:text-white group">
                     <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" /> Back to Module 3
                 </Link>
-                <Link to="/knowledge-check" className="glass-button glass-button-primary shadow-[0_0_20px_rgba(139,92,246,0.3)] border-indigo-400/50 bg-indigo-600/80 hover:bg-indigo-500 hover:shadow-[0_0_20px_rgba(99,102,241,0.6)]">
-                    Knowledge Check <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                </Link>
+                <div className="flex gap-4">
+                    <Link to="/museum" className="glass-button text-violet-300 hover:text-white border-violet-500/20 group">
+                        Museum of Mechanics <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                    <Link to="/knowledge-check" className="glass-button glass-button-primary shadow-[0_0_20px_rgba(139,92,246,0.3)] border-indigo-400/50 bg-indigo-600/80 hover:bg-indigo-500 hover:shadow-[0_0_20px_rgba(99,102,241,0.6)]">
+                        Final Quiz <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                </div>
             </div>
 
         </div>

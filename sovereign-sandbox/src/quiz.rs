@@ -9,8 +9,6 @@ pub struct QuizManager {
 }
 
 pub struct QuizQuestion {
-    pub prompt: String,
-    pub options: Vec<String>,
     pub correct_index: usize,
     pub feedback_correct: String,
     pub feedback_incorrect: String,
@@ -23,12 +21,6 @@ impl Default for QuizManager {
             score: 0,
             questions: vec![
                 QuizQuestion {
-                    prompt: "> TEACHER: Which AI architecture guarantees that student data never leaves the local classroom hardware?".to_string(),
-                    options: vec![
-                        "1. Cloud-based OpenAI APIs".to_string(),
-                        "2. Local-First Open Weights (e.g., Llama 3 via LM Studio)".to_string(),
-                        "3. A shared Google Drive".to_string(),
-                    ],
                     correct_index: 1, // The 2nd option (0-indexed)
                     feedback_correct: "> SYSTEM: Correct. Local-First models process all data on the machine, bypassing FERPA risks.".to_string(),
                     feedback_incorrect: "> SYSTEM: Incorrect. Cloud APIs send data to external servers. We need a Local-First approach.".to_string(),

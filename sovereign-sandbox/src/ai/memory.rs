@@ -126,6 +126,7 @@ impl MemoryStore {
     }
 
     /// Store a memory
+    #[allow(dead_code)]
     #[cfg(not(target_arch = "wasm32"))]
     pub fn store(
         &self,
@@ -183,6 +184,7 @@ impl MemoryStore {
     }
 
     /// Recall memories similar to query
+    #[allow(dead_code)]
     #[cfg(not(target_arch = "wasm32"))]
     pub fn recall(
         &self,
@@ -289,12 +291,10 @@ impl MemoryStore {
 
         // Count unique sessions (scan needed)
         let mut sessions = std::collections::HashSet::new();
-        for result in self.db.iter() {
-            if let Ok((_, value)) = result {
-                if let Ok(memory) = serde_json::from_slice::<StoredMemory>(&value) {
-                    if let Some(sid) = memory.session_id {
-                        sessions.insert(sid);
-                    }
+        for (_, value) in self.db.iter().flatten() {
+            if let Ok(memory) = serde_json::from_slice::<StoredMemory>(&value) {
+                if let Some(sid) = memory.session_id {
+                    sessions.insert(sid);
                 }
             }
         }
@@ -321,6 +321,7 @@ impl MemoryStore {
     // ========================================================================
 
     /// Simple hash-based embedding (placeholder for real embeddings)
+    #[allow(dead_code)]
     #[cfg(not(target_arch = "wasm32"))]
     fn hash_embed(&self, text: &str) -> Vec<f32> {
         use std::collections::hash_map::DefaultHasher;

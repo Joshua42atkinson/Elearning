@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use crate::ai::AiChannel;
 use crate::syllabus::{SyllabusResource, QuestPhase};
+use crate::scoring::PlayerScore;
 
 #[derive(Component)]
 pub struct Teacher;
@@ -25,7 +26,7 @@ impl Default for TeacherState {
             is_speaking: false,
             last_message: String::from("Waiting for Architect..."),
             auto_dialogue_sent: false,
-            nudge_timer: Timer::from_seconds(15.0, TimerMode::Repeating),
+            nudge_timer: Timer::from_seconds(45.0, TimerMode::Repeating),
         }
     }
 }
@@ -74,7 +75,7 @@ fn teacher_nudge_system(
             let prompt = format!(
                 "ROLE: Pedagogical Orchestrator. \
                 STATUS: The Architect is drifting in the world during the exploration phase for quest '{}'. \
-                MANAGED FREE WILL: Provide a gentle, 1-sentence 'nudge' that acknowledges their freedom but pulls them toward the chalkboard (the Teacher's location). \
+                MANAGED FREE WILL: Provide a gentle, 1-sentence 'nudge' that acknowledges their freedom but pulls them toward the chalkboard (the Teacher's location). Keep it very brief. \
                 Call them 'Architect'.",
                 quest.title
             );
@@ -156,7 +157,7 @@ fn auto_dialogue_on_proximity(
                         "ROLE: You are the Gamification Architect, acting as a Pedagogical Orchestrator.\n\
                         CONTEXT: The Architect (the player) is currently on the quest '{}', and has just approached you.\n\
                         CURRENT LESSON (Gagné Event '{}'): {}\n\n\
-                        INSTRUCTION: Deliver this lesson step to the Architect in 2-3 sentences. Speak with a cyberpunk mentor tone (e.g., 'Ah, Architect...', 'Listen closely to the grid...'). Focus intensely on the educational value of local, sovereign AI. Make the curriculum feel urgent and profound.",
+                        INSTRUCTION: Deliver this lesson step to the Architect in 2 short sentences. Speak with a cyberpunk mentor tone. Focus intensely on the educational value of local, sovereign AI. Be concise.",
                         quest.title,
                         crate::syllabus::gagne_step_name(gagne_step),
                         event_text
@@ -186,7 +187,7 @@ fn auto_dialogue_on_proximity(
                 
                 let prompt = format!(
                     "ROLE: Pedagogical Orchestrator. \
-                    Ask the Architect this quiz question: '{}'\n\nOptions:\n{}\n\nInstruction: Present the question and options clearly. Call them 'Architect'.",
+                    Ask the Architect this quiz question: '{}'\n\nOptions:\n{}\n\nInstruction: Present the question and options clearly. Call them 'Architect'. Limit your response to 2 short sentences plus the options.",
                     question,
                     options_str
                 );
@@ -211,10 +212,19 @@ fn teacher_interaction(
     mut teacher_state: ResMut<TeacherState>,
     mut syllabus: Option<ResMut<SyllabusResource>>,
     story_state: Res<crate::story_mode::StoryState>,
+    score: Res<PlayerScore>,
     mut event_writer: EventWriter<crate::syllabus::QuestAdvancedEvent>,
 ) {
     if keys.just_pressed(KeyCode::KeyT) && story_state.can_interact {
         if let Some(ref mut syl) = syllabus {
+            // Level Gate Check: Cannot advance to Module 2 without being Level 2
+            if syl.current_module_index == 0 && syl.quest_script.current_phase == 5 && score.level < 2 {
+                let _ = ai_channel.sender.send(crate::ai::AiRequest::Text(
+                    "Architect, your understanding is still novice. You must engage the Glitch Slimes in the hall to grind until you reach Level 2 before we proceed.".to_string()
+                ));
+                teacher_state.is_speaking = true;
+                return;
+            }
             match syl.current_phase().clone() {
                 QuestPhase::Dialogue { .. } => {
                     // Player presses T to advance past current dialogue

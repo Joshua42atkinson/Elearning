@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use crate::audio::SfxEvent;
 
 // ============================================================================
 // XP & Scoring System — The Progression Engine
@@ -11,10 +12,7 @@ pub struct XpGainEvent {
 }
 
 #[derive(Event)]
-pub struct LevelUpEvent {
-    pub new_level: u32,
-    pub title: String,
-}
+pub struct LevelUpEvent;
 
 #[derive(Resource)]
 pub struct PlayerScore {
@@ -183,6 +181,7 @@ fn process_xp_gains(
     mut events: EventReader<XpGainEvent>,
     mut score: ResMut<PlayerScore>,
     mut level_up_writer: EventWriter<LevelUpEvent>,
+    mut sfx_writer: EventWriter<SfxEvent>,
 ) {
     for event in events.read() {
         score.xp += event.amount;
@@ -193,10 +192,9 @@ fn process_xp_gains(
             score.level += 1;
             score.title = PlayerScore::title_for_level(score.level).to_string();
             
-            level_up_writer.send(LevelUpEvent {
-                new_level: score.level,
-                title: score.title.clone(),
-            });
+            level_up_writer.send(LevelUpEvent);
+
+            sfx_writer.send(SfxEvent::LevelUp);
 
             info!("🎉 LEVEL UP! Level {} — {}", score.level, score.title);
         }

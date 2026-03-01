@@ -44,7 +44,7 @@ fn setup_title_screen(mut commands: Commands) {
                     margin: UiRect::bottom(Val::Px(20.0)),
                     ..default()
                 },
-                BackgroundColor(Color::srgba(1.0, 0.75, 0.0, 0.5)),
+                BackgroundColor(Color::srgba(0.39, 0.40, 0.95, 0.5)),
             ));
 
             // Main title

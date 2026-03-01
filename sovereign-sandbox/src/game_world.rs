@@ -86,15 +86,15 @@ pub struct KnowledgeFragment {
 }
 
 #[derive(Component)]
-struct FloatingText {
-    lifetime: Timer,
-    velocity: Vec3,
+pub struct FloatingText {
+    pub lifetime: Timer,
+    pub velocity: Vec3,
 }
 
 #[derive(Component)]
-struct Particle {
-    lifetime: Timer,
-    velocity: Vec3,
+pub struct Particle {
+    pub lifetime: Timer,
+    pub velocity: Vec3,
 }
 
 #[derive(Resource)]
@@ -611,11 +611,13 @@ fn spawn_world(
     )).with_children(|parent| {
         let controls = [
             ("⌨ CONTROLS", Color::srgb(1.0, 0.75, 0.0)),
-            ("WASD / ↑↓←→  Move", Color::srgb(0.6, 0.6, 0.6)),
+            ("WASD / ARROWS Move", Color::srgb(0.6, 0.6, 0.6)),
+            ("F          Attack / Swing", Color::srgb(0.6, 0.6, 0.6)),
             ("T          Interact", Color::srgb(0.6, 0.6, 0.6)),
             ("SPACE      Talk to AI", Color::srgb(0.6, 0.6, 0.6)),
             ("1, 2, 3    Choices", Color::srgb(0.6, 0.6, 0.6)),
             ("C / L / M  Tools", Color::srgb(0.6, 0.6, 0.6)),
+            ("G          Spawn Slime", Color::srgb(0.6, 0.6, 0.6)),
             ("ESC        Close", Color::srgb(0.6, 0.6, 0.6)),
         ];
         for (label, color) in controls {
@@ -632,11 +634,13 @@ fn spawn_world(
 // Movement with Wall Collision
 // ============================================================================
 
+type WallQueryFilter = (Without<Player>, Without<Terminal>, Without<crate::teacher::TeacherMarker>);
+
 fn player_movement(
     time: Res<Time>,
     keys: Res<ButtonInput<KeyCode>>,
     mut player_query: Query<(&mut Player, &mut Transform, &Collider), Without<Terminal>>,
-    wall_query: Query<(&Transform, &Collider), (Without<Player>, Without<Terminal>, Without<crate::teacher::TeacherMarker>)>,
+    wall_query: Query<(&Transform, &Collider), WallQueryFilter>,
     popup_active: Res<crate::ui::knowledge_popup::PopupActive>,
 ) {
     if popup_active.0 { return; }
@@ -728,18 +732,12 @@ fn animate_player(
                 
                 sprite.image = asset_server.load(frame_path);
             }
-        } else {
-            if player.current_frame != 0 {
-                player.current_frame = 0;
-                sprite.image = asset_server.load("player.jpg");
-            }
+        } else if player.current_frame != 0 {
+            player.current_frame = 0;
+            sprite.image = asset_server.load("player.jpg");
         }
         
-        if player.facing_left {
-            sprite.flip_x = true;
-        } else {
-            sprite.flip_x = false;
-        }
+        sprite.flip_x = player.facing_left;
     }
 }
 
@@ -1307,10 +1305,12 @@ fn fade_out_rewards(
     }
 }
 
+type TargetQueryFilter = (With<MemoryLink>, Without<CompassGlow>);
+
 fn reveal_memories(
     mut commands: Commands,
     inventory: Res<crate::inventory::Inventory>,
-    targets_query: Query<(Entity, &Transform), (With<MemoryLink>, Without<CompassGlow>)>,
+    targets_query: Query<(Entity, &Transform), TargetQueryFilter>,
     glow_query: Query<Entity, With<CompassGlow>>,
 ) {
     let compass_active = inventory.active_tool == Some(crate::inventory::ToolId::OllamaCompass);
@@ -1346,8 +1346,8 @@ fn terminal_interaction(
     mut reward_writer: EventWriter<crate::inventory::ItemGetEvent>,
     puzzle_state: Res<crate::puzzle::PuzzleState>,
 ) {
-    // Don't process terminal interaction if puzzle system will handle it
-    if puzzle_state.is_active || puzzle_state.solved { return; }
+    // Don't process interaction if puzzle UI is actively open
+    if puzzle_state.is_active { return; }
 
     if keys.just_pressed(KeyCode::KeyT) {
         if let Ok(player_transform) = player_query.get_single() {

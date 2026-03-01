@@ -1,10 +1,13 @@
-import { ArrowRight, ArrowLeft, PlayCircle, HardHat, Hammer, TerminalSquare } from 'lucide-react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { CheckCircle2, HardHat, Hammer, TerminalSquare, Gamepad2, PlayCircle, ArrowLeft, ArrowRight, Printer, FileText } from 'lucide-react';
+import ChunkedVideoPlayer from '../components/ChunkedVideoPlayer';
+import { videos } from '../data/moduleData.jsx';
 
 export default function ModuleThree() {
     const [inputValue, setInputValue] = useState('');
     const [isUnlocked, setIsUnlocked] = useState(false);
+    const module3Data = videos[2];
 
     const handleInputChange = (e) => {
         const value = e.target.value;
@@ -16,7 +19,7 @@ export default function ModuleThree() {
 
     return (
         <div className="w-full max-w-4xl space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-500">
-
+            {/* ... (keep headers) ... */}
             <div className="flex items-center justify-between border-b border-amber-500/20 pb-6">
                 <div>
                     <h1 className="text-3xl font-bold text-white mb-2">Module 3: Entering The Forge</h1>
@@ -27,13 +30,26 @@ export default function ModuleThree() {
                 </div>
             </div>
 
+            {/* Learning Objectives */}
+            <div className="glass-panel p-6 space-y-4 border-amber-500/20 bg-amber-950/20 mb-8">
+                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                    <CheckCircle2 className="text-amber-400" size={20} /> Learning Objectives
+                </h3>
+                <p className="text-xs text-slate-500 uppercase tracking-wider mb-2">By the end of this module, you will be able to:</p>
+                <ul className="text-sm text-slate-300 space-y-2">
+                    <li className="flex items-start gap-2"><span className="text-amber-400 font-bold">1.</span> Write a structured <strong>COSTAR prompt</strong> to generate game logic from natural language.</li>
+                    <li className="flex items-start gap-2"><span className="text-amber-400 font-bold">2.</span> Explain how <strong>Constructivism</strong> applies to prompt-driven creation.</li>
+                    <li className="flex items-start gap-2"><span className="text-amber-400 font-bold">3.</span> Use AI to translate a lesson plan into interactive sandbox behavior.</li>
+                </ul>
+            </div>
+
             <div className="grid md:grid-cols-2 gap-6 mb-8">
                 <div className="glass-panel p-6 space-y-4 border-amber-500/10">
                     <h3 className="text-xl font-bold text-white flex items-center gap-2">
                         <HardHat className="text-amber-400" /> Engineering with Words
                     </h3>
                     <p className="text-slate-300 text-sm leading-relaxed">
-                        We are no longer "writing code" line by line. We are writing <strong>specifications</strong>. By providing our local assistant with a clear "System Prompt" and a "Task Document," we instruct the AI to build the architecture for us.
+                        We aren't just writing code; we are writing <strong className="text-amber-300">specifications</strong>. Like the <strong className="text-amber-400">Dragon Warrior</strong>, it's all about perspective. By providing our local assistant with clear intent, we instruct the AI to build the architecture for us.
                     </p>
                 </div>
 
@@ -42,7 +58,16 @@ export default function ModuleThree() {
                         <Hammer className="text-amber-300" /> The Sovereign Sandbox
                     </h3>
                     <p className="text-slate-300 text-sm leading-relaxed">
-                        In this final module, we use the AI to compile a WebAssembly (WASM) game built in <a href="https://www.rust-lang.org/" target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:text-amber-300 underline underline-offset-2">Rust</a> (the <a href="https://bevyengine.org/" target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:text-amber-300 underline underline-offset-2">Bevy engine</a>). This isn't just a toy; it's a high-performance, memory-safe virtual environment running directly in the browser—all generated offline.
+                        In this forge, we use AI to compile a WebAssembly (WASM) game built in <strong>Rust</strong> and <strong>Bevy</strong>. This isomorphic space allows students to choose to find information, giving consent to the learning process through WASD movement and interactive dialogue.
+                    </p>
+                </div>
+
+                <div className="glass-panel p-6 space-y-4 border-amber-500/20 bg-amber-950/20 md:col-span-2">
+                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                        <Gamepad2 className="text-amber-400" /> Archetypal Identity
+                    </h3>
+                    <p className="text-slate-300 text-sm leading-relaxed">
+                        We are building spaces for students to explore who they are. My Roblox world uses <strong>12 NPCs based on Jungian archetypes</strong>. Each has a personality matrix that players naturally gravitate toward, creating a social scaffold where they can explore new identities through intentional player choice.
                     </p>
                 </div>
 
@@ -96,7 +121,7 @@ export default function ModuleThree() {
                                                         <span>Navigate to the <strong>Teacher</strong> to finalize the build.</span>
                                                     </li>
                                                     <li className="flex gap-2 text-xs text-slate-300 group">
-                                                        <div className="w-4 h-4 rounded border border-amber-500/50 flex-shrink-0 flex items-center justify-center text-[10px] group-hover:bg-amber-500/20 transition-colors">2</div>
+                                                        <div className="w-4 h-4 rounded border border-amber-500/50 flex-shrink-0 flex items-center justify-center text-[10px] group-hover:bg-fuchsia-500/20 transition-colors">2</div>
                                                         <span>Activate the <strong>Logic Lens</strong> [2] to inspect the NPC rules.</span>
                                                     </li>
                                                     <li className="flex gap-2 text-xs text-slate-300 group">
@@ -119,14 +144,36 @@ export default function ModuleThree() {
                 </div>
             </div>
 
-            <div className="glass-panel p-1 rounded-2xl aspect-video relative group overflow-hidden bg-black/40 border-amber-500/10">
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 z-10">
-                    <PlayCircle size={64} className="text-amber-400 mb-4 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all cursor-pointer drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]" />
-                    <h3 className="text-xl font-bold text-white mb-2">Video 3: Creation (08:20)</h3>
-                    <p className="text-slate-400 max-w-md">
-                        Click to play. Includes closed captions and downloadable transcript for ADA 508 compliance.
-                    </p>
+            {/* Teacher Toolkit: COSTAR Cheat Sheet */}
+            <div className="glass-panel p-8 border-amber-500/20 bg-amber-950/20">
+                <div className="flex justify-between items-start mb-6">
+                    <h3 className="text-xl font-bold text-white flex items-center gap-3">
+                        <FileText size={24} className="text-amber-400" /> Teacher Toolkit: COSTAR Cheat Sheet
+                    </h3>
                 </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {[
+                        { l: 'C', n: 'Context', d: 'Background info for the AI.' },
+                        { l: 'O', n: 'Objective', d: 'What do you want it to build?' },
+                        { l: 'S', n: 'Style', d: 'Personas (e.g., "The Mentor").' },
+                        { l: 'T', n: 'Tone', d: 'The "vibe" (e.g., encouraging).' },
+                        { l: 'A', n: 'Audience', d: 'Who is this for? (e.g., 5th grade).' },
+                        { l: 'R', n: 'Response', d: 'Format (e.g., Markdown, Code).' },
+                    ].map((item) => (
+                        <div key={item.l} className="p-4 rounded-xl bg-black/40 border border-amber-500/10">
+                            <span className="text-2xl font-black text-amber-500/50 block mb-1">{item.l}</span>
+                            <h4 className="font-bold text-white text-sm mb-1">{item.n}</h4>
+                            <p className="text-[10px] text-slate-400 leading-tight">{item.d}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div className="space-y-4">
+                <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                    <PlayCircle className="text-amber-400" /> Interactive Learning Session
+                </h3>
+                <ChunkedVideoPlayer videoData={module3Data} />
             </div>
 
             <div className="flex justify-between pt-8">
@@ -138,6 +185,6 @@ export default function ModuleThree() {
                 </Link>
             </div>
 
-        </div>
+        </div >
     );
 }

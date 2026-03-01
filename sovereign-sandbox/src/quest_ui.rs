@@ -51,7 +51,8 @@ impl Plugin for QuestUIPlugin {
            .add_systems(Startup, setup_quest_ui)
            .add_systems(Update, (
                handle_quest_navigation, 
-               update_quest_ui, 
+               update_quest_notification,
+               update_quest_log,
                update_mission_timer,
                show_victory_screen,
                manage_notifications,
@@ -78,8 +79,8 @@ fn setup_quest_ui(mut commands: Commands) {
                 max_width: Val::Px(280.0),
                 ..default()
             },
-            BackgroundColor(Color::srgba(0.05, 0.05, 0.05, 0.85)), // Glassier Charcoal
-            BorderColor(Color::srgb(1.0, 0.75, 0.0)), // Sharp Amber
+            BackgroundColor(Color::srgba(0.05, 0.05, 0.08, 0.85)), // Glassier Deep Indigo
+            BorderColor(Color::srgb(0.55, 0.36, 0.96)), // Sharp Violet
             QuestLogPanel,
         ))
         .with_children(|parent| {
@@ -87,10 +88,10 @@ fn setup_quest_ui(mut commands: Commands) {
             parent.spawn((
                 Text::new("═══ QUEST LOG ═══"),
                 TextFont {
-                    font_size: 14.0,
+                    font_size: 13.0,
                     ..default()
                 },
-                TextColor(Color::srgb(1.0, 0.75, 0.0)), // Phosphor Amber
+                TextColor(Color::srgb(0.5, 0.5, 0.5)), // Subdued gray
             ));
 
             // Module Title
@@ -100,7 +101,7 @@ fn setup_quest_ui(mut commands: Commands) {
                     font_size: 16.0,
                     ..default()
                 },
-                TextColor(Color::srgb(1.0, 0.75, 0.0)), // Phosphor Amber
+                TextColor(Color::srgb(0.55, 0.36, 0.96)), // Neon Violet
                 QuestTitleText,
             ));
 
@@ -119,10 +120,10 @@ fn setup_quest_ui(mut commands: Commands) {
             parent.spawn((
                 Text::new(""),
                 TextFont {
-                    font_size: 12.0,
+                    font_size: 13.0,
                     ..default()
                 },
-                TextColor(Color::srgb(0.0, 1.0, 1.0)), // Cyan
+                TextColor(Color::srgb(0.9, 0.9, 0.9)), // White/Light Gray for focal point
                 QuestObjectiveText,
             ));
 
@@ -142,7 +143,7 @@ fn setup_quest_ui(mut commands: Commands) {
                             height: Val::Percent(100.0),
                             ..default()
                         },
-                        BackgroundColor(Color::srgb(1.0, 0.75, 0.0)), // Phosphor Amber
+                        BackgroundColor(Color::srgb(0.55, 0.36, 0.96)), // Neon Violet
                         QuestProgressBar,
                     ));
                 });
@@ -185,33 +186,26 @@ fn setup_quest_ui(mut commands: Commands) {
                 border: UiRect::vertical(Val::Px(2.0)),
                 ..default()
             },
-            BackgroundColor(Color::srgba(0.1, 0.07, 0.0, 0.88)),
-            BorderColor(Color::srgb(1.0, 0.75, 0.0)),
+            BackgroundColor(Color::srgba(0.05, 0.02, 0.1, 0.88)),
+            BorderColor(Color::srgb(0.39, 0.40, 0.95)),
             QuestNotificationText,
         ));
     });
 }
 
-fn update_quest_ui(
-    time: Res<Time>,
+fn update_quest_notification(
     syllabus: Option<Res<SyllabusResource>>,
     mut notification_timer: ResMut<NotificationTimer>,
     mut notification_query: Query<&mut Node, (With<QuestNotification>, Without<QuestProgressBar>)>,
     mut notif_text_query: Query<&mut Text, With<QuestNotificationText>>,
-    mut title_query: Query<&mut Text, (With<QuestTitleText>, Without<QuestStepText>, Without<QuestObjectiveText>, Without<QuestNotificationText>)>,
-    mut step_query: Query<&mut Text, (With<QuestStepText>, Without<QuestTitleText>, Without<QuestObjectiveText>, Without<QuestNotificationText>)>,
-    mut objective_query: Query<&mut Text, (With<QuestObjectiveText>, Without<QuestTitleText>, Without<QuestStepText>, Without<QuestNotificationText>)>,
-    mut progress_query: Query<&mut Node, With<QuestProgressBar>>,
 ) {
     if let Some(syl) = syllabus {
         if syl.is_changed() {
-            // Show transition banner with real phase info
             notification_timer.0.reset();
             for mut node in &mut notification_query {
                 node.display = Display::Flex;
             }
 
-            // Update banner text with actual phase info
             let phase = syl.current_phase();
             let phase_num = syl.quest_script.current_phase + 1;
             let total = syl.quest_script.total_phases();
@@ -225,6 +219,28 @@ fn update_quest_ui(
                     *text = Text::new(format!("━━  [{phase_type}]  {phase_num}/{total}: {goal}  ━━"));
                 }
             }
+        }
+    }
+}
+
+type TitleQueryFilter = (With<QuestTitleText>, Without<QuestStepText>, Without<QuestObjectiveText>, Without<QuestNotificationText>);
+type StepQueryFilter = (With<QuestStepText>, Without<QuestTitleText>, Without<QuestObjectiveText>, Without<QuestNotificationText>);
+type ObjectiveQueryFilter = (With<QuestObjectiveText>, Without<QuestTitleText>, Without<QuestStepText>, Without<QuestNotificationText>);
+
+fn update_quest_log(
+    syllabus: Option<Res<SyllabusResource>>,
+    mut title_query: Query<&mut Text, TitleQueryFilter>,
+    mut step_query: Query<&mut Text, StepQueryFilter>,
+    mut objective_query: Query<&mut Text, ObjectiveQueryFilter>,
+    mut progress_query: Query<&mut Node, With<QuestProgressBar>>,
+) {
+    if let Some(syl) = syllabus {
+        if syl.is_changed() {
+            let phase = syl.current_phase();
+            let phase_num = syl.quest_script.current_phase + 1;
+            let total = syl.quest_script.total_phases();
+            let phase_type = phase.phase_type_name();
+            let goal = phase.display_label();
 
             // Update module title
             if let Some(quest) = syl.current_quest() {
@@ -346,20 +362,20 @@ fn show_victory_screen(
                     ..default()
                 },
                 BackgroundColor(Color::srgba(0.02, 0.02, 0.04, 0.96)),
-                BorderColor(Color::srgb(1.0, 0.75, 0.0)),
+                BorderColor(Color::srgb(0.55, 0.36, 0.96)),
                 VictoryScreen,
             ))
             .with_children(|parent| {
                 parent.spawn((
                     Text::new("🏆  MISSION COMPLETE"),
                     TextFont { font_size: 48.0, ..default() },
-                    TextColor(Color::srgb(1.0, 0.75, 0.0)),
+                    TextColor(Color::srgb(0.55, 0.36, 0.96)),
                 ));
 
                 parent.spawn((
                     Text::new("The Sovereign Sandbox"),
                     TextFont { font_size: 20.0, ..default() },
-                    TextColor(Color::srgb(0.0, 1.0, 1.0)),
+                    TextColor(Color::srgb(0.39, 0.40, 0.95)),
                 ));
 
                 // Thin divider
@@ -370,7 +386,7 @@ fn show_victory_screen(
                         margin: UiRect::vertical(Val::Px(8.0)),
                         ..default()
                     },
-                    BackgroundColor(Color::srgba(1.0, 0.75, 0.0, 0.4)),
+                    BackgroundColor(Color::srgba(0.55, 0.36, 0.96, 0.4)),
                 ));
 
                 // Stats grid
@@ -414,7 +430,7 @@ fn show_victory_screen(
                         margin: UiRect::vertical(Val::Px(8.0)),
                         ..default()
                     },
-                    BackgroundColor(Color::srgba(1.0, 0.75, 0.0, 0.4)),
+                    BackgroundColor(Color::srgba(0.55, 0.36, 0.96, 0.4)),
                 ));
 
                 parent.spawn((
@@ -426,7 +442,7 @@ fn show_victory_screen(
                 parent.spawn((
                     Text::new("← Return to the E-Learning Module to continue your journey"),
                     TextFont { font_size: 14.0, ..default() },
-                    TextColor(Color::srgb(0.0, 1.0, 1.0)),
+                    TextColor(Color::srgb(0.39, 0.40, 0.95)),
                 ));
             });
         }
