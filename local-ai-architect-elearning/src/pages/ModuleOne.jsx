@@ -42,7 +42,7 @@ export default function ModuleOne() {
                     <p className="text-xs text-slate-500 uppercase tracking-wider mb-2">By the end of this module, you will be able to:</p>
                     <ul className="text-sm text-slate-300 space-y-2">
                         <li className="flex items-start gap-2"><span className="text-emerald-400 font-bold">1.</span> Explain why running AI locally protects student data privacy.</li>
-                        <li className="flex items-start gap-2"><span className="text-emerald-400 font-bold">2.</span> Download and configure <strong>LM Studio</strong> on your own computer.</li>
+                        <li className="flex items-start gap-2"><span className="text-emerald-400 font-bold">2.</span> Download and configure <strong>WebLLM or Ollama</strong> on your own computer.</li>
                         <li className="flex items-start gap-2"><span className="text-emerald-400 font-bold">3.</span> Demonstrate that the AI works offline — without internet.</li>
                     </ul>
                 </div>
@@ -54,7 +54,7 @@ export default function ModuleOne() {
                         <ShieldCheck className="text-emerald-400" /> Privacy First
                     </h3>
                     <p className="text-slate-300 text-sm leading-relaxed">
-                        By using a local host (like <a href="https://lmstudio.ai/" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2">LM Studio</a>), you download AI models directly to your machine. The internal "brain" runs securely offline, meaning your ideas and students' data never leave your sight.
+                        By using a local host (like <a href="https://webllm.mlc.ai/" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2">WebLLM</a> or Ollama), you download AI models directly to your machine. The internal "brain" runs securely offline, meaning your ideas and students' data never leave your sight.
                     </p>
                 </div>
 
@@ -98,7 +98,7 @@ export default function ModuleOne() {
                             <Sparkles size={16} /> The JS Sandbox
                         </h4>
                         <p className="text-xs text-slate-300 leading-relaxed">
-                            Inside LM Studio, you'll find a <strong className="text-white">JavaScript Sandbox</strong>. This isn't just for chatting; it's a living workbench where you can build and test logic instantly. You can search Hugging Face for models, load an 8B brain, and start creating logic without a single line of traditional setup.
+                            Inside these tools, you'll find a <strong className="text-white">JavaScript Sandbox</strong>. This isn't just for chatting; it's a living workbench where you can build and test logic instantly. You can search Hugging Face for models, load an 8B brain, and start creating logic without a single line of traditional setup.
                         </p>
                     </div>
 
