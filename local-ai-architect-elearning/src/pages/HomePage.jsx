@@ -7,7 +7,7 @@ const moduleData = [
         id: 1,
         title: '1. Setup',
         subtitle: 'Starting Your Private Assistant',
-        description: 'Set up your private AI assistant using LM Studio to protect student privacy.',
+        description: 'Set up your private AI assistant using tools like WebLLM or Eduaide to protect student privacy.',
         color: 'emerald',
         borderClass: 'border-t-emerald-500',
         bgClass: 'bg-emerald-500/20',
@@ -19,7 +19,7 @@ const moduleData = [
         link: '/module-1',
         objectives: [
             { label: 'Explain why running AI locally protects student data privacy.', theory: 'Data Sovereignty', detail: 'When AI runs on your own hardware, student questions, mistakes, and explorations never leave the building. No corporate server logs their curiosity. This is the foundation of a true "Safe Failure Space."' },
-            { label: 'Download and configure LM Studio on your own computer.', theory: 'Reducing Cognitive Load', detail: 'LM Studio provides a visual, GUI-based interface to download and manage AI models — removing the intimidation of terminal commands and making the setup accessible to non-technical educators.' },
+            { label: 'Download and configure local AI tools on your own computer.', theory: 'Reducing Cognitive Load', detail: 'Tools like WebLLM provide easy interfaces to download and manage AI models — removing the intimidation of terminal commands and making the setup accessible to non-technical educators.' },
             { label: 'Demonstrate that the AI works offline — without internet.', theory: 'Self-Determination Theory (Autonomy)', detail: 'The "Wi-Fi off" moment proves you are in control. The AI belongs to you. This sense of ownership and autonomy is a core driver of intrinsic motivation.' },
         ]
     },
@@ -60,7 +60,7 @@ const moduleData = [
         objectives: [
             { label: 'Write a structured COSTAR prompt to generate game logic.', theory: 'The COSTAR Framework', detail: 'Context, Objective, Style, Tone, Audience, Response — this structured prompt protocol transforms chaotic AI output into precise, usable educational architecture. It\'s the difference between asking "write code" and engineering a system.' },
             { label: 'Explain how Constructivism applies to prompt-driven creation.', theory: 'Papertian Constructionism', detail: 'Seymour Papert argued we learn best by building public artifacts. When you prompt an AI to generate a game world from your lesson plan, you aren\'t consuming content — you are constructing a living, interactive experience.' },
-            { label: 'Use AI to translate a lesson plan into interactive sandbox behavior.', theory: 'The Sandbox Bridge', detail: 'The "technical wall" between imagination and implementation has collapsed. If you can describe a learning experience in natural language, the AI can manifest it as playable logic. The lesson plan becomes the game.' },
+            { label: 'Use AI to instantly gamify a lesson plan, adding mechanics like scoring and progression.', theory: 'The Sandbox Bridge', detail: 'The "technical wall" between imagination and implementation has collapsed. If you can describe a learning experience in natural language, the AI can manifest it as playable logic. The lesson plan becomes the game.' },
         ]
     }
 ];
@@ -91,7 +91,7 @@ export default function HomePage() {
                 </h1>
 
                 <p className="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-                    Building Educational Sandboxes Without Code. Transform from a passive consumer of software into an empowered <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-amber-400 font-bold">Experience Architect</span>.
+                    Gamifying Lesson Plans into Interactive Sandboxes. Transform static lessons into dynamic games using AI to become an empowered <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-amber-400 font-bold">Experience Architect</span>.
                 </p>
 
                 <div className="flex justify-center pt-8">
@@ -210,7 +210,7 @@ export default function HomePage() {
                             <Shield className="text-violet-400" /> The Problem
                         </h2>
                         <p className="text-slate-300 leading-relaxed mb-4">
-                            Modern education is stuck in the <strong className="text-white">"Textbook Trap"</strong>—standardized, passive content that fails to engage student curiosity.
+                            Modern education struggles with the <strong className="text-white">"Engagement Gap"</strong>—static lesson plans fail to motivate students like interactive games do.
                         </p>
                         <p className="text-slate-300 leading-relaxed">
                             Educators are limited by the <strong className="text-white">"Creative Wall"</strong> of traditional coding required to build interactive worlds, forcing them to rely on "closed" vendor-locked software.
@@ -225,7 +225,7 @@ export default function HomePage() {
                             <Code className="text-fuchsia-400" /> The Solution
                         </h2>
                         <p className="text-slate-300 leading-relaxed mb-4">
-                            Use <strong className="text-white">LM Studio</strong> as your local forge to turn natural language into playable reality, keeping student data entirely private.
+                            Use <strong className="text-white">AI tools</strong> to easily gamify lesson plans and turn learning objectives into interactive experiences, keeping student data entirely private.
                         </p>
                         <p className="text-slate-300 leading-relaxed">
                             This journey applies <strong className="text-violet-300">Constructionism</strong> (building public artifacts), <strong className="text-violet-300">Cognitive Load Theory</strong> (offloading syntax), and <strong className="text-violet-300">Self-Determination Theory</strong> (sovereignty and autonomy).

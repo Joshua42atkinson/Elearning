@@ -14,7 +14,7 @@ export default function ModuleTwo() {
             <div className="flex items-center justify-between border-b border-fuchsia-500/20 pb-6">
                 <div>
                     <h1 className="text-3xl font-bold text-white mb-2">Module 2: IDE Integration</h1>
-                    <p className="text-fuchsia-300">Connecting LM Studio's Local Server to Cursor & Zed.</p>
+                    <p className="text-fuchsia-300">Connecting Your Local Server to Cursor & Zed.</p>
                 </div>
                 <div className="px-4 py-2 glass-panel border-fuchsia-500/30 text-fuchsia-300 rounded-full text-sm font-semibold shadow-[0_0_15px_rgba(217,70,239,0.2)]">
                     Step 2 of 3
@@ -28,7 +28,7 @@ export default function ModuleTwo() {
                 </h3>
                 <p className="text-xs text-slate-500 uppercase tracking-wider mb-2">By the end of this module, you will be able to:</p>
                 <ul className="text-sm text-slate-300 space-y-2">
-                    <li className="flex items-start gap-2"><span className="text-fuchsia-400 font-bold">1.</span> Start LM Studio's local API server and understand what <strong>localhost</strong> means.</li>
+                    <li className="flex items-start gap-2"><span className="text-fuchsia-400 font-bold">1.</span> Start a local API server and understand what <strong>localhost</strong> means.</li>
                     <li className="flex items-start gap-2"><span className="text-fuchsia-400 font-bold">2.</span> Connect a code editor (Cursor or Zed) to your private AI server.</li>
                     <li className="flex items-start gap-2"><span className="text-fuchsia-400 font-bold">3.</span> Describe how AI scaffolding relates to Vygotsky's Zone of Proximal Development.</li>
                 </ul>
@@ -40,7 +40,7 @@ export default function ModuleTwo() {
                         <Server className="text-fuchsia-400" /> The Local Server
                     </h3>
                     <p className="text-slate-300 text-sm leading-relaxed">
-                        <a href="https://lmstudio.ai/" target="_blank" rel="noopener noreferrer" className="text-fuchsia-400 hover:text-fuchsia-300 underline underline-offset-2">LM Studio</a> isn't just a chat interface. It acts as an API server (just like OpenAI), but running locally on your machine.
+                        <a href="https://ollama.com/" target="_blank" rel="noopener noreferrer" className="text-fuchsia-400 hover:text-fuchsia-300 underline underline-offset-2">Ollama</a> or LM Studio isn't just a chat interface. It acts as an API server (just like OpenAI), but running locally on your machine.
                     </p>
                     <div className="mt-3 p-3 bg-fuchsia-500/5 border border-fuchsia-500/20 rounded-lg">
                         <p className="text-xs text-fuchsia-200 flex items-start gap-2">
@@ -55,7 +55,7 @@ export default function ModuleTwo() {
                         <Code2 className="text-fuchsia-300" /> Plugging into IDEs
                     </h3>
                     <p className="text-slate-300 text-sm leading-relaxed">
-                        Editors like <strong>Cursor</strong> and <strong>Zed</strong> are built for AI. By connecting our LM Studio local server, we get world-class autocompletion without cloud fees. But syntax isn't the goal—intent is.
+                        Editors like <strong>Cursor</strong> and <strong>Zed</strong> are built for AI. By connecting our local server, we get world-class autocompletion without cloud fees. But syntax isn't the goal—intent is.
                     </p>
                 </div>
 
@@ -130,7 +130,7 @@ export default function ModuleTwo() {
                                     <span className="text-blue-400">fn</span> <span className="text-yellow-200">spawn_world</span>() {'{'}
                                     <br />    commands.<span className="text-yellow-200">spawn</span>((
                                     <div className={`transition-all duration-[1000ms] ${isHovered ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0'}`}>
-                                        <span className="text-fuchsia-400/80 italic">{'  '}// AI Scaffolding...</span><br />
+                                        <span className="text-fuchsia-400/80 italic">{'  '}{'// AI Scaffolding...'}</span><br />
                                         <span className="text-fuchsia-300/80 italic">{'  '}println!("Sovereign world initiated.");</span>
                                     </div>
                                     <br />{'}'}
@@ -155,7 +155,7 @@ export default function ModuleTwo() {
                             <MessageSquareQuote size={16} /> Privacy & FERPA Compliance
                         </h4>
                         <p className="text-xs text-slate-400 leading-relaxed">
-                            "Unlike cloud models (ChatGPT/Claude), LM Studio is a <strong className="text-white">Local-First</strong> application. Student data never leaves the device. There are no training logs, no remote servers, and no third-party data collection, making it inherently compliant with data privacy standards."
+                            "Unlike cloud models (ChatGPT/Claude), local AI is a <strong className="text-white">Local-First</strong> application. Student data never leaves the device. There are no training logs, no remote servers, and no third-party data collection, making it inherently compliant with data privacy standards."
                         </p>
                     </div>
                     <div className="p-4 rounded-xl bg-white/5 border border-fuchsia-500/20">
